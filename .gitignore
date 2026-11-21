@@ -1,0 +1,26 @@
+# Dependencies and builds
+node_modules/
+dist/
+coverage/
+
+# Playwright
+playwright-report/
+test-results/
+blob-report/
+
+# Env and secrets
+.env
+.env.*
+!.env.example
+
+# OS / editors
+.DS_Store
+*.swp
+.vscode/
+.idea/
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Design board captures (tools/designs/)
+design-captures/
