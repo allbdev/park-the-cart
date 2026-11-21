@@ -29,12 +29,18 @@ test("the whole flow works with the keyboard alone", async ({ page }) => {
   await expect(page.locator("main.play")).toBeFocused();
   // Drive: the clock starts on the first key.
   await page.keyboard.down("KeyW");
-  await page.waitForTimeout(600);
+  // Headless WebKit on Linux paints slowly; wait for the clock rather than a fixed time.
+  await expect
+    .poll(
+      () =>
+        page.evaluate(
+          () =>
+            (window as unknown as { __cart: { world(): { tick: number } } }).__cart.world().tick,
+        ),
+      { timeout: 10_000 },
+    )
+    .toBeGreaterThan(30);
   await page.keyboard.up("KeyW");
-  const tick = await page.evaluate(
-    () => (window as unknown as { __cart: { world(): { tick: number } } }).__cart.world().tick,
-  );
-  expect(tick).toBeGreaterThan(30);
   // Pause with Esc, resume with Enter on the focused button.
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog")).toBeVisible();
