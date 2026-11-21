@@ -111,16 +111,16 @@
 
 ## Phase 6 · Design sync tooling
 
-50. [ ] `tools/designs/`: Playwright captures every screen board from the real game (fixed level, fixed input log, fixed tick) at board size
-51. [ ] Upload the captures to the canvas and replace the drawn screen mockups; refresh `designs/` JPGs
-52. [ ] English versions of the screen boards on the canvas (English is the default locale)
+50. [x] `tools/designs/`: Playwright captures every screen board from the real game (fixed level, fixed input log, fixed tick) at board size
+51. [x] Upload the captures to the canvas and replace the drawn screen mockups; refresh `designs/` JPGs
+52. [x] English versions of the screen boards on the canvas (English is the default locale)
 
 ---
 
 ## Phase 7 · Launch
 
 53. [ ] README: architecture write-up, the cart model, cross-browser determinism, par runs, how to replay a bug
-54. [ ] Open Graph image and meta tags for link previews, in both locales
+54. [x] Open Graph image and meta tags for link previews, in both locales
 55. [ ] Playtests: 5 people, including at least 2 on phones and 2 English speakers
 56. [ ] Tune the cart, prices and levels from playtests
 57. [ ] Domain and production deploy (decision in `TODO_FOR_YOU.md`) (GitHub Pages by default)

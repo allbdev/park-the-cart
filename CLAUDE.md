@@ -13,7 +13,7 @@ Repo: https://github.com/allbdev/park-the-cart (remote `origin`, branch `main`).
 
 ## Design canvas (two-way sync, strict)
 
-The mockups live on the claude.ai design canvas **"Estacione o Carrinho — Mockups"**: https://claude.ai/artifact/1saXC69MKJ1wjoqMoXJwCa (pages: Screens, Mobile, Carts & hazards, Art direction). `designs/*.jpg` are exports of its boards; `designs/README.md` maps each board to its file.
+The mockups live on the claude.ai design canvas **"Estacione o Carrinho — Mockups"**: https://claude.ai/artifact/1saXC69MKJ1wjoqMoXJwCa (pages: Screens, Screens (English), Mobile, Carts & hazards, Art direction). `designs/*.jpg` are exports of its boards; `designs/README.md` maps each board to its file.
 
 The game, the docs and the canvas must always agree:
 
@@ -21,7 +21,7 @@ The game, the docs and the canvas must always agree:
 - **Canvas → game.** The developer edits boards by hand. Before starting any UI or content task, re-read the boards it touches (Artifact `read`), and bring every difference into the code, the content files and `GAME_PLAN.md`. If a canvas change conflicts with the plan, ask.
 - **Docs too.** `GAME_PLAN.md` §5–§10 (controls, the cart, hazards, levels, result, look and tokens) describe the same things as the boards; keep them in step.
 - **New looks are tried on the canvas first**, on a new page, then built in the game.
-- **Boards show the real game** once it exists (roadmap Phase 6): the screen boards are replaced by captures from the game (`npm run designs`), in PT-BR and English. The text boards (Carts, Hazards, Art direction) are edited by hand on the canvas.
+- **Boards show the real game:** the screen boards (pages "Screens" in PT-BR and "Screens (English)", and both phone boards) are captures from the game. After any visible change: `npm run build && npm run preview`, then `npm run designs` (writes `design-captures/`, git-ignored); convert to JPG (`sips -s format jpeg -s formatOptions 82 --resampleWidth 1920`), copy into `designs/` (PT-BR) and `designs/en/`, upload them as canvas assets and point each board's `<img>` at its new `/_blob/` id. The text boards (Carts, Hazards, Art direction) are edited by hand on the canvas.
 - If Claude can't regenerate a JPG export itself, list the stale files in `TODO_FOR_YOU.md`.
 
 ## Language rules (strict)
