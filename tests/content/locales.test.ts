@@ -66,3 +66,23 @@ describe("money and time", () => {
     expect(formatTime(754)).toBe("12:34");
   });
 });
+
+describe("coverage of game content", () => {
+  it("names every level, cart, zone, car model and colour in both locales", async () => {
+    const { has } = await import("../../src/content/i18n");
+    const { LEVELS } = await import("../../src/content/levels");
+    const { CART_IDS, CARTS } = await import("../../src/content/carts");
+    const { CAR_MODELS, CAR_COLOURS, ZONES } = await import("../../src/content/cars");
+    for (const locale of ["en", "pt-BR"] as const) {
+      for (const l of LEVELS) expect(has(locale, `levels.${l.key}`), l.key).toBe(true);
+      for (const c of CART_IDS) {
+        expect(has(locale, `carts.${c}`)).toBe(true);
+        expect(has(locale, `carts.${c}Fault`)).toBe(true);
+        expect(has(locale, `hud.pulls.${CARTS[c].pulls}`)).toBe(true);
+      }
+      for (const z of ZONES) expect(has(locale, `zones.${z}`)).toBe(true);
+      for (const m of CAR_MODELS) expect(has(locale, `cars.${m}`)).toBe(true);
+      for (const c of CAR_COLOURS) expect(has(locale, `cars.colour.${c}`)).toBe(true);
+    }
+  });
+});
