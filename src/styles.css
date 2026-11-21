@@ -1216,3 +1216,7 @@ h1:focus {
     transition-duration: 1ms !important;
   }
 }
+
+.levels-head .lang {
+  position: static;
+}
