@@ -64,8 +64,7 @@ async function open(
   });
   await ctx.addInitScript((s) => localStorage.setItem("park-the-cart.v1", s), opts.store ?? progress(locale));
   const page = await ctx.newPage();
-  const site = encodeURIComponent("https://allbdev.github.io/park-the-cart/");
-  await page.goto(`${URL_BASE}/?test=1&date=2026-11-20&site=${site}${query}${opts.hash ?? ""}`);
+  await page.goto(`${URL_BASE}/?test=1&date=2026-11-20&site=public${query}${opts.hash ?? ""}`);
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(500);
   await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());

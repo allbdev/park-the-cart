@@ -98,7 +98,7 @@ npm run preview      # serve the build (port 4183)
 | **R** | Restart | Restart the level |
 | **Esc** | Pause button | Pause |
 
-Dev and test URL parameters (not offered in the UI): `?level=03-speed-bump` (or `?level=daily`) opens a level; `?test=1` exposes `window.__cart` and allows `&speed=N`, `&date=YYYY-MM-DD` and `&site=`.
+Dev and test URL parameters (not offered in the UI): `?level=03-speed-bump` (or `?level=daily`) opens a level; `?test=1` exposes `window.__cart` and allows `&speed=N`, `&date=YYYY-MM-DD` (never saved) and `&site=public` (share the public address).
 
 ## Tests and tools
 

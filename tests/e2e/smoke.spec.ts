@@ -68,3 +68,21 @@ test("the daily level: the first try counts, the next is practice", async ({ pag
   );
   await expect(page.locator(".result-note")).toContainText("Practice");
 });
+
+test("a link can't choose the address players share", async ({ page }) => {
+  await page.goto("/?test=1&site=https://evil.example/&level=01-seniors-space");
+  await page.evaluate(() =>
+    (window as unknown as { __cart: { playPar(): void } }).__cart.playPar(),
+  );
+  await expect(page.getByTestId("share")).not.toContainText("evil.example");
+});
+
+test("a test date override never reaches storage", async ({ page }) => {
+  await page.goto("/?test=1&level=daily&date=2031-01-01");
+  await page.evaluate(() =>
+    (window as unknown as { __cart: { playPar(): void } }).__cart.playPar(),
+  );
+  await expect(page.getByTestId("result-tag")).toBeVisible({ timeout: 10_000 });
+  const stored = await page.evaluate(() => localStorage.getItem("park-the-cart.v1") ?? "");
+  expect(stored).not.toContain("2031-01-01");
+});

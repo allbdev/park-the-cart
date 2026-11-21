@@ -16,6 +16,7 @@ addEventListener("hashchange", () => {
   if (location.hash.startsWith("#r=")) location.reload();
 });
 
+const PUBLIC_URL = "https://allbdev.github.io/park-the-cart/";
 const params = new URLSearchParams(location.search);
 const test = params.get("test") === "1";
 const speed = test ? Math.min(20, Math.max(1, Number(params.get("speed") ?? 1) || 1)) : 1;
@@ -33,10 +34,9 @@ async function boot() {
   await Promise.race([document.fonts?.ready, new Promise((r) => setTimeout(r, 1500))]);
   const app = new App({
     root: document.getElementById("app")!,
-    // Test-only: the design boards show the public address instead of localhost.
-    url:
-      (test && params.get("site")?.match(/^https:\/\/[\w.-]+\/[\w./-]*$/)?.[0]) ||
-      location.origin + location.pathname,
+    // Test-only: the design boards show the public address instead of localhost. Only this fixed
+    // address, never a value from the URL: a link must not choose what players share.
+    url: test && params.get("site") === "public" ? PUBLIC_URL : location.origin + location.pathname,
     speed,
     levelParam: params.get("level"),
     dateParam: test ? params.get("date") : null,

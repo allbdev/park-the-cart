@@ -156,7 +156,9 @@ export class App {
         const result = resultOf(world);
         if (first) {
           this.progress.daily[key] = result;
-          saveProgress(this.progress);
+          // A test date override (?test=1&date=) stays in memory: a link must not spend a real
+          // day's first try.
+          if (!this.o.dateParam) saveProgress(this.progress);
         }
         const counted = this.progress.daily[key]!;
         this.showResult({
