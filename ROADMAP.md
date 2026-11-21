@@ -119,12 +119,12 @@
 
 ## Phase 7 · Launch
 
-53. [ ] README: architecture write-up, the cart model, cross-browser determinism, par runs, how to replay a bug
+53. [x] README: architecture write-up, the cart model, cross-browser determinism, par runs, how to replay a bug
 54. [x] Open Graph image and meta tags for link previews, in both locales
 55. [ ] Playtests: 5 people, including at least 2 on phones and 2 English speakers
 56. [ ] Tune the cart, prices and levels from playtests
-57. [ ] Domain and production deploy (decision in `TODO_FOR_YOU.md`) (GitHub Pages by default)
-58. [ ] Press kit and launch posts (`marketing/`), with a replay link of a spectacular run
+57. [~] Domain and production deploy (decision in `TODO_FOR_YOU.md`) (live on GitHub Pages: https://allbdev.github.io/park-the-cart/)
+58. [~] Press kit and launch posts (`marketing/`), with a replay link of a spectacular run (drafts written; contact, dates and the replay link to fill at launch)
 
 ---
 
