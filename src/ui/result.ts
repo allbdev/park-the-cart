@@ -46,7 +46,7 @@ export function resultScreen(o: ResultOptions): HTMLElement {
     const [whole, cents] = moneyParts(L, r.damage);
     tag = h(
       "div",
-      { class: "big-tag", "data-testid": "result-tag" },
+      { class: "big-tag", "data-testid": "result-tag", "data-autofocus": true, tabindex: "-1" },
       h("p", { class: "kicker" }, t(L, "result.parked")),
       h(
         "p",
@@ -64,7 +64,12 @@ export function resultScreen(o: ResultOptions): HTMLElement {
   } else {
     tag = h(
       "div",
-      { class: "big-tag failed", "data-testid": "result-tag" },
+      {
+        class: "big-tag failed",
+        "data-testid": "result-tag",
+        "data-autofocus": true,
+        tabindex: "-1",
+      },
       h("p", { class: "kicker" }, t(L, "result.failedTag")),
       h("p", { class: "big-word" }, t(L, "result.failedBig")),
       h("p", { class: "big-sub" }, t(L, "result.failedBody")),

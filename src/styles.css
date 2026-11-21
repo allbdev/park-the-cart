@@ -76,7 +76,8 @@ main {
 }
 
 main:focus,
-h1:focus {
+h1:focus,
+.big-tag:focus {
   outline: none;
 }
 

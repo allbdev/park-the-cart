@@ -257,6 +257,7 @@ export class PlayScreen {
   /** For tests: feed a whole input log at once. */
   playInputs(inputs: readonly Input[]): void {
     for (const i of inputs) this.tick(i);
+    this.updateHud();
   }
 
   /** For tests: play the level's recorded par run. */

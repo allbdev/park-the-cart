@@ -64,7 +64,8 @@ async function open(
   });
   await ctx.addInitScript((s) => localStorage.setItem("park-the-cart.v1", s), opts.store ?? progress(locale));
   const page = await ctx.newPage();
-  await page.goto(`${URL_BASE}/?test=1&date=2026-11-20${query}${opts.hash ?? ""}`);
+  const site = encodeURIComponent("https://allbdev.github.io/park-the-cart/");
+  await page.goto(`${URL_BASE}/?test=1&date=2026-11-20&site=${site}${query}${opts.hash ?? ""}`);
   await page.evaluate(() => document.fonts.ready);
   await page.waitForTimeout(500);
   await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
@@ -170,7 +171,7 @@ async function phones(browser: Browser, locale: Locale, messy: Input[]) {
       ? "Portrait, one thumb to steer and one to hold. The camera follows the cart instead of showing the whole lot."
       : "Retrato, um polegar pra virar e outro pra segurar. A câmera segue o carrinho em vez de mostrar o estacionamento inteiro.";
   await board.setContent(`<body style="margin:0;background:#232527;color:#fff;font-family:'Barlow Semi Condensed',sans-serif;height:1000px;box-sizing:border-box;padding:40px 60px">
-    <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:28px"><b style="font:400 46px Anton,Impact,sans-serif;text-transform:uppercase">${title}</b><span style="font-size:20px">${sub}</span></div>
+    <div style="display:flex;align-items:baseline;gap:24px;margin-bottom:28px"><b style="font:400 46px Anton,Impact,sans-serif;text-transform:uppercase;white-space:nowrap">${title}</b><span style="font-size:20px">${sub}</span></div>
     <div style="display:flex;gap:60px;justify-content:center">
     ${["phone-play.png", "phone-result.png", "phone-levels.png"].map((f) => `<img src="${img(f)}" style="width:370px;height:800px;object-fit:cover;object-position:top;border:9px solid #0e0f10;border-radius:34px;box-shadow:0 14px 34px rgba(0,0,0,.4)">`).join("")}
     </div></body>`);

@@ -33,7 +33,10 @@ async function boot() {
   await Promise.race([document.fonts?.ready, new Promise((r) => setTimeout(r, 1500))]);
   const app = new App({
     root: document.getElementById("app")!,
-    url: location.origin + location.pathname,
+    // Test-only: the design boards show the public address instead of localhost.
+    url:
+      (test && params.get("site")?.match(/^https:\/\/[\w.-]+\/[\w./-]*$/)?.[0]) ||
+      location.origin + location.pathname,
     speed,
     levelParam: params.get("level"),
     dateParam: test ? params.get("date") : null,
