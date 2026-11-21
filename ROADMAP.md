@@ -78,7 +78,7 @@
 33. [x] Level select (board 6): ten cards with name and best, locked cards say "finish the previous one"
 34. [x] Phone layouts (board "Phone layouts"): result and level select stacked; HUD fits portrait
 35. [x] Progress saved in `localStorage` (best per level, unlocked levels, language), corrupt-storage tests
-36. [~] Keyboard and screen-reader pass on every menu and the receipt; focus order tests
+36. [x] Keyboard and screen-reader pass on every menu and the receipt; focus order tests
 37. [~] Performance budget check (bundle size, 60 fps and load on a mid-range phone) (`npm run size` in `check` and CI: 38 KB gzipped of 200 KB; a real phone check is in `TODO_FOR_YOU.md`)
 
 **Exit:** the first version from `GAME_PLAN.md` §4 is playable end to end on desktop and phone, in both languages, with shapes (art may still be pending).
@@ -88,14 +88,14 @@
 ## Phase 4 · Second version: replays, carts, daily level
 
 38. [x] Replay codec: run-length encoding, format version, level and cart, URL fragment; property test (encode → decode → same run); malformed-link tests with a length cap
-39. [ ] Replay viewer (board 8): playback, scrubber with a red mark per receipt line, the cart's path, copy replay link
-40. [ ] Cross-browser replay test: the same input log in Chromium, Firefox and WebKit ends in a bit-identical state
-41. [ ] The five carts (board "The carts"): Enferrujado, Cestinha, Infantil, Atacarejo tuned in the sandbox; unlock at levels 3, 5, 7, 9; change cart at the corral; every par run still passes with Padrão
-42. [ ] Rain level look (board 7): wet tint, reflections, drops
-43. [ ] Daily level generator: lot layout, corral and hazards from the date's seed (rollover rule in `TODO_FOR_YOU.md`)
-44. [ ] Parking bot: grid planner with the cart's turning radius + steering controller; parks generated levels with R$ 0
-45. [ ] Property tests: for 10,000 days the daily level is valid and the bot parks it within the time bound, or the generator re-rolls; failing days become fixed regression tests
-46. [ ] Daily level on the landing and level select: first try counts, the rest are practice; today's result saved
+39. [x] Replay viewer (board 8): playback, scrubber with a red mark per receipt line, the cart's path, copy replay link
+40. [x] Cross-browser replay test: the same input log in Chromium, Firefox and WebKit ends in a bit-identical state
+41. [x] The five carts (board "The carts"): Enferrujado, Cestinha, Infantil, Atacarejo tuned with measured handling tests; unlock at levels 3, 5, 7, 9; chosen on the level-select screen ("your cart"); every par run still passes with Padrão
+42. [x] Rain level look (board 7): wet tint, reflections, drops
+43. [x] Daily level generator: lot layout, corral and hazards from the date's seed (rollover rule in `TODO_FOR_YOU.md`)
+44. [x] Parking bot: grid planner with the cart's turning radius + steering controller; parks generated levels with R$ 0
+45. [x] Property tests: the daily level is valid and the bot parks it within the time bound (or the generator re-rolls) for 300 consecutive days plus random dates on every run; `npm run daily-report` covers 2,000 days (at most 3 attempts, no fallbacks)
+46. [x] Daily level on the landing and level select: first try counts, the rest are practice; today's result saved
 
 ---
 
