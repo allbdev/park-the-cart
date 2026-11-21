@@ -23,12 +23,14 @@ async function boot() {
     url: location.origin + location.pathname,
     speed,
     levelParam: params.get("level"),
+    dateParam: test ? params.get("date") : null,
   });
   app.start();
   if (test) {
     (window as unknown as { __cart: unknown }).__cart = {
       app,
       playInputs: (inputs: Input[]) => app.play?.playInputs(inputs),
+      playPar: () => app.play?.playPar(),
       world: () => app.play?.getWorld(),
     };
   }

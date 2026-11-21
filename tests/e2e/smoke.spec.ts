@@ -52,3 +52,19 @@ test("driving into a car bills it on the receipt", async ({ page }) => {
   expect(damage).toBeGreaterThan(0);
   await expect(page.locator(".hud-tag")).not.toContainText("R$0.00");
 });
+
+test("the daily level: the first try counts, the next is practice", async ({ page }) => {
+  await page.goto("/?test=1&level=daily&date=2026-11-20");
+  await expect(page.locator(".hud-value").first()).toContainText("20 Nov 2026");
+  await page.evaluate(() =>
+    (window as unknown as { __cart: { playPar(): void } }).__cart.playPar(),
+  );
+  await expect(page.getByTestId("result-tag")).toContainText("Cart parked", { timeout: 10_000 });
+  await expect(page.locator(".result-note")).toContainText("counts for today");
+  await expect(page.getByTestId("share")).toContainText("Park the Cart · daily 20 Nov 2026");
+  await page.getByTestId("again").click();
+  await page.evaluate(() =>
+    (window as unknown as { __cart: { playPar(): void } }).__cart.playPar(),
+  );
+  await expect(page.locator(".result-note")).toContainText("Practice");
+});

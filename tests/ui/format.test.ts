@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bestText, carName, itemText, shareText } from "../../src/ui/format";
+import { bestText, carName, formatDate, itemText, shareText } from "../../src/ui/format";
 import type { Result } from "../../src/core/result";
 
 const r = (damage: number, ticks: number): Result => ({
@@ -56,5 +56,12 @@ describe("formatting", () => {
 
   it("shows bests as money and time", () => {
     expect(bestText("pt-BR", r(62000, 38 * 120))).toBe("R$ 620 · 00:38");
+  });
+});
+
+describe("dates", () => {
+  it("formats a date key per locale", () => {
+    expect(formatDate("pt-BR", "2026-11-20")).toBe("20/11/2026");
+    expect(formatDate("en", "2026-01-05")).toBe("5 Jan 2026");
   });
 });

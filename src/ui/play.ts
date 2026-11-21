@@ -2,6 +2,7 @@ import { CARTS, type CartId } from "../content/carts";
 import { formatMoney, formatTime, moneyParts, t, type Locale } from "../content/i18n";
 import { DT, type Input } from "../core/cart";
 import type { Level } from "../core/level";
+import { decodeInputs } from "../core/replay";
 import { receiptItems } from "../core/result";
 import { createWorld, elapsed, step, type ReceiptLine, type World } from "../core/world";
 import { button, h } from "./dom";
@@ -256,6 +257,12 @@ export class PlayScreen {
   /** For tests: feed a whole input log at once. */
   playInputs(inputs: readonly Input[]): void {
     for (const i of inputs) this.tick(i);
+  }
+
+  /** For tests: play the level's recorded par run. */
+  playPar(): void {
+    const inputs = this.o.level.par ? decodeInputs(this.o.level.par.inputs) : null;
+    if (inputs) this.playInputs(inputs);
   }
 
   getWorld(): World {

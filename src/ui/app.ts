@@ -1,10 +1,13 @@
 import { CARTS, type CartId } from "../content/carts";
-import { DEFAULT_LOCALE, t, type Locale } from "../content/i18n";
+import { DEFAULT_LOCALE, formatMoney, formatTime, t, type Locale } from "../content/i18n";
 import { LEVELS, levelById, type LevelEntry } from "../content/levels";
 import type { Input } from "../core/cart";
-import { isBetter, resultOf } from "../core/result";
+import { dailyLevel, dateKey, isDateKey, type Daily } from "../core/daily";
+import type { Level } from "../core/level";
+import { isBetter, resultOf, seconds } from "../core/result";
 import type { World } from "../core/world";
 import { button, h } from "./dom";
+import { formatDate } from "./format";
 import { PlayScreen } from "./play";
 import { resultScreen } from "./result";
 import { howtoScreen, landingScreen, levelsScreen, type Nav } from "./screens";
@@ -15,6 +18,8 @@ export interface AppOptions {
   url: string;
   speed: number;
   levelParam: string | null;
+  /** Test only: pretend today is this date. */
+  dateParam: string | null;
 }
 
 /** Wires screens, storage and the language. Owns no game rules. */
@@ -41,7 +46,8 @@ export class App {
   start(): void {
     this.applyLocale();
     const entry = this.o.levelParam ? levelById(this.o.levelParam) : undefined;
-    if (entry) this.playLevel(entry);
+    if (this.o.levelParam === "daily") this.playDaily();
+    else if (entry) this.playLevel(entry);
     else this.landing();
   }
 
@@ -93,17 +99,68 @@ export class App {
     );
   }
 
-  /** Overridden when the daily level exists (roadmap Phase 4). */
-  protected dailyEnabled(): boolean {
-    return false;
+  private dailyEnabled(): boolean {
+    return true;
   }
 
-  protected playDaily(): void {
-    this.levels();
+  /** Today's date key in the player's local time (rollover at local midnight). */
+  todayKey(): string {
+    if (this.o.dateParam && isDateKey(this.o.dateParam)) return this.o.dateParam;
+    const d = new Date();
+    return dateKey(d.getFullYear(), d.getMonth() + 1, d.getDate());
   }
 
-  protected dailyStatus(): { label: string; done: boolean } | null {
-    return null;
+  private dailyCache: { key: string; daily: Daily } | null = null;
+
+  private dailyFor(key: string): Daily {
+    if (this.dailyCache?.key !== key) this.dailyCache = { key, daily: dailyLevel(key) };
+    return this.dailyCache.daily;
+  }
+
+  private dailyStatus(): { label: string; done: boolean } | null {
+    const r = this.progress.daily[this.todayKey()];
+    if (!r) return null;
+    return {
+      done: true,
+      label: r.parked
+        ? t(this.locale, "levelsScreen.dailyDone", {
+            price: formatMoney(this.locale, r.damage, false),
+            time: formatTime(seconds(r.ticks)),
+          })
+        : t(this.locale, "levelsScreen.dailyFailed"),
+    };
+  }
+
+  playDaily(): void {
+    const key = this.todayKey();
+    const daily = this.dailyFor(key);
+    const date = formatDate(this.locale, key);
+    const label = t(this.locale, "hud.dailyTag", { date });
+    const first = !this.progress.daily[key];
+    this.startPlay(
+      daily.level,
+      label,
+      (world, inputs) => {
+        const result = resultOf(world);
+        if (first) {
+          this.progress.daily[key] = result;
+          saveProgress(this.progress);
+        }
+        const counted = this.progress.daily[key]!;
+        this.showResult({
+          world,
+          inputs,
+          label,
+          best: counted,
+          newBest: false,
+          share: { levelNumber: null, date, url: this.o.url },
+          note: t(this.locale, first ? "result.dailyFirst" : "result.dailyPractice"),
+          onAgain: () => this.playDaily(),
+          onNext: null,
+        });
+      },
+      () => this.playDaily(),
+    );
   }
 
   private chooseCart(id: CartId): void {
@@ -118,31 +175,43 @@ export class App {
   }
 
   playLevel(entry: LevelEntry): void {
-    const cart =
-      CARTS[this.progress.cart].unlockAfter <= this.progress.finished
-        ? this.progress.cart
-        : "standard";
+    this.startPlay(
+      entry.level,
+      this.levelLabel(entry),
+      (world, inputs) => this.finishLevel(entry, world, inputs),
+      () => this.playLevel(entry),
+    );
+  }
+
+  private currentCart(): CartId {
+    return CARTS[this.progress.cart].unlockAfter <= this.progress.finished
+      ? this.progress.cart
+      : "standard";
+  }
+
+  private startPlay(
+    level: Level,
+    label: string,
+    onEnd: (world: World, inputs: Input[]) => void,
+    again: () => void,
+  ): void {
     const screen = new PlayScreen({
       locale: this.locale,
-      level: entry.level,
-      levelLabel: this.levelLabel(entry),
-      cart,
+      level,
+      levelLabel: label,
+      cart: this.currentCart(),
       reducedMotion: this.progress.reducedMotion,
       touch: this.touch,
       speed: this.o.speed,
-      onEnd: (world, inputs) => this.finishLevel(entry, world, inputs),
+      onEnd,
       onPause: () => this.togglePause(),
     });
-    this.show(
-      screen.el,
-      () => screen.destroy(),
-      () => this.playLevel(entry),
-    );
+    this.show(screen.el, () => screen.destroy(), again);
     this.play = screen;
     screen.mount();
   }
 
-  protected finishLevel(entry: LevelEntry, world: World, inputs: Input[]): void {
+  private finishLevel(entry: LevelEntry, world: World, inputs: Input[]): void {
     const result = resultOf(world);
     const prev = this.progress.best[entry.level.id] ?? null;
     const newBest = isBetter(result, prev);
@@ -164,7 +233,7 @@ export class App {
     });
   }
 
-  protected showResult(r: {
+  private showResult(r: {
     world: World;
     inputs: Input[];
     label: string;

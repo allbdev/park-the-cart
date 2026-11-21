@@ -69,3 +69,24 @@ export function shareText(locale: Locale, r: Result, ctx: ShareContext): string 
 export function bestText(locale: Locale, r: Result): string {
   return `${formatMoney(locale, r.damage, false)} · ${formatTime(seconds(r.ticks))}`;
 }
+
+/** "20/11/2026" in pt-BR, "20 Nov 2026" in English, from a date key. */
+export function formatDate(locale: Locale, key: string): string {
+  const [y, m, d] = key.split("-").map(Number) as [number, number, number];
+  if (locale === "pt-BR") return `${String(d).padStart(2, "0")}/${String(m).padStart(2, "0")}/${y}`;
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  return `${d} ${months[m - 1]} ${y}`;
+}
