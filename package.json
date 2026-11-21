@@ -20,7 +20,8 @@
     "e2e": "playwright test",
     "check": "npm run lint && npm run typecheck && npm run test && npm run build && npm run size",
     "size": "tsx tools/size-check.ts",
-    "record-par": "tsx tools/record-par.ts"
+    "record-par": "tsx tools/record-par.ts",
+    "daily-report": "tsx tools/daily-report.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
