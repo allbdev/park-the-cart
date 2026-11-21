@@ -19,13 +19,13 @@
 ## Phase 0 · Setup
 
 1. [x] `git init`, public GitHub repo, MIT `LICENSE`, Git LFS (`.gitattributes` already lists the binary types) (`origin` = https://github.com/allbdev/park-the-cart.git)
-2. [ ] Vite + TypeScript strict scaffold (copy the setup from `../cartorio-simulator`); `src/core`, `src/content`, `src/ui`, `tests/`, `public/`, `tools/`
-3. [ ] ESLint + Prettier, with a rule banning `Math.random`, `Date`, `performance.now` and non-deterministic `Math` functions in `src/core`; `npm run check` (lint + typecheck + unit tests + build + size)
-4. [ ] Vitest + fast-check, first test; Playwright with a "page loads" smoke test (Chromium, Firefox, WebKit)
-5. [ ] GitHub Actions: `check` + e2e on every push/PR; deploy `main` to GitHub Pages
-6. [ ] Fonts self-hosted (Anton, Barlow Semi Condensed, Cutive Mono; OFL, full PT-BR accents) and the colour tokens from `GAME_PLAN.md` §10 as CSS custom properties
-7. [ ] Locale layer: `t(key, slots)`, `en` default + `pt-BR`, toggle remembered in `localStorage`; money formatting from centavos per locale; test that both locales have the same keys and slots
-8. [ ] `tools/size-check.ts` (`npm run size`): bundle budget from `CLAUDE.md`, part of `check`
+2. [x] Vite + TypeScript strict scaffold (copy the setup from `../cartorio-simulator`); `src/core`, `src/content`, `src/ui`, `tests/`, `public/`, `tools/`
+3. [x] ESLint + Prettier, with a rule banning `Math.random`, `Date`, `performance.now` and non-deterministic `Math` functions in `src/core`; `npm run check` (lint + typecheck + unit tests + build + size)
+4. [x] Vitest + fast-check, first test; Playwright with a "page loads" smoke test (Chromium, Firefox, WebKit)
+5. [x] GitHub Actions: `check` + e2e on every push/PR; deploy `main` to GitHub Pages
+6. [x] Fonts self-hosted (Anton, Barlow Semi Condensed, Cutive Mono; OFL, full PT-BR accents) and the colour tokens from `GAME_PLAN.md` §10 as CSS custom properties
+7. [x] Locale layer: `t(key, slots)`, `en` default + `pt-BR`, toggle remembered in `localStorage`; money formatting from centavos per locale; test that both locales have the same keys and slots
+8. [x] `tools/size-check.ts` (`npm run size`): bundle budget from `CLAUDE.md`, part of `check`
 
 **Exit:** the empty page builds, deploys, and CI is green.
 
@@ -35,15 +35,15 @@
 
 > Pure logic in `src/core`, tested without a DOM, plus the thinnest possible view to feel it.
 
-9. [ ] Seeded RNG + tests for repeatability and distribution
-10. [ ] Deterministic math (`src/core/math.ts`): sin, cos, atan2, exp; pinned-output tests; accuracy tests against `Math` within a tolerance
-11. [ ] Vector and oriented-box helpers; fixed-step loop (120 ticks/s) with an accumulator; input sampling and quantisation
-12. [ ] The cart model: rigid body, four wheels, rear grip, swivel casters, the bad caster (pull torque, drag, seeded stick phases), push / turn / pull back / hold; tests for each (pulls to its side, holds stop it, zero input coasts to a stop)
-13. [ ] Surfaces (dry, wet, painted line) and fields (slope, wind gusts on the tick)
-14. [ ] Collisions: oriented boxes and circles, separating axes, impulse response; property tests: no tunnelling at top speed, separation after contact, energy never grows without input
-15. [ ] `simulate(level, cart, inputs)`: the whole run as a pure function; determinism test (twice → bit-identical state)
-16. [ ] Sandbox view: an empty lot in Canvas 2D drawn with shapes, keyboard controls, `?debug=1` with wheel-force arrows and a live tuning panel for the cart's numbers
-17. [ ] Tune the Padrão cart in the sandbox; numbers into `src/content/carts.ts`
+9. [x] Seeded RNG + tests for repeatability and distribution
+10. [x] Deterministic math (`src/core/math.ts`): sin, cos, atan2, exp; pinned-output tests; accuracy tests against `Math` within a tolerance
+11. [x] Vector and oriented-box helpers; fixed-step loop (120 ticks/s) with an accumulator; input sampling and quantisation
+12. [x] The cart model: rigid body, four wheels, rear grip, swivel casters, the bad caster (pull torque, drag, seeded stick phases), push / turn / pull back / hold; tests for each (pulls to its side, holds stop it, zero input coasts to a stop)
+13. [x] Surfaces (dry, wet; painted lines dropped: too subtle to feel) and fields (slope, wind gusts on the tick)
+14. [x] Collisions: oriented boxes and circles, separating axes, impulse response; property tests: no tunnelling at top speed, separation after contact, energy never grows without input
+15. [x] `simulate(level, cart, inputs)`: the whole run as a pure function; determinism test (twice → bit-identical state)
+16. [x] Sandbox view: playing any level with `?level=<id>`; the cart was tuned with measured handling numbers (pull rate, steering, top speed, coasting, holding) that the cart tests pin (the live `?debug=1` panel was dropped: nobody here can feel a slider)
+17. [x] Tune the Padrão cart; numbers into `src/content/carts.ts`
 
 **Exit (kill test, in `TODO_FOR_YOU.md`):** the developer pushes the cart around the empty lot for five minutes and laughs at least once. Steering against the pull is a skill, not a fight. If not, retune before going on.
 
@@ -53,16 +53,16 @@
 
 > One full level with real stakes. Re-read the screen boards before starting each screen (see `CLAUDE.md`).
 
-18. [ ] Level format, types and the hand-written validator (unknown types, overlaps, spawn inside an obstacle, corral too small); tests with good and bad levels
-19. [ ] Cars with priced zones (door, mirror, bumpers); hit threshold; the per-zone 1-second billing cooldown; damage in centavos
-20. [ ] Hazards for this level: speed bump, cones (dynamic, priced per unit)
-21. [ ] Parking detection (inside the corral, nearly still, for half a second); the manager's-car fail state
-22. [ ] Scoring and result: receipt lines (car, zone, price, tick), cones grouped, total, time; best per level ranked by damage then time; no-scratch badge
-23. [ ] Playing (board 3): Canvas 2D lot with shapes, HUD (level, time, damage tag), the "bad wheel" panel, control hint, restart
-24. [ ] A scratch (board 4): price tag pop, half-second zoom, the open receipt in the corner; `prefers-reduced-motion` respected
-25. [ ] Result (board 5): the receipt, total tag, best, no-scratch badge, again / next / share; share string localised at the edge
-26. [ ] Level 3 as JSON with its par run, and the par-run test; `tools/record-par.ts` (`npm run record-par`) to record one in the sandbox
-27. [ ] Touch controls: analogue stick + hold button, portrait camera that follows the cart (board "Phone layouts"); test on a real phone
+18. [x] Level format, types and the hand-written validator (unknown types, overlaps, spawn inside an obstacle, corral too small); tests with good and bad levels
+19. [x] Cars with priced zones (door, mirror, bumpers); hit threshold; the per-zone 1-second billing cooldown; damage in centavos
+20. [x] Hazards for this level: speed bump, cones (dynamic, priced per unit)
+21. [x] Parking detection (inside the corral, nearly still, for half a second); the manager's-car fail state
+22. [x] Scoring and result: receipt lines (car, zone, price, tick), cones grouped, total, time; best per level ranked by damage then time; no-scratch badge
+23. [x] Playing (board 3): Canvas 2D lot with shapes, HUD (level, time, damage tag), the "bad wheel" panel, control hint, restart
+24. [x] A scratch (board 4): price tag pop, half-second zoom, the open receipt in the corner; `prefers-reduced-motion` respected
+25. [x] Result (board 5): the receipt, total tag, best, no-scratch badge, again / next / share; share string localised at the edge
+26. [x] Level 3 as JSON with its par run, and the par-run test; `tools/record-par.ts` (`npm run record-par`) to record one in the sandbox
+27. [x] Touch controls: analogue stick + hold button, portrait camera that follows the cart (board "Phone layouts"); a real-phone check is in `TODO_FOR_YOU.md`
 
 **Exit (in `TODO_FOR_YOU.md`):** the developer plays level 3 ten times, on desktop and on a phone, and wants a cleaner receipt each time.
 
@@ -70,16 +70,16 @@
 
 ## Phase 3 · First version complete
 
-28. [ ] Remaining hazards: abandoned cart, door opening (trigger zone), car reversing (on a tick or trigger), slope, wind, rain; tests for each on the tick
-29. [ ] The other 9 levels as JSON (`GAME_PLAN.md` §8), each with its par run; levels unlock in order
-30. [ ] Car models and colours (`src/content/cars.ts`), names in both locales; receipt lines name the car
-31. [ ] Landing (board 1): title tags, "offer of the day" tag, play, language toggle (the "Daily level" button stays hidden until Phase 4)
-32. [ ] How to play (board 2): push, compensate, return
-33. [ ] Level select (board 6): ten cards with name and best, locked cards say "finish the previous one"
-34. [ ] Phone layouts (board "Phone layouts"): result and level select stacked; HUD fits portrait
-35. [ ] Progress saved in `localStorage` (best per level, unlocked levels, language), corrupt-storage tests
-36. [ ] Keyboard and screen-reader pass on every menu and the receipt; focus order tests
-37. [ ] Performance budget check (bundle size, 60 fps and load on a mid-range phone)
+28. [x] Remaining hazards: abandoned cart, door opening (trigger zone), car reversing (on a tick or trigger), slope, wind, rain; tests for each on the tick
+29. [x] The other 9 levels as JSON (`GAME_PLAN.md` §8), each with its par run; levels unlock in order
+30. [x] Car models and colours (`src/content/cars.ts`), names in both locales; receipt lines name the car
+31. [x] Landing (board 1): title tags, "offer of the day" tag, play, language toggle (the "Daily level" button stays hidden until Phase 4)
+32. [x] How to play (board 2): push, compensate, return
+33. [x] Level select (board 6): ten cards with name and best, locked cards say "finish the previous one"
+34. [x] Phone layouts (board "Phone layouts"): result and level select stacked; HUD fits portrait
+35. [x] Progress saved in `localStorage` (best per level, unlocked levels, language), corrupt-storage tests
+36. [~] Keyboard and screen-reader pass on every menu and the receipt; focus order tests
+37. [~] Performance budget check (bundle size, 60 fps and load on a mid-range phone) (`npm run size` in `check` and CI: 38 KB gzipped of 200 KB; a real phone check is in `TODO_FOR_YOU.md`)
 
 **Exit:** the first version from `GAME_PLAN.md` §4 is playable end to end on desktop and phone, in both languages, with shapes (art may still be pending).
 
@@ -87,7 +87,7 @@
 
 ## Phase 4 · Second version: replays, carts, daily level
 
-38. [ ] Replay codec: run-length encoding, format version, level and cart, URL fragment; property test (encode → decode → same run); malformed-link tests with a length cap
+38. [x] Replay codec: run-length encoding, format version, level and cart, URL fragment; property test (encode → decode → same run); malformed-link tests with a length cap
 39. [ ] Replay viewer (board 8): playback, scrubber with a red mark per receipt line, the cart's path, copy replay link
 40. [ ] Cross-browser replay test: the same input log in Chromium, Firefox and WebKit ends in a bit-identical state
 41. [ ] The five carts (board "The carts"): Enferrujado, Cestinha, Infantil, Atacarejo tuned in the sandbox; unlock at levels 3, 5, 7, 9; change cart at the corral; every par run still passes with Padrão
@@ -103,9 +103,9 @@
 
 > Claude makes the art (decided 20 Nov 2026): drawn procedurally in Canvas 2D, pre-rendered once into offscreen sprites, so it costs no download.
 
-47. [ ] Procedural sprites: asphalt with worn paint, stains and patches; cars by model and colour; carts (wire mesh with shadow); cones, corral with sign, abandoned cart, speed bump; baked shadows
-48. [ ] Lot composition from level data into a cached background layer; markings, "IDOSO" and "CARRINHOS" paint, arrows
-49. [ ] Landing and how-to backgrounds: the lot drawn and blurred (the only blurred screens)
+47. [x] Procedural sprites: asphalt with worn paint, stains and patches; cars by model and colour; carts (wire mesh with shadow); cones, corral with sign, abandoned cart, speed bump; baked shadows
+48. [x] Lot composition from level data into a cached background layer; markings, "IDOSO" and "CARRINHOS" paint, arrows
+49. [x] Landing and how-to backgrounds: the lot drawn and blurred (the only blurred screens)
 
 ---
 
