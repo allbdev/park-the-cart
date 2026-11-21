@@ -1,0 +1,100 @@
+{
+  "id": "01-seniors-space",
+  "size": [32, 18],
+  "seed": 1,
+  "spawn": {
+    "x": 3,
+    "y": 9,
+    "heading": 0
+  },
+  "corral": {
+    "row": 0,
+    "stall": 7
+  },
+  "surface": "dry",
+  "rows": [
+    {
+      "x": 0.4,
+      "y": 0,
+      "stalls": 12,
+      "opens": "down"
+    },
+    {
+      "x": 0.4,
+      "y": 12.4,
+      "stalls": 12,
+      "opens": "up"
+    }
+  ],
+  "cars": [
+    {
+      "row": 0,
+      "stall": 2,
+      "model": "sedan",
+      "colour": "silver"
+    },
+    {
+      "row": 0,
+      "stall": 4,
+      "model": "hatch",
+      "colour": "white"
+    },
+    {
+      "row": 0,
+      "stall": 9,
+      "model": "suv",
+      "colour": "black"
+    },
+    {
+      "row": 1,
+      "stall": 3,
+      "model": "sedan",
+      "colour": "red"
+    },
+    {
+      "row": 1,
+      "stall": 8,
+      "model": "hatch",
+      "colour": "blue"
+    }
+  ],
+  "hazards": [],
+  "paint": [
+    {
+      "type": "arrow",
+      "x": 3.5,
+      "y": 9,
+      "dir": 0
+    },
+    {
+      "type": "arrow",
+      "x": 16,
+      "y": 9,
+      "dir": 0
+    },
+    {
+      "type": "arrow",
+      "x": 28.5,
+      "y": 9,
+      "dir": 0
+    },
+    {
+      "type": "text",
+      "text": "IDOSO",
+      "x": 14.7,
+      "y": 2.6,
+      "size": 0.8
+    },
+    {
+      "type": "text",
+      "text": "CARRINHOS",
+      "x": 19.9,
+      "y": 6.6,
+      "size": 0.7
+    }
+  ],
+  "par": {
+    "cart": "standard",
+    "inputs": "1hAD2BAG2hAN3BA82hAB3BAB2hAB3BAB2hAB3BAB2hAC3BAB2hAC3BAB2hAD3BAB2hAE3BAB2hAimBAJ1g8LlA8T0g4I0A4B0g4B0A4B0g4C0A4B0g4B0A4B0g4B0A4B0g4B0A4B0g4B0A4C0g4B0A4B0g4B0A4B0g4B0A4C0g4B0A4C0g4B0A4B0g4B0A4C0g4B0A4C0g4B0A4D0g4B0A4C0g4B0A4D0g4B0A4Cjg4B0g4Bjg4B0A4Bjg4B0A4BkA4B0A4Bjg4B0A4BkA4B0A4Bjg4B0A4Bjg4B0g4Bjg4B0A4Bjg4B0A4BkA4B0A4Cjg4B0A4Bjg4B0g4Bjg4B0A4Bjg4B0A4BkA4B0A4Bjg4B0A4Bjg4B0A4BkA4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0g4Bjg4B0A4Bjg4B0A4Bjg4B0g4Bjg4B0A4Cjg4B0A4Bjg4B0g4Bjg4B0A4Bjg4B0A4Bjg4B0A4BkA4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4BkA4B0A4Bjg4B0A4Cjg4B0A4Bjg4B0g4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0g4Bjg4B0A4Bjg4B0A4Bjg4BkA4Ikg4QlA4Z0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B1A0ClA4B1A0B0g0Blg4B0g0Blg4B1A0B0g0Blg4B0g0B1A0Blg4B0g0B1A0BlA4B1A0ClA4B1A0ClA4B1A0ClA4B1A0ClA4B1A0ClA4B1A0Blg4B0g0B1A0Blg4B0g0B1A0Blg4B1A0B0g0Blg4B1A0B0g0Blg4B1A0ClA4B1A0BlA4Gkg4NkA4U0g4BkA4B0g4CkA4B0g4DkA4B0g4CkA4B0g4B0A4CkA4B0A4Cjg4B0A4Djg4B0A4Ejg4B0A4Djg4B0A4Ejg4B0A4Ejg4B0A4Fjg4B0A4Ejg4B0A4Fjg4B0A4Fjg4B0A4Ejg4B0A4Fjg4B0A4Fjg4B0A4Ejg4B0A4Fjg4B0A4Ejg4B0A4Fjg4B0A4Ejg4B0A4Ejg4Bzg4B0A4Czg4B0A4BjA4B0A4Czg4B0A4BjA4B0A4Bzg4B0A4Bzg4B0A4Bzg4Bjg4Bzg4B0A4Bzg4B0A4Bzg4Bjg4Bzg4B0A4Bzg4C0A4Bzg4B0A4BjA4B0A4Bzg4C0A4Bzg4B0A4BjA4Bzg4B0A4Bzg4C0A4Bzg4C0A4BjA4B0A4Bzg4C0A4Bzg4C0A4Bzg4BjA4Bzg4B0A4Bzg4C0A4Bzg4C0A4BjA4Bzg4C0A4Bzg4C0A4Bzg4Djg4Bzg4C0A4Bzg4D0A4Bzg4CjA4B0A4Bzg4D0A4Bzg4D0A4Bzg4BjA4Bzg4B0A4Bzg4E0A4Bzg4Djg4Bzg4E0A4Bzg4D0A4Bzg4CjA4Bzg4B0A4Bzg4E0A4Bzg4Ejg4Bzg4E0A4Bzg4E0A4Bzg4BjA4Bzg4C0A4Bzg4F0A4Bzg4CjA4Bzg4B0A4Bzg4F0A4Bzg4DjA4Bzg4B0A4Bzg4F0A4Bzg4EjA4B0A4Bzg4Bjg4GkA4Kkg4TlA4P0g0BlA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4Ckg4JkA4Xjg4E0A4Bjg4B0A4Djg4B0A4Cjg4B0A4Djg4B0A4Djg4B0A4Ejg4B0A4Djg4B0A4Djg4B0A4Djg4B0A4Ejg4B0A4Djg4B0A4Djg4B0A4Ejg4B0A4Djg4B0A4Djg4B0A4Djg4B0A4Ejg4B0A4Djg4B0A4Djg4B0A4DjA4B0A4Czg4Bjg4Bzg4B0A4Bzg4Bjg4Bzg4B0A4Bzg4B0A4BjA4B0A4Bzg4Cjg4Bzg4B0A4Bzg4Cjg4Bzg4C0A4Bzg4BjA4B0A4Bzg4C0A4Bzg4BjA4B0A4Bzg4Djg4Bzg4D0A4Bzg4BjA4Bzg4B0A4Bzg4DjA4B0A4Bzg4Fjg4Bzg4Fjg4Bzg4GjA4B0A4Bzg4FjA4Bzg4E0A4Bzg4BjA4Bzg4GjA4Bzg4GjA4Bzg4HjA4Bzg4HjA4Bzg4HjA4Bzg4HjA4Bzg4GjA4Bzg4HjA4Bzg4GjA4Bzg4HjA4Bzg4GjA4Bzg4GjA4Bzg4GjA4Bzg4GjA4Bzg4GjA4Bzg4FjA4Bzg4FjA4Bzg4FjA4Bzg4FjA4Bzg4FjA4Cjg4IkA4Mkg4a0g0BlA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4Ckg4NkA4aoQgn7gsTsAwesgwDtAwEtgwEuAwFugwGvAwIvgwJwAwI_gsBwAwB_gsBwgwBgAwBwgwBgAwBwgwBgAwBwgwBgAwBwgwBgAwCwgwBgAwBggwBxAwBggwFhAwEhgwHiAwIigwNjAwJygsCjAwBygsCjAwBygsDjAwBygsDjAwBygsDjAwBzAsBygsBjgwBzAsDjgwBzAsCygsBjAwNigzRAYgMAYoMCcgLAooMAcgLA4oMAcgLAcoLAYwMAcoLA4wMAcoLAowMAcoLA4wMAcoLAowMAcoLA4wMAcoLA4wMAcoLAowMAcoLAcwLAo4MAcwLAo4MAcoLAcwLAo4MAcwLAo4MAcwLAcoLAcwLAY4MAcwLAo4MAcwLAYwMD4oMNogMAYoMAYgMAYoMAYgMAooMAYgMAYoMAYgMAooMAYgMAooMAYgMAooMAYgMAooMAYgMAooMAYgMA4oMAYgMA4oMAYgMBIoMAYgMA8EIVA"
+  }
+}

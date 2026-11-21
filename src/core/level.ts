@@ -69,7 +69,7 @@ export interface Level {
 }
 
 export const STALL_WIDTH = 2.6;
-export const STALL_DEPTH = 5.2;
+export const STALL_DEPTH = 5.6;
 
 export function stallRect(row: Row, stall: number): Rect {
   const w = row.stallWidth ?? STALL_WIDTH;

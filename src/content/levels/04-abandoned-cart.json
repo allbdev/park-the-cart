@@ -1,0 +1,156 @@
+{
+  "id": "04-abandoned-cart",
+  "size": [32, 18],
+  "seed": 4,
+  "spawn": {
+    "x": 2.6,
+    "y": 8.8,
+    "heading": 0
+  },
+  "corral": {
+    "row": 1,
+    "stall": 10
+  },
+  "surface": "dry",
+  "rows": [
+    {
+      "x": 0.4,
+      "y": 0,
+      "stalls": 12,
+      "opens": "down"
+    },
+    {
+      "x": 0.4,
+      "y": 12.4,
+      "stalls": 12,
+      "opens": "up"
+    }
+  ],
+  "cars": [
+    {
+      "row": 0,
+      "stall": 1,
+      "model": "suv",
+      "colour": "white"
+    },
+    {
+      "row": 0,
+      "stall": 2,
+      "model": "sedan",
+      "colour": "black"
+    },
+    {
+      "row": 0,
+      "stall": 4,
+      "model": "sedan",
+      "colour": "silver"
+    },
+    {
+      "row": 0,
+      "stall": 6,
+      "model": "hatch",
+      "colour": "red"
+    },
+    {
+      "row": 0,
+      "stall": 8,
+      "model": "suv",
+      "colour": "grey"
+    },
+    {
+      "row": 0,
+      "stall": 9,
+      "model": "sedan",
+      "colour": "white"
+    },
+    {
+      "row": 1,
+      "stall": 1,
+      "model": "sedan",
+      "colour": "blue"
+    },
+    {
+      "row": 1,
+      "stall": 3,
+      "model": "pickup",
+      "colour": "silver"
+    },
+    {
+      "row": 1,
+      "stall": 5,
+      "model": "suv",
+      "colour": "black"
+    },
+    {
+      "row": 1,
+      "stall": 7,
+      "model": "sedan",
+      "colour": "white"
+    },
+    {
+      "row": 1,
+      "stall": 9,
+      "model": "hatch",
+      "colour": "red"
+    },
+    {
+      "row": 1,
+      "stall": 11,
+      "model": "sedan",
+      "colour": "grey"
+    }
+  ],
+  "hazards": [
+    {
+      "type": "cart",
+      "x": 18.5,
+      "y": 9.6,
+      "heading": 0.5
+    },
+    {
+      "type": "speedBump",
+      "x": 10.5,
+      "y": 5.6,
+      "w": 0.9,
+      "h": 6.8
+    }
+  ],
+  "paint": [
+    {
+      "type": "arrow",
+      "x": 3.5,
+      "y": 9,
+      "dir": 0
+    },
+    {
+      "type": "arrow",
+      "x": 16,
+      "y": 9,
+      "dir": 0
+    },
+    {
+      "type": "arrow",
+      "x": 28.5,
+      "y": 9,
+      "dir": 0
+    },
+    {
+      "type": "text",
+      "text": "IDOSO",
+      "x": 9.5,
+      "y": 2.6,
+      "size": 0.8
+    },
+    {
+      "type": "text",
+      "text": "CARRINHOS",
+      "x": 27.7,
+      "y": 11.3,
+      "size": 0.7
+    }
+  ],
+  "par": {
+    "cart": "standard",
+    "inputs": "7hAE7BAE6hAF6BAH5hAI5BAM4hAQ4BAV3hAZ3BAf2hADmBAJ1g8MlA8Rkg8ClA8Bkg8D0A5Szg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4C0A4Bzg4B0A4Bzg4C0A4Bzg4C0A4Bzg4C0A4Bzg4C0A4Bzg4C0A4Bzg4D0A4Bzg4C0A4Bzg4D0A4Bzg4D0A4Bzg4E0A4Bzg4D0A4Bzg4E0A4Bzg4F0A4Bzg4E0A4Bzg4F0A4Bzg4G0A4Bzg4G0A4Bzg4G0A4Bzg4H0A4Bzg4I0A4Bzg4I0A4Bzg4I0A4Bzg4J0A4Bzg4K0A4Bzg4F0A4Ejg4CkA4Kkg4RlA4V0g0BlA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0Clg4B0g0B1A0Blg4B0g0B1A0BlA4B1A0BlA4B1A0ClA4B1A0B0g0BlA4Jkg4ZkA4Fkg4BkA4w0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4Bjg4BkA4B0g4BkA4Bjg4B0g4BkA4Bjg4B0g4B3BAB2hAW3BAImhAG2A8C2g8GmA8M1g4SlA4Ilg4BlA4Blg4BlA4Blg4BlA4Blg4ClA4Blg4BlA4Blg4ClA4Blg4BlA4Blg4ClA4Blg4BlA4Blg4ClA4Blg4ClA4Blg4ClA4Blg4ClA4Blg4ClA4Blg4ClA4B1A0Blg4B1A0B0g0Blg4B1A0B0g0Blg4B1A0B0g0BlA4Ikg4WkA4o0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4B0g4BkA4C0g4Bjg4BkA4B0A4BkA4B0A4BkA4Bjg4B0g4Bjg4B0g4Bjg4C0g4Bjg4B0g4Bjg4C0g4Bjg4B0A4BkA4B0A4Bjg4BkA4B0A4Bjg4B0A4BkA4B0A4Bjg4B0A4BkA4Bjg4B0A4Bjg4B0g4Bjg4B0A4Bjg4B0A4BkA4Bjg4B0A4Bjg4B0A4Bjg4B0g4Bjg4B0A4Bjg4B0A4Bjg4C0A4BkA4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0g4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4Bzg4Bjg4Czg4Bjg4B0A4BjA4B0A4Bjg4BjA4B0A4BjA4B0A4BjA4B0A4BjA4Bjg4Bzg4Bjg4Bzg4Bjg4Bzg4Bjg4Bzg4Bjg4Bzg4Bjg4BjA4Bzg4Bjg4Bzg4Bjg4Bzg4BjA4B0A4BjA4C0A4BjA4Bzg4BjA4B0A4BjA4Bzg4BjA4B0A4BjA4Bzg4BjA4Bjg4HkA4Nkg4b0A0Bkg4B0g0Bkg4B0g0ClA4B0g0ClA4B0g0ClA4B0A0B0g0BlA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0CzA0Hzg0L0A0Ekg4B0A0Ckg4B0A0Bkg4B0A0Bkg4B0A0Bkg4EkA4Wjg4BkA4Bjg4DkA4Bjg4CkA4Bjg4DkA4Bjg4CkA4Bjg4CkA4Bjg4DkA4Bjg4CkA4Bjg4CkA4Bjg4CkA4Bjg4CkA4Bjg4DkA4B0A4Bjg4B0g4Bjg4C0g4Bjg4B0A4BkA4Bjg4B0A4BkA4B0A4Bjg4C0g4Bjg4B0A4BkA4Bjg4B0A4BkA4B0A4Bjg4BkA4B0A4Bjg4C0g4Bjg4B0A4BkA4Bjg4B0A4BkA4B0A4Bjg4C0g4Bjg4B0A4BkA4Bjg4B0A4BkA4B0A4Bjg4C0g4Bjg4B0A4BkA4Bjg4B0A4Bjg4B0g4Bjg4C0g4Bjg4B0A4BkA4Bjg4B0A4Bjg4B0g4Bjg4C0g4Bjg4B0A4Bjg4BkA4B0A4Bjg4B0g4Bjg4C0A4BkA4B0A4Bjg4C0g4Bjg4B0A4BkA4Bjg4B0A4Bjg4BkA4B0A4Bjg4B0A4BkA4Bjg4B0A4BkA4B0A4Bjg4C0g4Bjg4B0A4Bjg4BkA4B0A4Bjg4B0A4BkA4Bjg4B0A4BkA4B0A4Bjg4C0g4Bjg4B0A4Bjg4BkA4B0A4Bjg4B0A4BkA4Bjg4B0A4Bjg4B0g4Bjg4C0A4BkA4B0A4Bjg4C0g4Bjg4B0A4Bjg4BkA4B0A4BkA4Jkg4RlA4W0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4Hkg4PkA4u0g4BkA4C0g4BkA4B0g4BkA4C0A4BkA4Bjg4B0g4Bjg4B0g4Bjg4C0g4Bjg4B0g4Bjg4C0g4Bjg4B0A4Bjg4B0g4Bjg4C0A4BkA4B0A4Bjg4B0A4Bjg4BkA4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0g4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4Czg4Bjg4B0A4BjA4B0A4BjA4Bjg4Bzg4Bjg4Bzg4Bjg4Bzg4Bjg4BjA4Bzg4Bjg4Bzg4Bjg4Bzg4BjA4B0A4BjA4C0A4BjA4Bzg4Bjg4Bzg4BjA4Bzg4BjA4B0A4BjA4Czg4BjA4B0A4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Czg4BjA4Czg4BjA4Czg4BjA4C4QgqlgYI2AYQlgYC8AwJrgwBrAwBqgwCqAwBpgwCpAwCogwCoAwCngwCnAwDmgwC2AsC1gsE1AsG1gsW1AsT0gsQ0AsRkgwB0AsBkgwBzgsBkAwBzgsBkAwBzgsBkAwBzgsBkAwCzgsBkAwBzgsBkAwCzgsBkAwBzgsBkAwCzgsBkAwCzgsBkAwBzgsBkAwCzAsBjgwCzAsBjgwCzAsBjgwCzAsBjgwCzAsBjgwDzAsBjgwCzAsBjgwDzAsBjgwDzAsBjgwCzAsBjgwDzAsBjgwDzAsBjAwDygsBjAwEygsBjAwEygsBjAwEygsBjAwEygsBjAwFygsBjAwFygsBjAwFygsBjAwGygsBjAwFygsBjAwGygsBjAwFygsBjAwGygsBjAwGygsBigwBjAwBigwBjAwBigwBjAwByAsBigwBjAwBigwBjAwBigwBjAwByAsBigwBjAwBigwBjAwBigwCjAwBigwByAsBjAwBigwCjAwBigwCjAwBigwByAsBjAwBigwDjAwBigwDygsDjAwBygsCjAwBygsDjAwBygsDjAwBygsCjAwBygsDjAwBygsCjAwBygsCzAsBjgwBzAsCjAwBzAsDjgwBzAsDjAwBzAsCjgwBzAsDjgwBygsBzAsBjgwBzAsDjgwBzAsBygsBzAsBjgwBzAsCjgwBzAsBygsBzAsBjgwBzAsCjgwBzAsBygsBzAsBjgwBzAsDjgwBzAsBygsBjgwBzAsDjgwBjAwDygsBjAwMygsBjAwIygsBjAwFigwBjAwBigwByAsBigwBjAwBigwDjAwBigwCyAsBigwBjAwBigwGjAwBigwByAsBigwKjAwBigwCyAsBigwDwQhV"
+  }
+}
