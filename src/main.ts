@@ -11,6 +11,10 @@ import "./styles.css";
 import { App } from "./ui/app";
 import type { Input } from "./core/cart";
 
+addEventListener("hashchange", () => {
+  if (location.hash.startsWith("#r=")) location.reload();
+});
+
 const params = new URLSearchParams(location.search);
 const test = params.get("test") === "1";
 const speed = test ? Math.min(20, Math.max(1, Number(params.get("speed") ?? 1) || 1)) : 1;
@@ -24,6 +28,7 @@ async function boot() {
     speed,
     levelParam: params.get("level"),
     dateParam: test ? params.get("date") : null,
+    replayParam: location.hash.startsWith("#r=") ? location.hash.slice(3) : null,
   });
   app.start();
   if (test) {
@@ -32,6 +37,18 @@ async function boot() {
       playInputs: (inputs: Input[]) => app.play?.playInputs(inputs),
       playPar: () => app.play?.playPar(),
       world: () => app.play?.getWorld(),
+      replayEnd: () => {
+        const w = app.replay?.finalWorld();
+        return (
+          w && {
+            x: w.cart.body.x,
+            y: w.cart.body.y,
+            a: w.cart.body.a,
+            tick: w.tick,
+            damage: w.damage,
+          }
+        );
+      },
     };
   }
 }

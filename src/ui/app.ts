@@ -4,11 +4,13 @@ import { LEVELS, levelById, type LevelEntry } from "../content/levels";
 import type { Input } from "../core/cart";
 import { dailyLevel, dateKey, isDateKey, type Daily } from "../core/daily";
 import type { Level } from "../core/level";
+import { decodeReplay, encodeReplay } from "../core/replay";
 import { isBetter, resultOf, seconds } from "../core/result";
 import type { World } from "../core/world";
 import { button, h } from "./dom";
 import { formatDate } from "./format";
 import { PlayScreen } from "./play";
+import { ReplayScreen } from "./replay";
 import { resultScreen } from "./result";
 import { howtoScreen, landingScreen, levelsScreen, type Nav } from "./screens";
 import { loadProgress, saveProgress, type Progress } from "./store";
@@ -18,6 +20,8 @@ export interface AppOptions {
   url: string;
   speed: number;
   levelParam: string | null;
+  /** The part after #r= in the URL, if any. */
+  replayParam: string | null;
   /** Test only: pretend today is this date. */
   dateParam: string | null;
 }
@@ -31,6 +35,7 @@ export class App {
   private destroyCurrent: (() => void) | null = null;
   private rerender: (() => void) | null = null;
   play: PlayScreen | null = null;
+  replay: ReplayScreen | null = null;
   private touch: boolean;
   private pauseEl: HTMLElement | null = null;
 
@@ -46,7 +51,13 @@ export class App {
   start(): void {
     this.applyLocale();
     const entry = this.o.levelParam ? levelById(this.o.levelParam) : undefined;
-    if (this.o.levelParam === "daily") this.playDaily();
+    if (this.o.replayParam !== null) {
+      if (!this.startReplay(this.o.replayParam)) {
+        this.landing();
+        const note = h("p", { class: "notice", role: "alert" }, t(this.locale, "replay.bad"));
+        this.root.querySelector("main")?.append(note);
+      }
+    } else if (this.o.levelParam === "daily") this.playDaily();
     else if (entry) this.playLevel(entry);
     else this.landing();
   }
@@ -55,6 +66,7 @@ export class App {
     this.closePause();
     this.destroyCurrent?.();
     this.play = null;
+    this.replay = null;
     this.root.replaceChildren(el);
     this.destroyCurrent = destroy;
     this.rerender = rerender;
@@ -264,11 +276,63 @@ export class App {
     this.show(render(), null, () => this.showResult(r));
   }
 
-  /** Overridden when the replay viewer exists (roadmap Phase 4). */
-  protected watchReplay(world: World, inputs: Input[], label: string): void {
-    void world;
-    void inputs;
-    void label;
+  private watchReplay(world: World, inputs: Input[], label: string): void {
+    const back = this.rerender;
+    const link = `${this.o.url}#r=${encodeReplay({ level: world.level.id, cart: world.cartId, inputs })}`;
+    this.openReplay(world.level, world.cartId, inputs, label, link, () =>
+      back ? back() : this.landing(),
+    );
+  }
+
+  private openReplay(
+    level: Level,
+    cart: CartId,
+    inputs: readonly Input[],
+    label: string,
+    link: string,
+    onClose: () => void,
+  ): void {
+    const screen = new ReplayScreen({
+      locale: this.locale,
+      level,
+      label,
+      cart,
+      inputs,
+      link,
+      reducedMotion: this.progress.reducedMotion,
+      onClose,
+    });
+    this.show(
+      screen.el,
+      () => screen.destroy(),
+      () => this.openReplay(level, cart, inputs, label, link, onClose),
+    );
+    this.replay = screen;
+    screen.mount();
+  }
+
+  /** Opens a replay link (#r=...). Untrusted: anything malformed shows a message instead. */
+  private startReplay(param: string): boolean {
+    const r = decodeReplay(param);
+    if (!r) return false;
+    let level: Level | null = null;
+    let label = "";
+    const entry = levelById(r.level);
+    const daily = /^daily-(\d{4}-\d{2}-\d{2})$/.exec(r.level);
+    if (entry) {
+      level = entry.level;
+      label = this.levelLabel(entry);
+    } else if (daily && isDateKey(daily[1]!)) {
+      level = this.dailyFor(daily[1]!).level;
+      label = t(this.locale, "hud.dailyTag", { date: formatDate(this.locale, daily[1]!) });
+    }
+    if (!level) return false;
+    const link = `${this.o.url}#r=${param}`;
+    this.openReplay(level, r.cart, r.inputs, label, link, () => {
+      history.replaceState(null, "", location.pathname + location.search);
+      this.landing();
+    });
+    return true;
   }
 
   togglePause(): void {

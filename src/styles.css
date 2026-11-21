@@ -1220,3 +1220,108 @@ h1:focus {
 .levels-head .lang {
   position: static;
 }
+
+/* ---------------------------------------------------------------- replay */
+
+.replay-title {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+}
+
+.replay-actions {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 60%;
+}
+
+.replay-bar {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  width: min(1100px, calc(100% - 36px));
+  background: var(--panel);
+  border-radius: 10px;
+  padding: 12px 18px;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto minmax(0, 280px);
+  gap: 16px;
+  align-items: center;
+}
+
+.play-toggle {
+  min-width: 56px;
+  padding: 0;
+  font-size: 20px;
+}
+
+.replay-clock {
+  font-family: var(--display);
+  font-size: 30px;
+}
+
+.scrub-wrap {
+  position: relative;
+}
+
+.scrub {
+  width: 100%;
+  accent-color: var(--tag);
+  height: 32px;
+}
+
+.scrub-marks {
+  position: absolute;
+  inset: 0 8px;
+  pointer-events: none;
+}
+
+.scrub-mark {
+  position: absolute;
+  top: 6px;
+  width: 4px;
+  height: 20px;
+  margin-left: -2px;
+  background: var(--price);
+}
+
+.replay-note {
+  margin: 0;
+  font-size: 16px;
+}
+
+@media (max-width: 860px) {
+  .replay-bar {
+    grid-template-columns: auto auto 1fr auto;
+  }
+  .replay-note {
+    grid-column: 1 / -1;
+  }
+  .replay-actions {
+    top: auto;
+    bottom: 150px;
+    max-width: none;
+  }
+}
+
+.notice {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  background: var(--receipt);
+  color: var(--ink);
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+  max-width: calc(100% - 32px);
+}
