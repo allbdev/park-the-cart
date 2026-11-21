@@ -1,0 +1,52 @@
+/* Park the Cart. Tokens from the design canvas, page "Art direction": the supermarket flyer laid
+   over a drone photo of the car park. Yellow tags, red prices, a till receipt. Red and yellow
+   never carry meaning alone: every state also has a word or a price. */
+
+:root {
+  --tag: #ffd400;
+  --price: #d21c18;
+  --price-dark: #a51410;
+  --asphalt: #141516;
+  --asphalt-2: #232527;
+  --receipt: #fdfcf6;
+  --ink: #141516;
+  --muted: #5d5f61;
+  --panel: rgba(20, 21, 22, 0.88);
+  --shadow: 0 2px 3px rgba(0, 0, 0, 0.3), 0 14px 30px rgba(0, 0, 0, 0.35);
+  --display: "Anton", Impact, "Arial Narrow", sans-serif;
+  --sans: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif;
+  --mono: "Cutive Mono", "Courier New", monospace;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--asphalt);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 18px;
+  line-height: 1.35;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+#app {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
