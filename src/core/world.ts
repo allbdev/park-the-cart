@@ -343,16 +343,19 @@ function collideBody(world: World, b: Body, isPlayer: boolean): void {
           world.endTick = world.tick;
           world.lastHit = world.tick;
         }
-      } else if (car.reverse?.moving && !car.reverse.billed) {
-        car.reverse.billed = true;
-        bill(world, {
-          kind: "reversing",
-          car: car.index,
-          model: car.model,
-          colour: car.colour,
-          price: HAZARD_PRICES.reversing,
-          tick: world.tick,
-        });
+      } else if (car.reverse?.moving) {
+        // Only the player pays for walking into a car that's backing out.
+        if (isPlayer && !car.reverse.billed) {
+          car.reverse.billed = true;
+          bill(world, {
+            kind: "reversing",
+            car: car.index,
+            model: car.model,
+            colour: car.colour,
+            price: HAZARD_PRICES.reversing,
+            tick: world.tick,
+          });
+        }
       } else if (v > HIT_SPEED) {
         const zone = zoneOf(car.body, contact.px, contact.py);
         if (world.tick >= car.cooldown[zone]) {
