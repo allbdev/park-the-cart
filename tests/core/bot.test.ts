@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { findPar, planPath } from "../../src/core/bot";
+import { drive, findPar, planPath } from "../../src/core/bot";
 import { createWorld, simulate } from "../../src/core/world";
 import { testLevel } from "./helpers";
 
@@ -28,6 +28,14 @@ describe("parking bot", () => {
       hazards: [{ type: "island", x: 0, y: 6.2, w: 24, h: 0.6 }],
     });
     expect(planPath(createWorld(blocked, "standard"), 0.5)).toBeNull();
+  });
+
+  it("takes over after a prefix of human inputs", () => {
+    const prefix = new Array(120).fill({ push: 1, turn: 0.5, hold: false });
+    const run = drive(level, "standard", { margin: 0.5, cruise: 1.2, timeout: 90 }, prefix)!;
+    expect(run.inputs.slice(0, 120)).toEqual(prefix);
+    expect(run.world.status).toBe("parked");
+    expect(simulate(level, "standard", run.inputs).endTick).toBe(run.world.endTick);
   });
 
   it("parks with R$ 0, and its inputs replay to the same result", () => {

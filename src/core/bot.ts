@@ -241,12 +241,25 @@ export function planPath(world: World, margin: number): [number, number][] | nul
   return s;
 }
 
-/** Drives the simulation along the plan. */
-export function drive(level: Level, cartId: CartId, opts: BotOptions): BotRun | null {
+/**
+ * Drives the simulation along the plan. `prefix` is played first (as a person would), and the
+ * bot takes over from wherever that leaves the cart; the returned inputs include the prefix.
+ */
+export function drive(
+  level: Level,
+  cartId: CartId,
+  opts: BotOptions,
+  prefix: readonly Input[] = [],
+): BotRun | null {
   const world = createWorld(level, cartId);
+  const inputs: Input[] = [];
+  for (const i of prefix) {
+    if (world.status !== "playing") break;
+    inputs.push(i);
+    step(world, i);
+  }
   const path = planPath(world, opts.margin);
   if (!path) return null;
-  const inputs: Input[] = [];
   const spec = CARTS[cartId];
   let seg = 1;
   const maxTicks = opts.timeout * TICK_RATE;
