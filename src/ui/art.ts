@@ -560,6 +560,34 @@ export function lotCanvas(level: Level, ppm: number): HTMLCanvasElement {
   }
   for (let i = 0; i < 6; i++) crack(ctx, rng, rng.range(0, W), rng.range(0, H), rng.int(6, 14));
 
+  if (wet) {
+    // Puddles: dark, glossy, with a pale rim of reflected sky.
+    for (let i = 0; i < 14; i++) {
+      const x = rng.range(1, W - 1);
+      const y = rng.range(1, H - 1);
+      const rx = rng.range(0.6, 2.2);
+      const ry = rx * rng.range(0.35, 0.7);
+      const a = rng.range(0, Math.PI);
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(a);
+      const g = ctx.createRadialGradient(-rx * 0.3, -ry * 0.3, 0.05, 0, 0, rx);
+      g.addColorStop(0, "rgba(120, 140, 165, 0.35)");
+      g.addColorStop(0.6, "rgba(25, 32, 42, 0.55)");
+      g.addColorStop(1, "rgba(25, 32, 42, 0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "rgba(190, 205, 225, 0.18)";
+      ctx.lineWidth = 0.04;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, rx * 0.85, ry * 0.85, 0, Math.PI * 1.1, Math.PI * 1.7);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+
   // Stall lines and the yellow aisle edges.
   for (const row of level.rows) {
     const first = stallRect(row, 0);
