@@ -8,6 +8,7 @@ import "@fontsource/barlow-semi-condensed/latin-ext-600.css";
 import "@fontsource/cutive-mono/latin-400.css";
 import "@fontsource/cutive-mono/latin-ext-400.css";
 import "./styles.css";
+import receiptAUrl from "@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-300-normal.woff2?url";
 import { App } from "./ui/app";
 import type { Input } from "./core/cart";
 
@@ -18,6 +19,14 @@ addEventListener("hashchange", () => {
 const params = new URLSearchParams(location.search);
 const test = params.get("test") === "1";
 const speed = test ? Math.min(20, Math.max(1, Number(params.get("speed") ?? 1) || 1)) : 1;
+
+// Cutive Mono's capital Ã puts its tilde over the next letter ("NAÕ"). Patch that one glyph
+// with IBM Plex Mono Light; unicode-range means it only downloads when an Ã is on screen.
+try {
+  document.fonts.add(new FontFace("Receipt A", `url(${receiptAUrl})`, { unicodeRange: "U+00C3" }));
+} catch {
+  // Old browsers: the tilde is just misplaced.
+}
 
 async function boot() {
   // The lot paints its words with Anton; wait for the fonts (but not forever).

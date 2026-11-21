@@ -21,13 +21,15 @@
     "check": "npm run lint && npm run typecheck && npm run test && npm run build && npm run size",
     "size": "tsx tools/size-check.ts",
     "record-par": "tsx tools/record-par.ts",
-    "daily-report": "tsx tools/daily-report.ts"
+    "daily-report": "tsx tools/daily-report.ts",
+    "designs": "tsx tools/designs/capture.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@fontsource/anton": "^5.3.0",
     "@fontsource/barlow-semi-condensed": "^5.3.0",
     "@fontsource/cutive-mono": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
     "@playwright/test": "^1.65.1",
     "@types/node": "^26.6.6",
     "eslint": "^10.15.0",
