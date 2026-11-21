@@ -3,7 +3,7 @@
 > *Estacione o Carrinho.* Three good wheels. The fourth one is a free gift.
 > A free, open-source browser game, played from a link. A portfolio piece: the code is part of the product.
 
-**Author:** Vinícius Albuquerque Barros · **Written:** 18 Nov 2026 · **Updated:** 20 Nov 2026 · **Status:** being built
+**Author:** Vinícius Albuquerque Barros · **Written:** 18 Nov 2026 · **Updated:** 20 Nov 2026 · **Status:** first and second versions built (ten levels, replays, five carts, daily level); playtests next
 
 The original one-page pitch is `ESTACIONE_O_CARRINHO.md`. Mockups live on the design canvas "Estacione o Carrinho — Mockups" (https://claude.ai/artifact/1saXC69MKJ1wjoqMoXJwCa) and as JPG exports in `designs/`. The canvas and this file are kept in sync both ways (see `CLAUDE.md`). All names, prices and lines are first drafts. Effort figures are estimates, not measurements.
 
@@ -112,6 +112,8 @@ Each cart is the same model with different numbers, so the same level plays diff
 
 What can go wrong in a level and what it costs on the receipt. Prices are placeholders to tune. A level is a list of these with positions. (Canvas board "Hazards and price list".)
 
+Door scratches, mirrors and bumpers bill once per car and part per second (a long scrape is one line). A car backing out bills only when it hits the player's cart. Prices in the code are integer centavos (`src/content/cars.ts`).
+
 | Hazard | What it does | Price |
 |---|---|---|
 | Lombada (speed bump) | The cart jumps and changes direction | R$ 0 |
@@ -130,7 +132,7 @@ Hazards with timing (door, reversing car, wind gusts) run on the simulation tick
 
 ## 8. The levels
 
-Ten levels, each about a minute, unlocked in order. Every level ships with a **par run**: a recorded input log that parks the cart with R$ 0. A test replays it, so every level is proven finishable, and any change to the cart model that breaks a level fails CI. (Canvas board "Level select": "Ofertas da semana".)
+Ten levels, each about a minute, unlocked in order. Every level ships with a **par run**: an input log that parks the cart with R$ 0, recorded by the parking bot (`npm run record-par`; a grid planner plus a steering controller driving the real simulation). A test replays it, so every level is proven finishable, and any change to the cart model that breaks a level fails CI. (Canvas board "Level select": "Ofertas da semana".)
 
 | # | Name (PT-BR) | English (draft) | Introduces |
 |---|---|---|---|
@@ -145,26 +147,30 @@ Ten levels, each about a minute, unlocked in order. Every level ships with a **p
 | 9 | Carro do Gerente | The Manager's Car | Instant fail |
 | 10 | Horário de Pico | Rush Hour | Reversing cars; everything at once |
 
-**Level format** (JSON in `src/content/levels/`, validated when loaded):
+**Level format** (JSON in `src/content/levels/`, validated when loaded). Stalls come in rows, and cars are placed by stall, so a level reads like a car-park plan:
 
 ```jsonc
 {
   "id": "03-speed-bump",
-  "size": [64, 36],                 // metres; the lot is 1 unit = 1 m
-  "seed": 3,                        // for the caster's stick phases and gusts
-  "spawn": { "x": 9, "y": 30, "heading": -0.6 },
-  "corral": { "x": 52, "y": 6, "w": 6, "h": 8 },
-  "surface": "dry",                 // dry | wet
-  "cars": [{ "model": "sedan", "colour": "silver", "x": 20, "y": 5, "heading": 1.5708 }],
-  "hazards": [{ "type": "speedBump", "x": 30, "y": 18, "w": 1, "h": 10 }],
-  "fields": [],                     // slope, wind
-  "par": { "time": 24, "inputs": "…" }
+  "size": [32, 18],                       // metres; x right, y down
+  "seed": 3,                              // the caster's stick phases, gusts, bump kicks
+  "spawn": { "x": 4.3, "y": 15.2, "heading": -1.5708 },
+  "corral": { "row": 0, "stall": 9 },     // a stall with rails on three sides
+  "surface": "dry",                       // dry | wet
+  "rows": [{ "x": 0.4, "y": 0, "stalls": 12, "opens": "down" },
+           { "x": 0.4, "y": 12.4, "stalls": 12, "opens": "up" }],   // stalls 2.6 x 5.6 m
+  "cars": [{ "row": 0, "stall": 2, "model": "suv", "colour": "black",
+             "door": "right", "reverse": { "near": 5, "distance": 3 } }],
+  "hazards": [{ "type": "speedBump", "x": 13, "y": 5.6, "w": 0.9, "h": 6.8 },
+              { "type": "cone", "x": 8.6, "y": 14 }],   // also cart, island, slope, wind
+  "paint": [{ "type": "text", "text": "IDOSO", "x": 8.2, "y": 2.6 }],
+  "par": { "cart": "standard", "inputs": "…" }          // recorded by npm run record-par
 }
 ```
 
 The validator is hand-written (no schema library without asking) and rejects unknown types, overlaps between cars, a spawn inside an obstacle, and a corral the cart can't fit into.
 
-**The daily level (second version):** generated from the date by a seeded generator out of the same pieces: a lot layout, a corral position, a few hazards. A path-finding bot (a planner over a grid with the cart's turning radius, plus a steering controller) must park it with R$ 0 within a time bound, or the generator re-rolls. Property tests run this over thousands of days. The first try of the day counts; the rest are practice.
+**The daily level:** generated from the date (player's local midnight) by a seeded generator out of the same pieces: corral, spawn, cars, doors, reversing cars, the manager's car, cones, bumps, an abandoned cart, rain, wind or a slope. The parking bot must park it with R$ 0 within 45 s, or the generator re-rolls. Over 2,000 consecutive days (`npm run daily-report`) no day needed more than 3 attempts and none fell back to the plain lot; the bot's median is 20.6 s. Tests check 300 consecutive days and random dates on every run. The first try of the day counts; the rest are practice.
 
 ## 9. Result, replays and sharing
 
@@ -256,7 +262,7 @@ Shared with `../cartorio-simulator` and `../um-buraco-so`: one scaffold (Vite + 
 | Art takes longer than code | Every sprite has a shapes fallback; the game is playable with shapes alone |
 | Least engineering depth of the browser games | The hand-written model, cross-browser determinism and replays add it |
 
-**Effort (estimate):** about 1 weekend for the first version with shapes, plus the art. The second version (replays, carts, daily level) another weekend.
+**Effort (estimate):** about 1 weekend for the first version with shapes, plus the art. The second version (replays, carts, daily level) another weekend. (Built in one long session on 20–21 Nov 2026.)
 
 ## 15. What already exists
 
