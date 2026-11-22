@@ -56,6 +56,14 @@ export type ReceiptLine =
       price: number;
       tick: number;
     }
+  | {
+      kind: "traffic";
+      car: number;
+      model: CarModel;
+      colour: CarColour;
+      price: number;
+      tick: number;
+    }
   | { kind: "cone"; price: number; tick: number };
 
 export interface DoorState {
@@ -76,6 +84,19 @@ export interface ReverseState {
   billed: boolean;
 }
 
+/** A car driving through: where it is depends only on the tick. */
+export interface TrafficState {
+  dir: 1 | -1;
+  speed: number;
+  /** Where a pass starts (x of the car's centre). */
+  startX: number;
+  travelTicks: number;
+  cycleTicks: number;
+  offsetTicks: number;
+  /** The pass it last billed the player on, so one pass bills once. */
+  billedPass: number;
+}
+
 export interface CarEntity {
   index: number;
   model: CarModel;
@@ -84,6 +105,7 @@ export interface CarEntity {
   manager: boolean;
   door: DoorState | null;
   reverse: ReverseState | null;
+  traffic: TrafficState | null;
   /** Tick until which each zone can't bill again. */
   cooldown: Record<Zone | "door", number>;
 }
@@ -120,7 +142,10 @@ export interface World {
   cars: CarEntity[];
   statics: Body[];
   cones: Cone[];
-  loose: Body | null;
+  /** Abandoned carts. */
+  loose: Body[];
+  /** Which of them the player has pushed: from then on, what it hits goes on the receipt. */
+  pushed: boolean[];
   bumps: Rect[];
   slopes: Slope[];
   wind: Wind | null;
@@ -138,6 +163,8 @@ export interface World {
   lastHit: number;
   /** The car that ended the run, if any. */
   failedOn: number;
+  /** Why the run failed: the manager's car, or the receipt went over the level's limit. */
+  failReason: "manager" | "limit" | null;
 }
 
 const WALL = 2;
@@ -212,6 +239,7 @@ export function createWorld(level: Level, cartId: CartId): World {
             billed: false,
           }
         : null,
+      traffic: null,
       cooldown: setCooldown(),
     };
     if (door) placeDoor(car);
@@ -219,7 +247,7 @@ export function createWorld(level: Level, cartId: CartId): World {
   });
 
   const cones: Cone[] = [];
-  let loose: Body | null = null;
+  const loose: Body[] = [];
   const bumps: Rect[] = [];
   const slopes: Slope[] = [];
   let wind: Wind | null = null;
@@ -230,7 +258,7 @@ export function createWorld(level: Level, cartId: CartId): World {
         break;
       case "cart": {
         const spec = CARTS.standard;
-        loose = makeBox(h.x, h.y, h.heading, spec.length, spec.width, spec.mass);
+        loose.push(makeBox(h.x, h.y, h.heading, spec.length, spec.width, spec.mass));
         break;
       }
       case "island":
@@ -251,6 +279,34 @@ export function createWorld(level: Level, cartId: CartId): World {
           left: TICK_RATE * 2,
         };
         break;
+      case "traffic": {
+        const spec = CAR_SPECS[h.model];
+        const reach = spec.length / 2 + 1;
+        const body = makeBox(0, h.y, h.dir === 1 ? 0 : Math.PI, spec.length, spec.width);
+        const travel = (W + 2 * reach) / h.speed;
+        const car: CarEntity = {
+          index: cars.length,
+          model: h.model,
+          colour: h.colour,
+          body,
+          manager: false,
+          door: null,
+          reverse: null,
+          traffic: {
+            dir: h.dir,
+            speed: h.speed,
+            startX: h.dir === 1 ? -reach : W + reach,
+            travelTicks: Math.round(travel * TICK_RATE),
+            cycleTicks: Math.round((travel + h.gap) * TICK_RATE),
+            offsetTicks: Math.round((h.offset ?? 0) * TICK_RATE),
+            billedPass: -1,
+          },
+          cooldown: setCooldown(),
+        };
+        placeTraffic(car, 0);
+        cars.push(car);
+        break;
+      }
     }
   }
 
@@ -266,6 +322,7 @@ export function createWorld(level: Level, cartId: CartId): World {
     statics,
     cones,
     loose,
+    pushed: loose.map(() => false),
     bumps,
     slopes,
     wind,
@@ -278,7 +335,25 @@ export function createWorld(level: Level, cartId: CartId): World {
     onBump: false,
     lastHit: -1000,
     failedOn: -1,
+    failReason: null,
   };
+}
+
+/** Somewhere no cart will ever be: where a traffic car waits between passes. */
+const OFF_LOT = -1000;
+
+/** Puts a traffic car where it is at `tick`: on its pass, or away between passes. */
+function placeTraffic(car: CarEntity, tick: number): void {
+  const t = car.traffic!;
+  const b = car.body;
+  const phase = (tick + t.offsetTicks) % t.cycleTicks;
+  if (phase < t.travelTicks) {
+    b.x = t.startX + (t.dir * t.speed * phase) / TICK_RATE;
+    b.vx = t.dir * t.speed;
+  } else {
+    b.x = OFF_LOT;
+    b.vx = 0;
+  }
 }
 
 /** Door hinge near the front of the front door; it swings its rear edge outwards. */
@@ -324,12 +399,23 @@ function bill(world: World, line: ReceiptLine): void {
   world.receipt.push(line);
   world.damage += line.price;
   world.lastHit = world.tick;
+  const limit = world.level.limit;
+  if (limit !== undefined && world.damage > limit && world.status === "playing") {
+    // Card declined: the receipt went over what this level lets you spend.
+    world.status = "failed";
+    world.failReason = "limit";
+    world.endTick = world.tick;
+  }
 }
 
 const contact = makeContact();
 
-/** A moving body (the player's cart or the loose one) against everything solid. */
-function collideBody(world: World, b: Body, isPlayer: boolean): void {
+/**
+ * A moving body (the player's cart or an abandoned one) against everything solid. `pays` is
+ * false for an abandoned cart nobody has pushed: it still bounces off things and knocks cones
+ * over, but that isn't the player's doing.
+ */
+function collideBody(world: World, b: Body, isPlayer: boolean, pays: boolean): void {
   for (const s of world.statics) {
     if (collide(b, s, contact)) resolve(b, s, contact, CART_MATERIAL);
   }
@@ -337,11 +423,27 @@ function collideBody(world: World, b: Body, isPlayer: boolean): void {
     if (collide(b, car.body, contact)) {
       const v = closingSpeed(b, car.body, contact);
       if (car.manager) {
-        if (world.status === "playing") {
+        if (pays && world.status === "playing") {
           world.status = "failed";
+          world.failReason = "manager";
           world.failedOn = car.index;
           world.endTick = world.tick;
           world.lastHit = world.tick;
+        }
+      } else if (car.traffic) {
+        // Driving through, not stopping: the player pays once per pass.
+        const t = car.traffic;
+        const pass = Math.floor((world.tick + t.offsetTicks) / t.cycleTicks);
+        if (isPlayer && t.billedPass !== pass) {
+          t.billedPass = pass;
+          bill(world, {
+            kind: "traffic",
+            car: car.index,
+            model: car.model,
+            colour: car.colour,
+            price: HAZARD_PRICES.traffic,
+            tick: world.tick,
+          });
         }
       } else if (car.reverse?.moving) {
         // Only the player pays for walking into a car that's backing out.
@@ -356,7 +458,7 @@ function collideBody(world: World, b: Body, isPlayer: boolean): void {
             tick: world.tick,
           });
         }
-      } else if (v > HIT_SPEED) {
+      } else if (pays && v > HIT_SPEED) {
         const zone = zoneOf(car.body, contact.px, contact.py);
         if (world.tick >= car.cooldown[zone]) {
           car.cooldown[zone] = world.tick + COOLDOWN_TICKS;
@@ -375,7 +477,7 @@ function collideBody(world: World, b: Body, isPlayer: boolean): void {
     }
     const door = car.door;
     if (door && door.open > 0.05 && collide(b, door.body, contact)) {
-      if (world.tick >= car.cooldown.door) {
+      if (pays && world.tick >= car.cooldown.door) {
         car.cooldown.door = world.tick + COOLDOWN_TICKS * 3;
         bill(world, {
           kind: "door",
@@ -396,11 +498,17 @@ function collideBody(world: World, b: Body, isPlayer: boolean): void {
       cone.body.vx = b.vx * 1.3 + contact.nx * 0.6;
       cone.body.vy = b.vy * 1.3 + contact.ny * 0.6;
       cone.body.w = (world.rng.next() - 0.5) * 10;
-      bill(world, { kind: "cone", price: HAZARD_PRICES.cone, tick: world.tick });
+      if (pays) bill(world, { kind: "cone", price: HAZARD_PRICES.cone, tick: world.tick });
     }
   }
-  if (isPlayer && world.loose && collide(b, world.loose, contact)) {
-    resolve(b, world.loose, contact, CART_MATERIAL);
+  if (isPlayer) {
+    for (let i = 0; i < world.loose.length; i++) {
+      const l = world.loose[i]!;
+      if (collide(b, l, contact)) {
+        world.pushed[i] = true;
+        resolve(b, l, contact, CART_MATERIAL);
+      }
+    }
   }
 }
 
@@ -439,6 +547,10 @@ function stepWind(world: World): void {
 function stepCars(world: World): void {
   const cb = world.cart.body;
   for (const car of world.cars) {
+    if (car.traffic) {
+      placeTraffic(car, world.tick);
+      continue;
+    }
     const d = car.door;
     if (d) {
       if (!d.opening && world.status === "playing") {
@@ -519,15 +631,16 @@ export function step(world: World, raw: Input): void {
 
   const [ax, ay] = fieldAccel(world, b, cart.spec.windFactor);
   stepCart(cart, input, world.surface, ax, ay);
-  if (world.loose) {
-    const [lx, ly] = fieldAccel(world, world.loose, 1);
-    stepLooseCart(world.loose, CARTS.standard as CartSpec, world.surface, lx, ly);
+  for (const l of world.loose) {
+    const [lx, ly] = fieldAccel(world, l, 1);
+    stepLooseCart(l, CARTS.standard as CartSpec, world.surface, lx, ly);
   }
 
   // Two passes settle stacked contacts (cart against a car against a rail).
   for (let pass = 0; pass < 2; pass++) {
-    collideBody(world, b, true);
-    if (world.loose) collideBody(world, world.loose, false);
+    collideBody(world, b, true, true);
+    for (let i = 0; i < world.loose.length; i++)
+      collideBody(world, world.loose[i]!, false, world.pushed[i]!);
   }
   stepCones(world);
 
@@ -572,6 +685,6 @@ export function simulate(level: Level, cartId: CartId, inputs: readonly Input[])
 /** Is a point inside a car, the corral rails or a wall? (Used by the validator and the bot.) */
 export function solidAt(world: World, x: number, y: number): boolean {
   for (const s of world.statics) if (containsPoint(s, x, y)) return true;
-  for (const c of world.cars) if (containsPoint(c.body, x, y)) return true;
+  for (const c of world.cars) if (!c.traffic && containsPoint(c.body, x, y)) return true;
   return false;
 }

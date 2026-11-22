@@ -4,7 +4,7 @@
   "seed": 9,
   "spawn": {
     "x": 2.6,
-    "y": 9,
+    "y": 10.2,
     "heading": 0
   },
   "corral": {
@@ -12,6 +12,7 @@
     "stall": 6
   },
   "surface": "dry",
+  "limit": 70000,
   "rows": [
     {
       "x": 0.4,
@@ -30,137 +31,244 @@
     {
       "row": 0,
       "stall": 0,
-      "model": "sedan",
-      "colour": "silver"
+      "model": "manager",
+      "colour": "black"
     },
     {
       "row": 0,
       "stall": 1,
       "model": "suv",
+      "colour": "blue"
+    },
+    {
+      "row": 0,
+      "stall": 2,
+      "model": "pickup",
       "colour": "white"
     },
     {
       "row": 0,
       "stall": 3,
-      "model": "sedan",
-      "colour": "red"
+      "model": "pickup",
+      "colour": "silver",
+      "shift": -0.08354070791974663
     },
     {
       "row": 0,
       "stall": 4,
-      "model": "hatch",
-      "colour": "grey"
+      "model": "pickup",
+      "colour": "white",
+      "tilt": 0.06865812560543419
     },
     {
       "row": 0,
       "stall": 5,
       "model": "manager",
-      "colour": "black"
+      "colour": "black",
+      "shift": 0.2913466798374429
     },
     {
       "row": 0,
       "stall": 7,
       "model": "manager",
-      "colour": "black"
+      "colour": "black",
+      "shift": -0.2852998359594494
+    },
+    {
+      "row": 0,
+      "stall": 8,
+      "model": "pickup",
+      "colour": "black",
+      "shift": 0.007716285455971972,
+      "tilt": 0.05781256350688638
     },
     {
       "row": 0,
       "stall": 9,
       "model": "sedan",
-      "colour": "white"
+      "colour": "blue"
     },
     {
       "row": 0,
       "stall": 10,
+      "model": "sedan",
+      "colour": "grey",
+      "shift": 0.09585981888696554
+    },
+    {
+      "row": 0,
+      "stall": 11,
       "model": "suv",
-      "colour": "silver"
+      "colour": "red"
     },
     {
       "row": 1,
       "stall": 0,
-      "model": "sedan",
-      "colour": "black"
+      "model": "pickup",
+      "colour": "white",
+      "shift": -0.012446799632161831
+    },
+    {
+      "row": 1,
+      "stall": 1,
+      "model": "pickup",
+      "colour": "white",
+      "shift": -0.22675066748633982
     },
     {
       "row": 1,
       "stall": 2,
-      "model": "hatch",
-      "colour": "blue"
+      "model": "sedan",
+      "colour": "red",
+      "tilt": 0.052293546963483095
+    },
+    {
+      "row": 1,
+      "stall": 3,
+      "model": "suv",
+      "colour": "black",
+      "shift": 0.01844292748719456
     },
     {
       "row": 1,
       "stall": 4,
-      "model": "suv",
+      "model": "pickup",
       "colour": "white"
     },
     {
       "row": 1,
       "stall": 5,
-      "model": "sedan",
-      "colour": "silver"
+      "model": "suv",
+      "colour": "red"
     },
     {
       "row": 1,
       "stall": 6,
-      "model": "sedan",
-      "colour": "red",
-      "door": "left"
+      "model": "suv",
+      "colour": "white",
+      "shift": 0.23030685780569915,
+      "backIn": true
+    },
+    {
+      "row": 1,
+      "stall": 7,
+      "model": "suv",
+      "colour": "white"
     },
     {
       "row": 1,
       "stall": 8,
-      "model": "pickup",
-      "colour": "grey"
+      "model": "hatch",
+      "colour": "silver",
+      "shift": 0.17642066497355702,
+      "door": "right"
+    },
+    {
+      "row": 1,
+      "stall": 9,
+      "model": "hatch",
+      "colour": "black",
+      "shift": -0.14856305062770844,
+      "tilt": -0.05875131840817631
     },
     {
       "row": 1,
       "stall": 10,
-      "model": "sedan",
-      "colour": "white"
+      "model": "suv",
+      "colour": "blue",
+      "door": "right"
+    },
+    {
+      "row": 1,
+      "stall": 11,
+      "model": "hatch",
+      "colour": "black"
     }
   ],
   "hazards": [
-    {
-      "type": "cone",
-      "x": 15.3,
-      "y": 7.3
-    },
-    {
-      "type": "cone",
-      "x": 18.5,
-      "y": 7.3
-    },
     {
       "type": "speedBump",
       "x": 10,
       "y": 5.6,
       "w": 0.9,
       "h": 6.8
+    },
+    {
+      "type": "wind",
+      "dir": 1.570796,
+      "accel": 0.7
+    },
+    {
+      "type": "traffic",
+      "y": 7.4,
+      "dir": -1,
+      "speed": 3.4,
+      "gap": 5,
+      "offset": 15,
+      "model": "suv",
+      "colour": "silver"
+    },
+    {
+      "type": "cone",
+      "x": 8.3,
+      "y": 10.6
+    },
+    {
+      "type": "cone",
+      "x": 22.4,
+      "y": 9.5
+    },
+    {
+      "type": "cone",
+      "x": 26.4,
+      "y": 9.3
+    },
+    {
+      "type": "cone",
+      "x": 27.3,
+      "y": 10.5
+    },
+    {
+      "type": "cone",
+      "x": 20.8,
+      "y": 9.1
+    },
+    {
+      "type": "cone",
+      "x": 12.9,
+      "y": 9.9
     }
   ],
   "paint": [
     {
       "type": "arrow",
-      "x": 3.5,
-      "y": 9,
-      "dir": 0
+      "x": 5,
+      "y": 7.4,
+      "dir": 3.141593
     },
     {
       "type": "arrow",
       "x": 16,
-      "y": 9,
-      "dir": 0
+      "y": 7.4,
+      "dir": 3.141593
     },
     {
       "type": "arrow",
-      "x": 28.5,
-      "y": 9,
-      "dir": 0
+      "x": 27,
+      "y": 7.4,
+      "dir": 3.141593
+    },
+    {
+      "type": "text",
+      "text": "CARRINHOS",
+      "x": 17.3,
+      "y": 6.6,
+      "size": 0.7
     },
     {
       "type": "text",
       "text": "GERENTE",
-      "x": 14.7,
+      "x": 14.700000000000001,
       "y": 0.9,
       "size": 0.6
     },
@@ -173,14 +281,14 @@
     },
     {
       "type": "text",
-      "text": "CARRINHOS",
-      "x": 17.3,
-      "y": 6.6,
-      "size": 0.7
+      "text": "GERENTE",
+      "x": 1.7000000000000002,
+      "y": 0.9,
+      "size": 0.6
     }
   ],
   "par": {
     "cart": "standard",
-    "inputs": "3hA-3BAy2hAamBAJ1g8MlA8Kkg8BlA8Bkg8ClA8Bkg8DlA8Bkg8B0A4E0g4B0A5Tjg4CkA4Jkg4RlA4U0g0BlA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0Clg4B0g0B1A0BlA4B1A0B0g0Blg4B0g0B1A0Blg4B0g0B1A0BlA4B1A0Blg4B0g0B1A0BlA4B1A0ClA4B1A0ClA4B1A0ClA4B1A0B0g0Blg4B1A0B0g0Blg4B1A0ClA4B1A0ClA4B1A0Blg4B0g0B1A0Blg4B0g0B1A0Blg4B1A0B0g0Blg4B1A0B0g0Blg4B1A0ClA4B1A0Clg4B0g0B1A0Blg4B1A0B0g0Blg4BlA4Gkg4NkA4U0g4BkA4B0g4DkA4B0g4DkA4B0g4B0A4Bjg4B0g4B0A4Cjg4B0A4Djg4B0A4Ejg4B0A4Ejg4B0A4Ejg4B0A4Fjg4B0A4Ejg4B0A4Fjg4B0A4Fjg4B0A4Fjg4B0A4Fjg4B0A4Fjg4B0A4Fjg4B0A4Ejg4B0A4Fjg4B0A4EjA4B0A4Bzg4B0A4Czg4Bjg4Bzg4B0A4Bzg4B0A4Bzg4BjA4B0A4Bzg4B0A4Bzg4B0A4Bzg4BjA4B0A4Bzg4C0A4Bzg4C0A4BjA4Bzg4B0A4Bzg4C0A4Bzg4Djg4Bzg4D0A4Bzg4D0A4Bzg4BjA4Bzg4C0A4Bzg4E0A4Bzg4CjA4Bzg4C0A4Bzg4G0A4Bzg4CjA4Bzg4E0A4Bzg4IjA4B0A4Bzg4Ojg4Bzg4LwBAFwhABxhAByhABzBACzhAE0BAG0hAK1BABkhAJ0A8G0g8DkA8Ckg8JlA8B0g4L1A4Jkg4OlA4ekg4IkA4Tjg4J0A4Bjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Bjg4B0A4Cjg4B0A4Cjg4B0A4Cjg4B0A4Bzg4Bjg4Bzg4B0A4BjA4B0A4BjA4B0A4Bzg4BjA4B0A4Bzg4BjA4B0A4Bzg4BjA4B0A4Bzg4CjA4B0A4Bzg4BjA4Bzg4Cjg4Bzg4DjA4Bzg4Cjg4Bzg4CjA4Bzg4DjA4Bzg4DjA4Bzg4CjA4Bzg4DjA4Bzg4DjA4Bzg4DjA4Bzg4CjA4Bzg4DjA4Bzg4DjA4Bzg4Cjg4IkA4Nkg4a0A0BlA4B0g0ClA4B0g0BlA4B0g0Ckg4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0B6goDrAsHrgsB8AsB8gsD9AsC9gsCuAwBugwDvAwEvgwBgA0Egg0FhA0Gxg0ByA0Iyg0OyA0Big4JiA4gyg4BiA4Byg4BiA4Byg4BiA4Byg4BiA4Byg4BiA4Byg4BiA4Byg4BiA4Byg4BiA4Byg4BiA4Cyg4BiA4Byg4BiA4Cyg4BiA4Byg4BiA4Cyg4BiA4Cyg4BiA4Cyg4BiA4Cyg4BiA4D1g4G1A4I0g4BoQgMmAYD2gYDnAcD3gcEoAgE4ggEpAkF5gkGqAoH6goB7AoD7goE8AoBsgsDtAsGtgsG-gsH_AsI_gsLgAwNggwOxAwBggwChAwBxgwBhAwDxgwBhAwDxgwBhAwExgwBhAwGxgwBhgwHyAwBhgwZiAw8igwBiAwBigwBiAwBigwMjAwZygsBjAwBzAsCjAwBzAsDjgwBzAsDjAwBzAsCjgwBzAsDjgwBygsBzAsBjgwBzAsDjgwBzAsCjAwBzAsDjgwBzAsDjAwBzAsCjgwBzAsDjgwBygsBzAsBjgwBzAsDjgwBzAsCjAwBzAsDjgwBzAsDjAwBzAsCjgwBzAsDjgwBzAsBygsBjgwBzAsDjgwBzAsCygsBjgwBzAsCjgwBzAsDjAwBzAsCjgwBzAsDjgwBygsBzAsBjAwXigwCjAwBigyWAYgMAYoMA4gMAYoMAogMAYoMDMgLAYoMAcoLAowMAcoLA4wMAcoLAowMAcoLA4wMAcoLAowMAcoLA4wMAcoLA4wMAcoLAowMAcoLAcwLAcoLAY4MAcwLAo4MAcwLA4wMAcwLAo4MAcwLA44MAcoLAcwLAY4MAcwLA44MAcoLAcwLAo4MAcwLAo4MAcoLAcwLAo4MAcEIVQ"
+    "inputs": "-hAC-BAC9hAC9BAC8hAD8BAD7hAD7BAE6hAF6BAH5hAI5BAL4hAO4BAS3hAV3BAUmhAFmBAC1g8KlA8P0g4D0A4cjg4SjA4Djg4BjA4Qzg4BjA4hig4HjA4Jyg0DzA0aig0kjA0Big0FjA0Big0EjA0Big0GjA0Big0GjA0Big0KjA0Big0EzA0Cyg0KyA0exg0H7gsCsAwCsgwDtAwEtgwB-AwF-gwHvg0LwA0Ggg4LhA4ahg4GyA4Bhg4ByA4Bhg4ByA4Chg4ByA4Chg4ByA4Bhg4ByA4Bhg4ByA4Chg4ByA4Bhg4ByA4Chg4ByA4Bhg4ByA4Bhg4ByA4Chg4ByA4Bhg4ByA4Bhg4ByA4Bhg4ByA4Bhg4ByA4Bhg4ByA4Bhg4ByA4Bhg4CyA4Bhg4ByA4Bhg4ByA4Bhg4CyA4Bhg4CyA4Bhg4ByA4Bhg4CyA4Bhg4CyA4Bhg4CyA4Bhg4CyA4Bhg4CyA4Bhg4CyA4Bhg4CyA4BhA4Bhg4BhA4Bxg4Bhg4BhA4Bxg4BhA4Bhg4Bxg4BhA4Cxg4BhA4Cxg4BhA4Cxg4BhA4Bxg4BhA4Cxg4BhA4Cxg4BhA4Bxg4BhA4Cxg4BhA4Bxg4BhA4Cxg4BhA4Cxg4BhA4Bxg4BhA4Cxg4BhA4Cxg4BhA4Bxg4BhA4Cxg4BhA4Dxg4BhA4Cxg4BhA4DxA4Bgg4DxA4Bgg4DmA8Dlg8ElA8G4BAB3BAC2hAJ2BAQ1hALlBAJ0g8J0A8Cjg8UzA41ig4EjA4Jjg4RkA4gzg0BkA4Czg0BkA4Bzg0BkA4Czg0Bkg4Czg0Bkg4B0A0BkA4Bkg4Bzg0Bkg4B0A0BkA4Bkg4Bzg0Bkg4B0A0ByA0Gyg0JzA0Jjg4Dzg0BkA4Gzg0BkA4Gzg0BkA4Jjg4LjA4Kzg4PzA4pyg4BzA4Byg4RjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Cyg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Cyg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8Byg4BjA8ByA4Big8Byg4Big8ByA4BjA8Big8ByA4Big8ByA4BjA8ByA4Big8ByA4Big8CyA4Big8ByA4Big8ByA4Big8CyA4Big8ByA4Big8Cyg4HzA4Nzg4i0A4Czg4B0A4Dzg4B0A4Czg4B0A4Czg4B0A4Bzg4B0A4Czg4B0A4Dzg4B0A4Czg4D3gcDoAgD4ggDpAkE5gkDqAoE6goFrAsE7gsGsAwG8gwHtA0J9g0MuA4Q-g4C_A4G_g4IgA8Lgg8OhA8Bxg8BhA8Cxg8BhA8Cxg8BhA8Dxg8BhA8Exg8BhA8Bhg8FyA8Bhg8UiA8iyg8WrwgDpgYD6AYB6gYBrAcC7gcDsAgC8ggDtgkD-AkEugoE_AoC_goDwAsFggwHxAwBxgwIiA0Lig0CzA0Vzg0J0A0Hkg4B0A0Bkg4B0A0Bkg4B0A0BlA4B0g0BlA4B0g0BlA4B0g0BlA4B0g0BlA4B0g0ClA4B0g0BlA4B0g0BlA4B0g0BlA4B0g0BlA4B0g0BlA4B0g0BlA4B0g0BlA4B0g0Blg4B1A0Blg4B1A0Blg4B1A0Clg4B1A0Blg4B1A0Blg4B0g0Blg4B1A0Blg4B1A0Blg4B1A0Blg4B1A0Blg4B1A0Blg4B1A0Blg4B1A0BlA4B1A0Blg4B1A0Blg4B1A0Clg4B1A0J0g0B1A0P0g0B1A0Fkg0IkA0Bkg0BkA0jjg0CkA0Bjg0BzAwBkA0BzAwCzgwBjg0BzAwBzgwBzAwBjg0BzgwBzAwCzgwBjg0BzAwCzgwBjg0BzAwCzgwBzAwBjg0BzAwBzgwBzAwCjg0BzgwBzAwCjg0BzAwBzgwBzAwCjg0BzAwBzgwBzAwCjg0BzAwBzgwBzAwCjg0BzAwCzgwBzAwBjg0BzAwDzgwBjg0BzAwEkA0BzAwFjg0BzgwBzAwDjg0BzAwCzgwBzAwBjg0BzAwEjg0BzgwBzAwDjg0BzAwDzgwBjg0BzAwEjg0BzAwBzgwBjg0CzAwBjg0EkA0Bjg0IkA0Bjg0GkA0Bjg0FkA0Bjg0FkA0Bjg0EkA0B0A0E0g0B0A0D0g0B0A0D0g0B0A0E0g0B0A0D0g0B0A0D0g0B0A0D0g0B0A0C0g0B0A0D0g0B0A0C0g0B0A0D0g0B0A0C0g0B0A0C0g0B0A0D0g0B0A0Bkg4B0g0Bkg4C0g0Bkg4C0g0Bkg4ClA4B0A0Bkg4BlA4B0A0Bkg4BlA4B0A0Bkg4C0g0Bkg4C0g0Bkg4ClA4B0A0Bkg4BlA4B0A0Bkg4BlA4Bkg4B0A0BlA4Bkg4B0A0B0g0ClA4B0g0MlA4B0g0I1A0Elg4B1A0H0g0B1A0Dlg4B1A0Llg4B1A0Mlg4B1A0S0g0B1A0F0g0HkA0Vjg0GkA0Bjg0KzAx2ygwBzAwBygwBzAwBygwBzAwCygwBzAwBygwBzAwBygwBzAwBygwBzAwBygwBzAwBygwBzAwBygwBzAwBygwBzAwBygwBzAwBygwCzAwBygwBzAwBygwCzAwBygwBzAwBwQhR"
   }
 }

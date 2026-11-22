@@ -132,6 +132,89 @@ describe("the other carts", () => {
     expect(spin("kiddie")).toBeLessThan(spin("standard") / 2);
   });
 
+  it("wholesale is slow to get going, fast in the end, and won't be held back", () => {
+    const speed = (c: ReturnType<typeof createCart>) => Math.hypot(c.body.vx, c.body.vy);
+    // Seconds of full push to reach a speed, and the speed after half a minute.
+    const pushTo = (id: CartId, v: number) => {
+      const cart = createCart(CARTS[id], 0, 0, 0, createRng(1));
+      for (let i = 1; i <= 30 * TICK_RATE; i++) {
+        stepCart(cart, { push: 1, turn: 0, hold: false }, DRY, 0, 0);
+        if (speed(cart) >= v) return i / TICK_RATE;
+      }
+      return Infinity;
+    };
+    const top = (id: CartId) => {
+      const cart = createCart(CARTS[id], 0, 0, 0, createRng(1));
+      for (let i = 0; i < 30 * TICK_RATE; i++)
+        stepCart(cart, { push: 1, turn: 0, hold: false }, DRY, 0, 0);
+      return speed(cart);
+    };
+    // Metres to stop from 3 m/s with the cart held.
+    const holdFrom3 = (id: CartId) => {
+      const cart = createCart(CARTS[id], 0, 0, 0, createRng(1));
+      cart.body.vx = 3;
+      for (let i = 0; i < 20 * TICK_RATE && speed(cart) > 0.1; i++)
+        stepCart(cart, { push: 0, turn: 0, hold: true }, DRY, 0, 0);
+      return cart.body.x;
+    };
+    // Walking pace takes over three seconds (the standard cart: under one).
+    expect(pushTo("standard", 1)).toBeLessThan(1);
+    expect(pushTo("wholesale", 1)).toBeGreaterThan(3);
+    expect(pushTo("wholesale", 2)).toBeGreaterThan(7);
+    // Then it keeps gaining, to well past anything the standard cart reaches.
+    expect(top("wholesale")).toBeGreaterThan(top("standard") * 1.7);
+    // And holding it takes metres, not centimetres.
+    expect(holdFrom3("standard")).toBeLessThan(1);
+    expect(holdFrom3("wholesale")).toBeGreaterThan(5);
+  });
+
+  it("rusty lurches and stalls, wobbles, and is hard to turn on purpose", () => {
+    // Full push, no steering, for 15 seconds: the speed range after it's up to speed, how much
+    // of that time it's nearly stopped, and how hard it yaws on its own.
+    const straight = (id: CartId, seed: number) => {
+      const rng = createRng(seed);
+      const cart = createCart(CARTS[id], 0, 0, 0, rng);
+      let min = Infinity;
+      let max = 0;
+      let slow = 0;
+      let wobble = 0;
+      const n = 15 * TICK_RATE;
+      for (let i = 0; i < n; i++) {
+        stepFaults(cart, rng);
+        stepCart(cart, { push: 1, turn: 0, hold: false }, DRY, 0, 0);
+        wobble += cart.body.w * cart.body.w;
+        if (i < 3 * TICK_RATE) continue;
+        const v = Math.hypot(cart.body.vx, cart.body.vy);
+        min = Math.min(min, v);
+        max = Math.max(max, v);
+        if (v < 0.6) slow++;
+      }
+      return { min, max, slow: slow / (n - 3 * TICK_RATE), wobble: Math.sqrt(wobble / n) };
+    };
+    const turned = (id: CartId, seed: number) => {
+      const rng = createRng(seed);
+      const cart = createCart(CARTS[id], 0, 0, 0, rng);
+      for (let i = 0; i < 3 * TICK_RATE; i++) {
+        stepFaults(cart, rng);
+        stepCart(cart, { push: 0.5, turn: 1, hold: false }, DRY, 0, 0);
+      }
+      return Math.abs(cart.body.a);
+    };
+    const mean = (f: (seed: number) => number) => [1, 2, 3, 4, 5].reduce((a, s) => a + f(s), 0) / 5;
+    // The standard cart holds a steady speed; the rusty one swings from a crawl to a sprint.
+    expect(mean((s) => straight("standard", s).min)).toBeGreaterThan(1.8);
+    expect(mean((s) => straight("rusty", s).min)).toBeLessThan(0.7);
+    expect(mean((s) => straight("rusty", s).max)).toBeGreaterThan(
+      mean((s) => straight("standard", s).max),
+    );
+    expect(mean((s) => straight("rusty", s).slow)).toBeGreaterThan(0.05);
+    expect(mean((s) => straight("rusty", s).wobble)).toBeGreaterThan(
+      mean((s) => straight("standard", s).wobble) * 1.4,
+    );
+    // Asked to turn, it manages about half of what the standard cart does.
+    expect(mean((s) => turned("rusty", s))).toBeLessThan(mean((s) => turned("standard", s)) * 0.65);
+  });
+
   it("are all deterministic", () => {
     for (const id of CART_IDS) {
       const a = run(id, { push: 1, turn: 0.4, hold: false }, 3, DRY, 9).body;

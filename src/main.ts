@@ -10,6 +10,7 @@ import "@fontsource/cutive-mono/latin-ext-400.css";
 import "./styles.css";
 import receiptAUrl from "@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-300-normal.woff2?url";
 import { App } from "./ui/app";
+import { forceFlat } from "./ui/render3d";
 import type { Input } from "./core/cart";
 
 addEventListener("hashchange", () => {
@@ -28,6 +29,9 @@ try {
 } catch {
   // Old browsers: the tilde is just misplaced.
 }
+
+// Test-only: the flat fallback renderer, so the browser tests can cover it.
+if (test && params.get("gfx") === "flat") forceFlat();
 
 async function boot() {
   // The lot paints its words with Anton; wait for the fonts (but not forever).

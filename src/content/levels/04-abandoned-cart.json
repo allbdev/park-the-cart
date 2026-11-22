@@ -12,6 +12,7 @@
     "stall": 10
   },
   "surface": "dry",
+  "limit": 200000,
   "rows": [
     {
       "x": 0.4,
@@ -29,90 +30,187 @@
   "cars": [
     {
       "row": 0,
+      "stall": 0,
+      "model": "hatch",
+      "colour": "white"
+    },
+    {
+      "row": 0,
       "stall": 1,
       "model": "suv",
-      "colour": "white"
+      "colour": "red",
+      "shift": 0.16136828258633618
     },
     {
       "row": 0,
       "stall": 2,
-      "model": "sedan",
-      "colour": "black"
+      "model": "hatch",
+      "colour": "silver"
     },
     {
       "row": 0,
       "stall": 4,
-      "model": "sedan",
-      "colour": "silver"
-    },
-    {
-      "row": 0,
-      "stall": 6,
       "model": "hatch",
-      "colour": "red"
-    },
-    {
-      "row": 0,
-      "stall": 8,
-      "model": "suv",
-      "colour": "grey"
-    },
-    {
-      "row": 0,
-      "stall": 9,
-      "model": "sedan",
       "colour": "white"
     },
     {
-      "row": 1,
-      "stall": 1,
-      "model": "sedan",
-      "colour": "blue"
-    },
-    {
-      "row": 1,
-      "stall": 3,
-      "model": "pickup",
-      "colour": "silver"
-    },
-    {
-      "row": 1,
+      "row": 0,
       "stall": 5,
       "model": "suv",
       "colour": "black"
     },
     {
-      "row": 1,
+      "row": 0,
+      "stall": 6,
+      "model": "sedan",
+      "colour": "black",
+      "tilt": -0.04246900432743132
+    },
+    {
+      "row": 0,
       "stall": 7,
+      "model": "hatch",
+      "colour": "black"
+    },
+    {
+      "row": 0,
+      "stall": 9,
+      "model": "suv",
+      "colour": "blue"
+    },
+    {
+      "row": 0,
+      "stall": 10,
+      "model": "sedan",
+      "colour": "black"
+    },
+    {
+      "row": 1,
+      "stall": 0,
+      "model": "suv",
+      "colour": "silver",
+      "backIn": true
+    },
+    {
+      "row": 1,
+      "stall": 1,
+      "model": "sedan",
+      "colour": "white",
+      "shift": 0.11644349168986085
+    },
+    {
+      "row": 1,
+      "stall": 2,
+      "model": "pickup",
+      "colour": "red"
+    },
+    {
+      "row": 1,
+      "stall": 3,
       "model": "sedan",
       "colour": "white"
     },
     {
       "row": 1,
-      "stall": 9,
+      "stall": 5,
+      "model": "pickup",
+      "colour": "silver",
+      "tilt": -0.04487256410997362
+    },
+    {
+      "row": 1,
+      "stall": 7,
       "model": "hatch",
-      "colour": "red"
+      "colour": "white",
+      "tilt": 0.0015892633190378591
+    },
+    {
+      "row": 1,
+      "stall": 8,
+      "model": "sedan",
+      "colour": "grey"
+    },
+    {
+      "row": 1,
+      "stall": 9,
+      "model": "pickup",
+      "colour": "white",
+      "shift": 0.24119431542931125,
+      "door": "left"
     },
     {
       "row": 1,
       "stall": 11,
-      "model": "sedan",
-      "colour": "grey"
+      "model": "pickup",
+      "colour": "red",
+      "shift": -0.18679717888589947
     }
   ],
   "hazards": [
     {
-      "type": "cart",
-      "x": 18.5,
-      "y": 9.6,
-      "heading": 0.5
-    },
-    {
       "type": "speedBump",
-      "x": 10.5,
+      "x": 12,
       "y": 5.6,
       "w": 0.9,
       "h": 6.8
+    },
+    {
+      "type": "cart",
+      "x": 20.6,
+      "y": 10,
+      "heading": 0.7
+    },
+    {
+      "type": "cart",
+      "x": 7.2,
+      "y": 11,
+      "heading": -2.4
+    },
+    {
+      "type": "cart",
+      "x": 25.6,
+      "y": 7.5,
+      "heading": 0.2
+    },
+    {
+      "type": "cone",
+      "x": 18.9,
+      "y": 10.5
+    },
+    {
+      "type": "cone",
+      "x": 22.1,
+      "y": 8.2
+    },
+    {
+      "type": "cone",
+      "x": 21.5,
+      "y": 11.2
+    },
+    {
+      "type": "cone",
+      "x": 14,
+      "y": 6.3
+    },
+    {
+      "type": "cone",
+      "x": 28.5,
+      "y": 10.6
+    },
+    {
+      "type": "cone",
+      "x": 11.5,
+      "y": 13.9
+    },
+    {
+      "type": "cone",
+      "x": 12.1,
+      "y": 15.2
+    },
+    {
+      "type": "cone",
+      "x": 12.7,
+      "y": 16.5
     }
   ],
   "paint": [
@@ -136,13 +234,6 @@
     },
     {
       "type": "text",
-      "text": "IDOSO",
-      "x": 9.5,
-      "y": 2.6,
-      "size": 0.8
-    },
-    {
-      "type": "text",
       "text": "CARRINHOS",
       "x": 27.7,
       "y": 11.3,
@@ -151,6 +242,6 @@
   ],
   "par": {
     "cart": "standard",
-    "inputs": "7hAE7BAE6hAF6BAH5hAI5BAM4hAQ4BAV3hAZ3BAf2hADmBAJ1g8MlA8Rkg8ClA8Bkg8D0A5Szg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4C0A4Bzg4B0A4Bzg4C0A4Bzg4C0A4Bzg4C0A4Bzg4C0A4Bzg4C0A4Bzg4D0A4Bzg4C0A4Bzg4D0A4Bzg4D0A4Bzg4E0A4Bzg4D0A4Bzg4E0A4Bzg4F0A4Bzg4E0A4Bzg4F0A4Bzg4G0A4Bzg4G0A4Bzg4G0A4Bzg4H0A4Bzg4I0A4Bzg4I0A4Bzg4I0A4Bzg4J0A4Bzg4K0A4Bzg4F0A4Ejg4CkA4Kkg4RlA4V0g0BlA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0Clg4B0g0B1A0Blg4B0g0B1A0BlA4B1A0BlA4B1A0ClA4B1A0B0g0BlA4Jkg4ZkA4Fkg4BkA4w0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4Bjg4BkA4B0g4BkA4Bjg4B0g4BkA4Bjg4B0g4B3BAB2hAW3BAImhAG2A8C2g8GmA8M1g4SlA4Ilg4BlA4Blg4BlA4Blg4BlA4Blg4ClA4Blg4BlA4Blg4ClA4Blg4BlA4Blg4ClA4Blg4BlA4Blg4ClA4Blg4ClA4Blg4ClA4Blg4ClA4Blg4ClA4Blg4ClA4B1A0Blg4B1A0B0g0Blg4B1A0B0g0Blg4B1A0B0g0BlA4Ikg4WkA4o0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4B0g4BkA4C0g4Bjg4BkA4B0A4BkA4B0A4BkA4Bjg4B0g4Bjg4B0g4Bjg4C0g4Bjg4B0g4Bjg4C0g4Bjg4B0A4BkA4B0A4Bjg4BkA4B0A4Bjg4B0A4BkA4B0A4Bjg4B0A4BkA4Bjg4B0A4Bjg4B0g4Bjg4B0A4Bjg4B0A4BkA4Bjg4B0A4Bjg4B0A4Bjg4B0g4Bjg4B0A4Bjg4B0A4Bjg4C0A4BkA4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0g4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4Bzg4Bjg4Czg4Bjg4B0A4BjA4B0A4Bjg4BjA4B0A4BjA4B0A4BjA4B0A4BjA4Bjg4Bzg4Bjg4Bzg4Bjg4Bzg4Bjg4Bzg4Bjg4Bzg4Bjg4BjA4Bzg4Bjg4Bzg4Bjg4Bzg4BjA4B0A4BjA4C0A4BjA4Bzg4BjA4B0A4BjA4Bzg4BjA4B0A4BjA4Bzg4BjA4Bjg4HkA4Nkg4b0A0Bkg4B0g0Bkg4B0g0ClA4B0g0ClA4B0g0ClA4B0A0B0g0BlA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0CzA0Hzg0L0A0Ekg4B0A0Ckg4B0A0Bkg4B0A0Bkg4B0A0Bkg4EkA4Wjg4BkA4Bjg4DkA4Bjg4CkA4Bjg4DkA4Bjg4CkA4Bjg4CkA4Bjg4DkA4Bjg4CkA4Bjg4CkA4Bjg4CkA4Bjg4CkA4Bjg4DkA4B0A4Bjg4B0g4Bjg4C0g4Bjg4B0A4BkA4Bjg4B0A4BkA4B0A4Bjg4C0g4Bjg4B0A4BkA4Bjg4B0A4BkA4B0A4Bjg4BkA4B0A4Bjg4C0g4Bjg4B0A4BkA4Bjg4B0A4BkA4B0A4Bjg4C0g4Bjg4B0A4BkA4Bjg4B0A4BkA4B0A4Bjg4C0g4Bjg4B0A4BkA4Bjg4B0A4Bjg4B0g4Bjg4C0g4Bjg4B0A4BkA4Bjg4B0A4Bjg4B0g4Bjg4C0g4Bjg4B0A4Bjg4BkA4B0A4Bjg4B0g4Bjg4C0A4BkA4B0A4Bjg4C0g4Bjg4B0A4BkA4Bjg4B0A4Bjg4BkA4B0A4Bjg4B0A4BkA4Bjg4B0A4BkA4B0A4Bjg4C0g4Bjg4B0A4Bjg4BkA4B0A4Bjg4B0A4BkA4Bjg4B0A4BkA4B0A4Bjg4C0g4Bjg4B0A4Bjg4BkA4B0A4Bjg4B0A4BkA4Bjg4B0A4Bjg4B0g4Bjg4C0A4BkA4B0A4Bjg4C0g4Bjg4B0A4Bjg4BkA4B0A4BkA4Jkg4RlA4W0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4Hkg4PkA4u0g4BkA4C0g4BkA4B0g4BkA4C0A4BkA4Bjg4B0g4Bjg4B0g4Bjg4C0g4Bjg4B0g4Bjg4C0g4Bjg4B0A4Bjg4B0g4Bjg4C0A4BkA4B0A4Bjg4B0A4Bjg4BkA4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0g4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4Czg4Bjg4B0A4BjA4B0A4BjA4Bjg4Bzg4Bjg4Bzg4Bjg4Bzg4Bjg4BjA4Bzg4Bjg4Bzg4Bjg4Bzg4BjA4B0A4BjA4C0A4BjA4Bzg4Bjg4Bzg4BjA4Bzg4BjA4B0A4BjA4Czg4BjA4B0A4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Bzg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Czg4BjA4Czg4BjA4Czg4BjA4C4QgqlgYI2AYQlgYC8AwJrgwBrAwBqgwCqAwBpgwCpAwCogwCoAwCngwCnAwDmgwC2AsC1gsE1AsG1gsW1AsT0gsQ0AsRkgwB0AsBkgwBzgsBkAwBzgsBkAwBzgsBkAwBzgsBkAwCzgsBkAwBzgsBkAwCzgsBkAwBzgsBkAwCzgsBkAwCzgsBkAwBzgsBkAwCzAsBjgwCzAsBjgwCzAsBjgwCzAsBjgwCzAsBjgwDzAsBjgwCzAsBjgwDzAsBjgwDzAsBjgwCzAsBjgwDzAsBjgwDzAsBjAwDygsBjAwEygsBjAwEygsBjAwEygsBjAwEygsBjAwFygsBjAwFygsBjAwFygsBjAwGygsBjAwFygsBjAwGygsBjAwFygsBjAwGygsBjAwGygsBigwBjAwBigwBjAwBigwBjAwByAsBigwBjAwBigwBjAwBigwBjAwByAsBigwBjAwBigwBjAwBigwCjAwBigwByAsBjAwBigwCjAwBigwCjAwBigwByAsBjAwBigwDjAwBigwDygsDjAwBygsCjAwBygsDjAwBygsDjAwBygsCjAwBygsDjAwBygsCjAwBygsCzAsBjgwBzAsCjAwBzAsDjgwBzAsDjAwBzAsCjgwBzAsDjgwBygsBzAsBjgwBzAsDjgwBzAsBygsBzAsBjgwBzAsCjgwBzAsBygsBzAsBjgwBzAsCjgwBzAsBygsBzAsBjgwBzAsDjgwBzAsBygsBjgwBzAsDjgwBjAwDygsBjAwMygsBjAwIygsBjAwFigwBjAwBigwByAsBigwBjAwBigwDjAwBigwCyAsBigwBjAwBigwGjAwBigwByAsBigwKjAwBigwCyAsBigwDwQhV"
+    "inputs": "5hAJ5BAL4hAQ4BAX3hAb3BAi2hATmBAI1g8NlA8Dkg8V0A4-zg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4B0A4Bzg4C0A4Bzg4B0A4Bzg4C0A4Bzg4C0A4Bzg4C0A4Bzg4C0A4Bzg4C0A4Bzg4D0A4Bzg4D0A4Bzg4D0A4Bzg4E0A4Bzg4E0A4Bzg4E0A4Bzg4G0A4Bzg4G0A4Bzg4H0A4Bzg4I0A4Bzg4K0A4Bzg4M0A4Bzg4R0A4Bzg4Y0A4Bzg4X0A4Fjg4BkA4Kkg4SlA4V0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0Clg4B0g0B1A0BlA4B1A0ClA4B1A0BlA4B1A0B0g0Blg4BlA4Ikg4ZkA4Hkg4BkA4w0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4D0g4BkA4C0g4BkA4Cjg4B0g4BkA4Bjg4B0g4BkA4Bjg4BkA4B0g4Bjg4BkA4B0A4BkA4C0A4BkA4Bjg4BkA4B0g4Bjg4BkA4B0A4BkA4Bjg4B0g4Bjg4BkA4B0A4BkA4Bjg4B0g4Bjg4BkA4B0A4BkA4Bjg4B0g4Bjg4BkA4Bjg4B0g4Bjg4BkA4B0A4Bjg4BkA4B0A4BkA4Bjg4B0g4Bjg4C0g4Bjg4BkA4Jkg4RlA4W0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0ClA4B0g0BlA4B0g0ClA4B0g0Clg4B0g0B1A0Blg4B0g0B1A0BlA4B1A0B0g0BzBAB0BAB1BAB2BAE2hAI3BAKmhADmBAF1g8MlA8S0g4S0A4C0g4B0A4C0g4B0A4C0g4B0A4D0g4B0A4F0g4B0A4Njg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4C0A4BjA4B0A4BjA4Bjg4Bzg4BjA4B0A4BjA4Bjg4Bzg4BjA4Bzg4Bjg4BjA4Bzg4BjA4B0A4BjA4Czg4BjA4Bzg4BjA4Bzg4BjA4Bjg4Bzg4BjA4Bzg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Czg4BjA4Czg4BjA4Czg4BjA4BrgwE8AwG7gwC7AwC6gwBrA0Bqg0DqA0Dpg0EpA0B5g0D5A0G4g0I4A0Eog4EoA4Lng4MnA4Pmg4QmA4Ulg4YlA4U1g4BlA4Plg4JlA4Bvg0DwA0Cwg0DxA0Exg0EyA0Gyg0HzA0Lzg0Qkg4C0A0Bkg4B0A0Bkg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Bkg4B0A0Bkg4B0A0Bkg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Bkg4B0A0Ckg4B0A0BlA4Bkg4HkA4Qjg4t0A4Bjg4B0A4Bjg4C0A4Bjg4C0A4Bjg4C0A4Bjg4C0A4Bjg4C0A4Bjg4B0A4Bjg4C0A4Bjg4C0A4Bjg4C0A4Bjg4C0A4Bjg4C0A4Bjg4D0A4Bjg4C0A4Bjg4Czg4BjA4Bjg4BjA4B0A4BjA4Czg4Bjg4BjA4Bzg4BjA4C0A4BjA4Czg4BjA4Dzg4BjA4Czg4BjA4Czg4BjA4Czg4BjA4Czg4BjA4Czg4BjA4Dzg4BjA4C9gwD-AwDug0BvA0Fvg0IwA0Fgg4HhA4Vhg4EiA4Gig4HjA4Kjg4QkA4Dzg0CkA4Bzg0BkA4Bzg0BkA4Bzg0CkA4Bzg0BkA4Bzg0BkA4Bzg0CkA4Bzg0CkA4Bzg0BkA4Bzg0C8gsDtgwHuAwC-gwI_AwCvg0OwA0Bgg4bhA4Txg4BhA4Bxg4BhA4Cxg4BhA4Bxg4BhA4Dxg4BhA4Cxg4BhA4DrA8Bqg8CqA8Cpg8CpA8Dog8EoA8C3g4D3A4H2g4K2A4S1g4ElA4C1g4BlA4D1g4BlA4D1g4BlA4D1g4BlA4D1g4BlA4C1g4BlA4Bkg4C1A4Bkg4D1A4Bkg4C1A4Bkg4D1A4Bkg4C1A4Bkg4C1A4Bkg4C1A4Bkg4C1A4Bkg4D1A4Bkg4C1A4Bkg4C1A4Bkg4C1A4BkA4C0g4BkA4C0g4BkA4C0g4BkA4C0g4BkA4C0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4C0g4BkA4Bjg4B0A4Bjg4B0g4Bjg4C0A4Bjg4C0A4BkA4B0A4Bjg4C0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4C0A4Bjg4B0A4Bjg4B0A4Bjg4C0A4Bjg4C0A4Bjg4B0A4Bjg4C0A4Bjg4C0A4Bjg4B0A4Bjg4Czg4BjA4Czg4Bjg4BjA4Bzg4BjA4Czg4BjA4Bzg4BjA4Czg4BjA4Czg4BjA4Bzg4BjA4Bjg4DwA0Bwg0ExA0Exg0GyA0Jyg0C4QgqlgYH2AYi8AwMrgwTrAwDqgwB6AsC5gsD5AsF4gsE4AsG3gsG3AsH2gsI2AsJ1gsL1AsN0gsLlAwB0gsBlAwB0gsB0AsBkgwB0AsBkgwB0AsBkgwB0AsBkgwB0AsCkgwB0AsBkgwB0AsBkgwC0AsBkgwB0AsBkAwBzgsBkAwBzgsBkAwBzgsBkAwBzgsBkAwCzgsBkAwBzgsBkAwCzgsBkAwBzgsBkAwCzgsBkAwCzgsBkAwCzAsBjgwBzAsBjgwCzAsBjgwCzAsBjgwDzAsBjgwCzAsBjgwDzAsBjgwCzAsBjgwDzAsBjgwDzAsBjgwDzAsBjgwDzAsBjAwDygsBjAwDygsBjAwEygsBjAwEygsBjAwEygsBjAwFygsBjAwFygsBjAwCygsBjAwBygsDjAwBzAsBygsBjgwBzAsDjgwBzAsBygsBzAsBjgwBzAsCjgwBzAsCygsBjgwBzAsDjgwBzAsCjAwBzAsDjgwBzAsDjAwBzAsCjgwBzAsDjAwBzAsDjgwBzAsCjgwBygsBzAsCjgwBzAsCjgwBygsBzAsCjgwBzAsDjgwBygsBzAsBjgwBzAsDjgwBygsBzAsCjgwBzAsCjgwBygsBjAwFygsBjAwJygsBjAwIygsBjAwIygsBjAwCigwBjAwBigwCjAwByAsBigwBjAwBigwCjAwBigwDygsBigwDjAwBigwEjAwBigwByAsBigwEjAwBigwHyAsBjAwBigwMyAsBigwRyAsBigwFwQhV"
   }
 }

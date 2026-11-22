@@ -40,6 +40,9 @@ export const LEVELS: readonly LevelEntry[] = RAW.map(([key, json], i) => ({
   level: json as Level,
 }));
 
+/** The ten level ids, in order: what a cart has to finish to unlock the next cart. */
+export const LEVEL_IDS: readonly string[] = LEVELS.map((l) => l.level.id);
+
 export function levelById(id: string): LevelEntry | undefined {
   return LEVELS.find((l) => l.level.id === id);
 }

@@ -3,7 +3,7 @@
   "size": [32, 18],
   "seed": 10,
   "spawn": {
-    "x": 1.7,
+    "x": 1.7000000000000002,
     "y": 15.2,
     "heading": -1.570796
   },
@@ -11,7 +11,8 @@
     "row": 0,
     "stall": 11
   },
-  "surface": "dry",
+  "surface": "wet",
+  "limit": 10000,
   "rows": [
     {
       "x": 0.4,
@@ -30,138 +31,168 @@
     {
       "row": 0,
       "stall": 0,
-      "model": "sedan",
-      "colour": "white"
+      "model": "hatch",
+      "colour": "white",
+      "tilt": -0.044098437456414105,
+      "backIn": true
     },
     {
       "row": 0,
       "stall": 1,
       "model": "suv",
-      "colour": "grey"
+      "colour": "white",
+      "shift": -0.24604347582906488
     },
     {
       "row": 0,
       "stall": 2,
-      "model": "sedan",
-      "colour": "red",
-      "reverse": {
-        "near": 5,
-        "distance": 3
-      }
-    },
-    {
-      "row": 0,
-      "stall": 3,
-      "model": "hatch",
+      "model": "suv",
       "colour": "white"
     },
     {
       "row": 0,
+      "stall": 3,
+      "model": "suv",
+      "colour": "black"
+    },
+    {
+      "row": 0,
       "stall": 4,
-      "model": "sedan",
-      "colour": "silver"
+      "model": "suv",
+      "colour": "grey",
+      "tilt": -0.0553077472280711
     },
     {
       "row": 0,
       "stall": 5,
-      "model": "suv",
-      "colour": "black",
-      "door": "right"
+      "model": "pickup",
+      "colour": "silver"
+    },
+    {
+      "row": 0,
+      "stall": 6,
+      "model": "sedan",
+      "colour": "white",
+      "shift": 0.10138019450008873,
+      "tilt": -0.01206115716136992
     },
     {
       "row": 0,
       "stall": 7,
-      "model": "sedan",
-      "colour": "blue"
+      "model": "hatch",
+      "colour": "red"
     },
     {
       "row": 0,
       "stall": 8,
       "model": "pickup",
-      "colour": "white",
-      "reverse": {
-        "at": 9,
-        "distance": 3.2
-      }
+      "colour": "blue"
     },
     {
       "row": 0,
       "stall": 9,
       "model": "sedan",
-      "colour": "grey"
+      "colour": "red",
+      "shift": 0.04188902903348207
     },
     {
       "row": 0,
       "stall": 10,
       "model": "manager",
-      "colour": "black"
+      "colour": "black",
+      "shift": 0.21218679843004792
     },
     {
       "row": 1,
       "stall": 1,
       "model": "sedan",
-      "colour": "silver"
+      "colour": "red",
+      "shift": 0.24178951276466254,
+      "tilt": -0.05789625989273191,
+      "door": "right"
     },
     {
       "row": 1,
       "stall": 2,
-      "model": "hatch",
-      "colour": "red"
+      "model": "suv",
+      "colour": "white",
+      "reverse": {
+        "near": 5.108738534152508,
+        "distance": 1.4083839291939513
+      }
+    },
+    {
+      "row": 1,
+      "stall": 3,
+      "model": "pickup",
+      "colour": "black",
+      "shift": -0.2194851300492883,
+      "tilt": 0.06575550863519311
     },
     {
       "row": 1,
       "stall": 4,
       "model": "suv",
-      "colour": "white",
-      "reverse": {
-        "near": 4.5,
-        "distance": 2.8
-      }
+      "colour": "black",
+      "shift": 0.071167723108083,
+      "tilt": 0.024521954325027767
     },
     {
       "row": 1,
       "stall": 5,
       "model": "sedan",
-      "colour": "black"
+      "colour": "white",
+      "tilt": -0.04908241129014641,
+      "reverse": {
+        "near": 4.19818966127932,
+        "distance": 1.3857042390853167
+      }
     },
     {
       "row": 1,
       "stall": 6,
+      "model": "pickup",
+      "colour": "silver",
+      "reverse": {
+        "near": 5.195062233135104,
+        "distance": 1.3557616025675088
+      }
+    },
+    {
+      "row": 1,
+      "stall": 7,
       "model": "sedan",
-      "colour": "white",
-      "door": "left"
+      "colour": "blue",
+      "shift": 0.21460323231294753
     },
     {
       "row": 1,
       "stall": 8,
-      "model": "pickup",
-      "colour": "silver"
+      "model": "sedan",
+      "colour": "white",
+      "backIn": true
     },
     {
       "row": 1,
       "stall": 9,
-      "model": "suv",
-      "colour": "red"
+      "model": "sedan",
+      "colour": "red",
+      "shift": 0.12388542290776972
     },
     {
       "row": 1,
       "stall": 10,
-      "model": "sedan",
-      "colour": "blue"
+      "model": "pickup",
+      "colour": "white"
     },
     {
       "row": 1,
       "stall": 11,
       "model": "hatch",
-      "colour": "grey"
+      "colour": "silver"
     }
   ],
   "hazards": [
-    {
-      "type": "wind",
-      "dir": 1.570796,
-      "accel": 0.8
-    },
     {
       "type": "speedBump",
       "x": 16.5,
@@ -170,39 +201,90 @@
       "h": 6.8
     },
     {
+      "type": "wind",
+      "dir": 1.570796,
+      "accel": 0.8
+    },
+    {
+      "type": "traffic",
+      "y": 7.1,
+      "dir": 1,
+      "speed": 4,
+      "gap": 4,
+      "offset": 2.5,
+      "model": "pickup",
+      "colour": "silver"
+    },
+    {
+      "type": "traffic",
+      "y": 7.1,
+      "dir": 1,
+      "speed": 4,
+      "gap": 4,
+      "offset": 17.5,
+      "model": "hatch",
+      "colour": "white"
+    },
+    {
       "type": "cart",
-      "x": 23.5,
-      "y": 8,
-      "heading": -0.8
+      "x": 11.1,
+      "y": 9.3,
+      "heading": -2.4
+    },
+    {
+      "type": "cart",
+      "x": 23.2,
+      "y": 11.2,
+      "heading": 2.6
     },
     {
       "type": "cone",
-      "x": 25.6,
-      "y": 7.4
+      "x": 9,
+      "y": 11.4
     },
     {
       "type": "cone",
-      "x": 26.4,
-      "y": 8.4
+      "x": 21.3,
+      "y": 10.7
+    },
+    {
+      "type": "cone",
+      "x": 28.3,
+      "y": 9.1
+    },
+    {
+      "type": "cone",
+      "x": 7.5,
+      "y": 10.9
+    },
+    {
+      "type": "cone",
+      "x": 24.9,
+      "y": 11.3
+    },
+    {
+      "type": "cone",
+      "x": 7,
+      "y": 8.8
     }
   ],
   "paint": [
     {
       "type": "arrow",
-      "x": 3.5,
-      "y": 9,
+      "x": 5,
+      "y": 7.1,
       "dir": 0
     },
     {
       "type": "arrow",
       "x": 16,
-      "y": 9,
+      "y": 7.1,
       "dir": 0
     },
     {
       "type": "arrow",
-      "x": 28.5,
-      "y": 9,
+      "x": 27,
+      "y": 7.1,
       "dir": 0
     },
     {
@@ -211,10 +293,17 @@
       "x": 30.3,
       "y": 6.6,
       "size": 0.7
+    },
+    {
+      "type": "text",
+      "text": "GERENTE",
+      "x": 27.7,
+      "y": 0.9,
+      "size": 0.6
     }
   ],
   "par": {
     "cart": "standard",
-    "inputs": "9BAB8hAD8BAD7hAD7BAF6hAF6BAI5hAJ5BAO4hAT4BAY3hAf3BAj2hAImBAN1g8T1A8Hkg8lkA8C3AcBnggD4AgCogkD5AkCpgoD6AoDqgsD7AsDrgwD8AwEsg0E9A0Ftg4CtA4Dsg4B9A4B8g4E8A4DsA8Erg8ErA8E7g8B7A8F6g8G6A8G5g8I5A8H4g8J4A8K3g8L3A8N2g8JmA8B2g8BmA8Dlg8SlA8dlg8BlA8Dlg8BlA8Dlg8BlA8B0g4D1A4B0g4F1A4B0g4E1A4B0g4B1A4B0g4B1A4B0g4B1A4C0g4B1A4F0g4B1A4ckg4b1A4E0g4N0A4mzg4C0A4Bzg4F0A4Bzg47zA4Ujg8BzA4Bjg8EzA4Bjg8EzA4Bjg8BjA8Eyg4BjA8Hyg4BjA8Lyg4BjA8Myg4BjA8Gig8BjA8Big8ByA4Big8YyA4Big8EyA4Big8ByA4Big8ByA4Big8ByA4Big8ByA4Big8ByA4Dig8ByA4Eig8ByA4dtg0BuA0C-g0C_A0G_g0HgA4Gwg4GxA4Txg4hig8Bxg4ByA4Big8ByA4Big8ByA4Cig8ByA4Cig8ByA4Cig8ByA4Cig8ByA4Dig8ByA4Cig8ByA4Dig8ByA4Gyg4GzA4Izg4M0A4Fjg4D0A4Bjg4G0A4Bjg4G0A4Bjg4B4AgBogkF5AkEpgoE6AoEqgsE7AsFrgwF8AwD7gwCrg0CrA0Cqg0D6g0D6A0D5g0D5A0Bpg4DpA4Fog4FoA4Ing4D4A4Cng4B4A4Cng4B3g4BnA4C3g4BnA4C3g4BnA4E3g4BnA4Bmg4B3A4Cmg4B3A4Cmg4B3A4Bmg4B3A4Cmg4B3A4Bmg4B3A4Bmg4B2g4CmA4B2g4BmA4B2g4BmA4B2g4BmA4B2g4BmA4B2g4BmA4B2g4BmA4B2g4Blg4B2A4Blg4C2A4Blg4B2A4Blg4B2A4Blg4B2A4Blg4C2A4Blg4B2A4Blg4BlA4B1g4BlA4B1g4BlA4B1g4BlA4C1g4BlA4B1g4BlA4C1g4BlA4B1g4BlA4C1g4BlA4C1A4Bkg4B1A4Bkg4C1A4Bkg4B1A4Bkg4B1A4Bkg4C1A4Bkg4B1A4Bkg4B0g4BkA4C0g4BkA4C0g4BkA4B0g4BkA4C0g4BkA4C0g4BkA4Bjg4C0A4Bjg4C0A4Bjg4D0A4Bjg4E0A4Bjg4FjA4Bzg4BjA4Izg4BjA4Pig4liA4big4BiA4Cig4CiA4Big4CiA4Big4DiA4Big4GzA4Big4CzA4Big4DzA4Big4CzA4Big4CzA4Big4BzA4Big4CzA4Big4BzA4Big4CzA4Big4BzA4Big4CzA4Big4BzA4Big4BzA4Big4BzA4Big4CzA4Big4BzA4Big4BzA4Big4BzA4Big4BzA4Big4BzA4Big4BzA4Big4BzA4Big4BzA4Big4BzA4Big4BzA4Big4BzA4Big4BzA4Big4BzA4Big4BzA4Cig4BzA4Big4BzA4Big4BzA4Big4BzA4Big4BzA4Big4BzA4Cig4BzA4Big4BzA4Big4BzA4Big4BzA4Big4BzA4Cig4BzA4Big4BzA4Big4BzA4Big4BzA4Cig4BzA4Big4BzA4Big4EjA4Hjg4MkA4Zkg4C0A0Bkg4B0A0Bkg4B0A0Bkg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Bkg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Bkg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Bkg4B0A0Bkg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Bkg4B0A0Bkg4B0A0Bkg4B0A0Bkg4B0A0Bkg4B0A0CyhABzhAB0hAB1BAB1hAZlBAI0g8K0A8Bjg8CqgsB7AsHrgwH8AwE7gwB7AwC6gwBrA0Cqg0CqA0Dpg0D6A0B5g0D5A0F4g0F4A0F3g0H3A0H2g0I2A0J1g0K1A0M0g0BkA0Mjg0PjA0Sig0ZiA0Big0BiA0Syg0IzA0Big0KjA0Czg0BjA0Ezg0BjA0Dzg0BjA0Dzg0BjA0Czg0BjA0Czg0BjA0Czg0BjA0Bjg0B0A0Bjg0Bzg0Bjg0C0A0Bjg0B0A0Bjg0Czg0Bjg0B0A0Bjg0C0A0Bjg0Bzg0Bjg0B0A0Bjg0Czg0Bjg0B5gkCqAoF6goErAsG7gsGsAwEsgwD9AwC9gwG-AwBug0JvA0G_g0LgA4avg0BgA4Cvg0BgA4Bvg0BgA4Cvg0BgA4Bvg0BgA4CwA0Bgg4BwA0Bgg4BwA0Bgg4CwA0Bgg4BwA0Bgg4BwA0Bgg4BwA0Cgg4BwA0Bgg4BwA0Bgg4BwA0Bgg4BwA0Bgg4BwA0Bgg4BwA0Cgg4BwA0Bgg4BwA0Bgg4BwA0Bgg4BwA0Bgg4BwA0Bgg4BwA0Bgg4BwA0Bgg4BwA0Bgg4BwA0Bgg4BwA0Bgg4DwA0Bgg4HhA4Yhg4fyA4Bhg4ByA4Cyg4BiA4Byg4DiA4Byg4DiA4Byg4DiA4Byg4DiA4Byg4CiA4Byg4DiA4Byg4CiA4Byg4DiA4Byg4CiA4Dig4FjA4Jjg4MkA4Szg0BkA4Bzg0BkA4Bzg0Ckg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Ckg4B0A0Ckg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Ckg4B0A0Ckg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Ckg4B0A0Ckg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0Ckg4B0A0Bkg4B0A0B0g0Bkg4B0g0Bkg4B0g0B0A0BlA4B0A0BlA4B0g0B0A0BlA4B0A0BlA4B0g0B0A0BlA4B0A0BlA4Bkg4HkA4Njg4ejA4Rzg4BjA4Czg4BjA4C5gkEqAoF6goErAsF7gsGsAwH8gwHtA0Htg0C-A0D-g0H_A0Dvg4FwA4Kwg4Mhg8BxA4Bhg8GxA4Bhg8DxA4Bhg8DxA4BiA8Fxg4BiA8jig8BiA8Big8DiA8Big8TzA8Dig8BzA8Eig8BzA8Eig8BzA8Gig8BzA8Kig8BzA8hzg8BjA8Bzg8Big8Bzg8BjA8Bzg8BjA8Xjg8HkA8I0A4N0g4X1A4Lkg4E1A4Bkg4E1A4Bkg4D1A4Bkg4E1A4Bkg4E1A4C0g4K0A4Wzg4PkA8Njg8Y0A8Ezg8KoQgImAYC2gYCnAcD3gcDoAgC4ggDpAkE5gkDqAoE6goFrAsDrgsD8gsE9AsCtgwDuAwF-gwB_AwG_gwFwA0Dwg0JxA0Ihg4Bxg0EyA0Eyg0GzA0Gzg0GjA0Djg0NkA0JzgwV0AwEzgwB0AwFzgwB0AwEzgwB0AwFzgwB0AwEzgwB0AwBjgwD0AwBjAwBjgwC0AwBjgwBjAwBjgwB0AwBjgwDzgwBjgwD0AwBjgwBjAwBjgwB0AwBjgwBzgwCjAwBzgwHjAwBzgwFjAwBzgwFjAwBzgwEjAwBzgwCzAwBjAwBzAwCzgwBzAwBjAwBzAwCzgwBzAwBjAwBzAwCzgwBzAwBigwBzgwBzAwCzgwBigwBzAwBzgwBzAwCjAwBzAwCzgwBzAwBigwBzgwBzAwCzgwBigwBzAwCzgwBzAwCjAwBzAwDzgwBigwBzAwBzgwBzAwCigwBzgwBzAwCzgwBigwBzAwCzgwBzAwCigwBzgwBzAwDjAwBzAwDzgwBzAwBigwBzgwBzAwDjAwBzAwDzgwBigwBzAwCzgwBzAwCigwBzAwBzgwBzAwCigwBzgwBzAwDzgwBigwBzAwCzgwBzAwBigwBzAwBzgwBzAwDigwBzgwBzAwDjAwBzAwDzgwBzAwBigwBzAwCzgwBzAwBigwBzAwBzgwBzAwDigwBzgwBzAwDzgwBigwBzAwDzgwBigwBzAwCzgwBzAwCigwBzAwBzgwBzAwCigwBzAwBzgwBzAwDjAwBzAwEzgwBigwBzAwDzgwBigwBzAwCzgwBzAwCigwBzAwBzgwBzAwCigwBzAwBzgwBzAwDigwBzgwBzAwEjAwBzAwEjAwBzAwEzgwBigwBzAwDzgwBzAwBigwBzAwCzgwBzAwBigwBzAwCzgwBzAwCigwBzAwBzgwBzAwDigwBzgwBzAwDigwBzAwBzgwBzAwEzgwBzAwGzgwBzAwHzgwBzAwIkA0Bjg0HkA0Bjg0GkA0Bjg0E0A0B0g0B0A0E0g0B0A0F0g0B0A0E0g0B0A0E0g0B0A0D0g0B0A0Ckg4BlA4Bkg4ElA4Bkg4BlA4K0g0BlA4G0g0BlA4G0g0BlA4I0g0BlA4Dlg4ClA4B1A0Blg4B1A0B0g0B1A0Blg4B0g0B1A0E0g0B1A0D0g0B1A0D0g0B1A0E0g0B1A0D0g0B1A0C0g0KkA0Ojg0-wQhQ"
+    "inputs": "wQi0AfAQAe4QA-wQBOoQBugQBuYQCeQQDOIQEeAQF94QGdwQH9oQINgQDJYQAfQNBLYOBbQOAbIOArAOAq4OAfAOAu4OA-wOA-oOA-gOBeYOAqgPA6YPBqQPB6IPCKAPCZ4PDJwPBdoODNgOHtYOAtgOAdYOAtgOAdYOAZQOAZYOAZQOAZYOAZQOApYOAZQOApYOAZQOApYOAZQOApYOAZQOA5YOAZQOApYOAZQOApYOAZQOAdINAtQNAdINAtQNAdINA9QNAdINA9QNAdINBNQNAdINCNANDc4NBJAOAc4NApAOAc4NApAOAc4NApAOAc4NApAOAc4NApAOAc4NA44OAcwNAo4OAcwNAo4OAcwNA44OAcwNAo4OAcwNAo4OAcwNAo4OAcwNA44OAcwNAo4OAcwNAo4OAcwNA44OAcwNAo4OAcwNAcoNAowOAcoNAowOAcoNAowOAcoNA4wOAcoNAowOAcoNAowOAcoNAowOAcoNAowOAcoNAYwOAcoNAYwOAsoNAYwOCYoOF4gOD8oOBugKAaoLBewLBa4MBu4MAuwMAuoMAqoNA6gNA6YNA-YNBOQNBOINBeANAaIOBaAOBp4OB5wOCpoOB9gNBdYNENQNEdINEZANBNANAY4NBNANAY4NBdANAY4NBNANAY4NBtANAYwNBc4NAYwNBc4NAYwNBc4NAYwNBc4NAYwNBcwNAYoNBswNAYoNBMwNAYoNBcwNAYoNBMwNAYoNBMwNAYoNBcwNAYoNAogNAYoNCYwNEo4NCswMBY4NAcwMBY4NAcwMBY4NAcwMBY4NAcwMBI4NAcwMBY4NAcwMAugKCKoLA6gLAqYLAqQLA-QLAuILA-ALA94LAqAMAp4MBZwMBZoMBNwMA9oMCNgMDdYMDtQMDdIMBJQNAdIMAZQNAtIMAZQNAtIMAZQNAtIMAZINAtAMAZINAtAMAZINAtAMAZINAdAMAZINAtAMAeQQAuIQAeAQAt4QA-AQAd4QAtwQCt4QDsAQA8IQG4AQCoIQAcAPAb4PAsAPAb4PCPwODLgOA6gKA-oKC6wLFu4LCqwLAe4LAqwLAe4LA6wLAe4LA6wLAe4LBKwLAe4LCqwLAe4LGKwLAe4LCKwLAe4LBKwLAe4LA6wLAe4LAqwLAe4LAqwLAe4LAqwLAe4LAawLAe4LAawLAe4LAawLAe4LAawLAe4LAawLAe4LAawLAu4LAawLA-4LAawLBe4LAawLEO4LBawLA8QQAcYQBMQQBMYQBcgQA8oQAswQAs4QBcwQAc4QBNAQCdIQC5IQApAQA5IQA9APCI4PAZAPB84OBtAOBI4OB5AOAY4OB5AOAc4NBMwNBM4NFYwNCc4NAswNC8oNBYgNAcoND4gNAcoNCcgNGMYNF8QNAoYOBMQNAYYODq4MBfAMAu4MAewMAuoMAegMAqgNAqYNAqQNA6INA6ANAuINAuANBN4NBdwNBtoNB9gNCNYNCdQNC9INDdANCeAQAd4QBtwQCtoQApgQBNYPB5QPA5IPBNAOCo4OB4wOBsoNHIgNN4oNCYwNEo4NA8wME44NAcwMDI4NA4wNCYoNEIgNGMYMAYgNA4YNAcQMAYYNA8QMAYYNA8QMAYYNBMQMAYYNA8QMAYYNA8QMAYYNA8QMAYYNA8QMAYYNA8QMAYYNA8QMAYYNAsQMAYYNA8QMAYYNAsQMAYYNAsIMAYYNAYQNAcIMAYQNAYYNAcIMAYQNA8QMAYQNAsIMAYQNA8IMAYQNAsIMAYQNA8IMAYQNA8IMAYQNA8IMAYQNA8IMAYQNA8IMAYQNBMIMAYQNA8IMAYQNA8IMAYQNA8IMAYQNBMIMAYQNA8IMAYQNA8IMAYQNA8IMAYQNA8IMAYQNBMIMAYQNA8IMAYQNCMIMAYQNEIYNA4QNAYYNbIgNAYYNA4gNAYYNA4gNAYYNA4gNAYYNA4gNAYYNAogNAYYNA4gNAYYNA4gNAYYNAogNAYYNA4gNAYYNAogNAYYNA4gNAYYNA4gNAYYNA4gNAYYNA4gNAYYNA4gNAYYNBIgNAYYNBcoNAYYNBYgNAcgNAYYNBsgNAYYNAogNAYYNA8gNAYYNAYgNB4oNDYwNE8oMAYwNAcoMA4wNAcoMAswMAYwNAcwMA44NAcwMA4wNAcwMA44NAcwMA44NAcwMA4wNAcwMBI4NAcwMA44NAcwMAcoMAcwMAY4NAcwMAqoLB-oLAugLAuYLA-QLAuILA-ALA6IMAaAMBJ4MBZwMBpoMBNwMBNoMC9gMENYMBooNCIwNF4oNE4gNA8YMDcQMBtoGBJwHBt4HBaAIBuIIBqQJB-YJCagKCeoKC6wLDu4LErAMGfIMFaAIAuIIA6QJA-YJBKgKBeoKBKwLBu4LBrAMCfIMCrQNCLYNBLgNA_oNA_wNCP4NDIAOB4IOBYQOBYYOB4gOBsoOA8wOD84OFdAOBaYPAaQPAaIPArMIArUIBuoFAawGAu4GA7AHA_IHArQIA_YIBLgJA_oJBPwJAb4KB4ALCcILBsQLDYYMFogMAYYMAYgMHcYLAYgMA8YLAYgMA8YLAYgMAsYLAYgMA8YLAYgMAsYLAYgMA8YLAYgMAsYLAYgMAsYLAYgMAsYLAYgMAsYLAYgMAsYLAYgMA8YLAYgMAsYLAYgMAsYLAYgMAsYLAYgMAsYLAYgMAsYLAYgMAsYLAYgMAsYLAYgMAsYLAYoMAYgMAcYLAYoMAYgMAcgLAYgMAsgLAYgMAcgLAYgMAYoMAcYLAYoMAYgMAcYLAYoMAYgMAcgLAYgMAcgLAYgMAYoMAcYLAYoMAYgMAcgLAYgMAcgLDcoLHcwLBcoLAcwLB8oLAcwLCMoLAcwLB8oLAcwLB8oLAcwLCMoLAcwLCMoLAcwLB8oLAcwLCMoLAcwLCMoLAcwLAcoLIYwMAcgLAowMAcgLAcoLAYoMAcgLAcoLAYoMAcgLAYwMAcgLAowMAcgLAowMAcgLAYoMAcgLAcoLAYoMAcgLAYoMAcoLAcgLAYoMAcgLAYwMAcgLAooMAcoLAYoMAcgLAooMAcoLAYoMAcgLAooMAcgLAYwMAcgLAooMAcgLAYoMAYwMAYoMB4wMAYoMCIwMAYoMB4wMAcwMBs4MAcwMBs4MAcwMBc4MAcwMAo4NApANAY4NBJANAY4NBJANAY4NBJANAY4NA5ANAY4NA5ANAY4NA5ANAY4NA5ANAdANA9INAdANA9INAdANA9INAdANA9INAdANA9INAdANAtINAdANA9INAdANA9INAdANA9INAdANA9INAdANAtINAdANA9INAY4NA5ANAY4NA5ANAY4NApANAY4NA5ANAY4NBJANAY4NA5ANAY4NAswMA84MAcwMBc4MAcwMBc4MAcwMCc4MAcwMAYoMD4wMAYoMKcgLAYoMAcgLAooMAcgLAooMAcgLAYoMAcgLAooMAcgLAooMAcgLAsEIaQ"
   }
 }

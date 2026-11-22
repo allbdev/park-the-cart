@@ -1,6 +1,7 @@
 import type { Body } from "../core/body";
 import { stallRect, type Level } from "../core/level";
 import type { World } from "../core/world";
+import { Renderer3D, supports3d } from "./render3d";
 import {
   carSprite,
   cartSprite,
@@ -40,7 +41,8 @@ export interface Labels {
 export interface FrameOptions {
   alpha: number;
   prevCart: Pose;
-  prevLoose: Pose | null;
+  /** One pose per abandoned cart, in the world's order. */
+  prevLoose: readonly Pose[];
   /** Seconds of wall time, for rain and pulses. */
   time: number;
   /** Show the "you" ring (before the first input). */
@@ -67,7 +69,47 @@ export function poseOf(b: Body): Pose {
   return { x: b.x, y: b.y, a: b.a };
 }
 
-export class Renderer {
+/** Copies the bodies' poses into `dst` without allocating once it's the right length. */
+export function copyPoses(dst: Pose[], bodies: readonly Body[]): void {
+  dst.length = bodies.length;
+  for (let i = 0; i < bodies.length; i++) {
+    const b = bodies[i]!;
+    const p = dst[i];
+    if (p) {
+      p.x = b.x;
+      p.y = b.y;
+      p.a = b.a;
+    } else {
+      dst[i] = poseOf(b);
+    }
+  }
+}
+
+/** What the screens need from a renderer; the 3D one and the flat fallback both provide it. */
+export interface LotRenderer {
+  readonly canvas: HTMLCanvasElement;
+  /** True on portrait phones: the camera follows the cart. */
+  follow: boolean;
+  /** `ppm` caps the resolution of the painted asphalt (thumbnails need little). */
+  setLevel(level: Level, ppm?: number): void;
+  resize(cssW: number, cssH: number, dpr: number): void;
+  /** Frames the lot. `fill` < 1 moves in past the edges, for backdrops. */
+  fit(world: World | null, fill?: number): void;
+  track(x: number, y: number): void;
+  /** Screen position (CSS px) of a point on the lot. */
+  toScreen(x: number, y: number): [number, number];
+  draw(world: World, o: FrameOptions): void;
+  /** Frees the GPU context. The renderer can't be used afterwards. */
+  dispose(): void;
+}
+
+/** The 3D renderer where WebGL 2 works, the flat one everywhere else. */
+export function createRenderer(canvas: HTMLCanvasElement): LotRenderer {
+  return supports3d() ? new Renderer3D(canvas) : new Renderer2D(canvas);
+}
+
+/** The flat, top-down fallback: sprites on a 2D canvas. */
+export class Renderer2D implements LotRenderer {
   readonly canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private level: Level | null = null;
@@ -76,7 +118,7 @@ export class Renderer {
   private dpr = 1;
   private cssW = 0;
   private cssH = 0;
-  camera: Camera = { scale: 40, cx: 16, cy: 9 };
+  private camera: Camera = { scale: 40, cx: 16, cy: 9 };
   /** True on portrait phones: the camera follows the cart. */
   follow = false;
   private drops: Float32Array;
@@ -93,6 +135,10 @@ export class Renderer {
     this.lot = null;
   }
 
+  dispose(): void {
+    // Nothing to free: a 2D canvas goes with its element.
+  }
+
   resize(cssW: number, cssH: number, dpr: number): void {
     this.cssW = cssW;
     this.cssH = cssH;
@@ -104,15 +150,17 @@ export class Renderer {
   }
 
   /** Fits the camera to the lot (or to a window around the cart on portrait phones). */
-  fit(world: World | null, insetTop = 0, insetBottom = 0): void {
+  fit(world: World | null, fill = 1): void {
     if (!this.level) return;
     const [W, H] = this.level.size;
-    const availH = Math.max(100, this.cssH - insetTop - insetBottom);
     this.follow = this.cssH > this.cssW * 1.15 && this.cssW < 900;
     if (this.follow) {
       this.camera.scale = this.cssW / 11;
+    } else if (fill < 1) {
+      // Cover rather than fit, so there are no bars around the lot.
+      this.camera.scale = Math.max(this.cssW / W, this.cssH / H);
     } else {
-      this.camera.scale = Math.min(this.cssW / W, availH / H);
+      this.camera.scale = Math.min(this.cssW / W, this.cssH / H);
     }
     const viewW = this.cssW / this.camera.scale;
     const viewH = this.cssH / this.camera.scale;
@@ -122,8 +170,7 @@ export class Renderer {
       this.camera.cy = clampView(b.y, viewH, H);
     } else {
       this.camera.cx = W / 2;
-      // Shift so the lot sits between the insets.
-      this.camera.cy = H / 2 - (insetTop - insetBottom) / 2 / this.camera.scale;
+      this.camera.cy = H / 2;
     }
   }
 
@@ -213,9 +260,9 @@ export class Renderer {
     }
 
     const t = o.alpha;
-    if (world.loose && o.prevLoose) {
-      const b = world.loose;
-      const p = o.prevLoose;
+    for (let i = 0; i < world.loose.length; i++) {
+      const b = world.loose[i]!;
+      const p = o.prevLoose[i] ?? b;
       this.drawCart(
         "standard",
         p.x + (b.x - p.x) * t,

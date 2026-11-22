@@ -1,4 +1,4 @@
-import { moneyParts, t, type Locale } from "../content/i18n";
+import { formatMoney, moneyParts, t, type Locale } from "../content/i18n";
 import type { Level } from "../core/level";
 import { seconds, type Result } from "../core/result";
 import type { ReceiptLine } from "../core/world";
@@ -17,6 +17,8 @@ export interface ResultOptions {
   best: Result | null;
   newBest: boolean;
   share: ShareContext;
+  /** Why a run that didn't park failed. */
+  reason: "manager" | "limit" | null;
   /** Extra line under the tag (daily: counts / practice). */
   note: string | null;
   hasNext: boolean;
@@ -70,9 +72,21 @@ export function resultScreen(o: ResultOptions): HTMLElement {
         "data-autofocus": true,
         tabindex: "-1",
       },
-      h("p", { class: "kicker" }, t(L, "result.failedTag")),
-      h("p", { class: "big-word" }, t(L, "result.failedBig")),
-      h("p", { class: "big-sub" }, t(L, "result.failedBody")),
+      ...(o.reason === "limit"
+        ? [
+            h("p", { class: "kicker" }, t(L, "result.declinedTag")),
+            h("p", { class: "big-word" }, t(L, "result.declinedBig")),
+            h(
+              "p",
+              { class: "big-sub" },
+              t(L, "result.declinedBody", { limit: formatMoney(L, o.level.limit ?? 0, false) }),
+            ),
+          ]
+        : [
+            h("p", { class: "kicker" }, t(L, "result.failedTag")),
+            h("p", { class: "big-word" }, t(L, "result.failedBig")),
+            h("p", { class: "big-sub" }, t(L, "result.failedBody")),
+          ]),
     );
   }
 

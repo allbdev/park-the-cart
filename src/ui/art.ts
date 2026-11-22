@@ -503,10 +503,11 @@ function paintText(
 }
 
 /** The parked-cart stack and the sign inside the corral. */
-function corralArt(ctx: CanvasRenderingContext2D, level: Level) {
+function corralArt(ctx: CanvasRenderingContext2D, level: Level, rails: boolean) {
   const row = level.rows[level.corral.row]!;
   const r = stallRect(row, level.corral.stall);
   hatch(ctx, r.x, r.y, r.w, r.h, "rgba(232, 196, 40, 0.85)", "rgba(20,20,20,0.55)");
+  if (!rails) return;
   // Rails.
   ctx.strokeStyle = "#c9ced3";
   ctx.lineWidth = 0.1;
@@ -520,8 +521,12 @@ function corralArt(ctx: CanvasRenderingContext2D, level: Level) {
   ctx.stroke();
 }
 
-/** The whole static lot at `ppm`: asphalt, paint, bumps, the corral. Drawn once per level/scale. */
-export function lotCanvas(level: Level, ppm: number): HTMLCanvasElement {
+/**
+ * The whole static lot at `ppm`: asphalt, paint, bumps, the corral. Drawn once per level/scale.
+ * With `ground3d` it's the texture under the 3D scene: only what is painted on the asphalt, since
+ * the bumps, islands, rails and kerb are modelled there.
+ */
+export function lotCanvas(level: Level, ppm: number, ground3d = false): HTMLCanvasElement {
   const [W, H] = level.size;
   const c = canvas(W * ppm, H * ppm);
   const ctx = c.getContext("2d")!;
@@ -600,6 +605,7 @@ export function lotCanvas(level: Level, ppm: number): HTMLCanvasElement {
   }
 
   for (const h of level.hazards) {
+    if (ground3d && h.type !== "slope") continue;
     if (h.type === "speedBump") {
       ctx.save();
       ctx.beginPath();
@@ -654,7 +660,8 @@ export function lotCanvas(level: Level, ppm: number): HTMLCanvasElement {
     else hatch(ctx, p.x, p.y, p.w, p.h, "rgba(232,196,40,0.8)", "rgba(0,0,0,0)");
   }
 
-  corralArt(ctx, level);
+  corralArt(ctx, level, !ground3d);
+  if (ground3d) return c;
 
   // A vignette of kerb around the edge.
   ctx.strokeStyle = "rgba(170,170,160,0.5)";

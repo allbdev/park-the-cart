@@ -21,6 +21,7 @@ const HAZARD_FIELDS: Record<string, readonly string[]> = {
   island: ["x", "y", "w", "h"],
   slope: ["x", "y", "w", "h", "dir", "accel"],
   wind: ["dir", "accel"],
+  traffic: ["y", "dir", "speed", "gap"],
 };
 
 export function validateLevel(raw: unknown): Validation {
@@ -48,6 +49,8 @@ export function validateLevel(raw: unknown): Validation {
   if (!Array.isArray(L.cars)) errors.push("no cars list");
   if (!Array.isArray(L.hazards)) errors.push("no hazards list");
   if (!isObj(L.corral) || !isNum(L.corral.row) || !isNum(L.corral.stall)) errors.push("bad corral");
+  if (L.limit !== undefined && !(isNum(L.limit) && L.limit >= 0 && Number.isInteger(L.limit)))
+    errors.push("bad limit");
   if (errors.length) return { ok: false, errors };
 
   const level = L as Level;
@@ -83,6 +86,14 @@ export function validateLevel(raw: unknown): Validation {
       if (!isNum((h as unknown as Record<string, unknown>)[f]))
         errors.push(`hazard ${i}: bad ${f}`);
     if (h.type === "wind") winds++;
+    if (h.type === "traffic") {
+      if (h.dir !== 1 && h.dir !== -1) errors.push(`hazard ${i}: bad dir`);
+      if (!(h.speed > 0.2 && h.speed < 12)) errors.push(`hazard ${i}: bad speed`);
+      if (!(h.gap >= 0)) errors.push(`hazard ${i}: bad gap`);
+      if (h.offset !== undefined && !isNum(h.offset)) errors.push(`hazard ${i}: bad offset`);
+      if (!CAR_MODELS.includes(h.model)) errors.push(`hazard ${i}: unknown model`);
+      if (!CAR_COLOURS.includes(h.colour)) errors.push(`hazard ${i}: unknown colour`);
+    }
   });
   if (winds > 1) errors.push("more than one wind");
   if (errors.length) return { ok: false, errors };

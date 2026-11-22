@@ -43,7 +43,21 @@ export type Hazard =
   | { type: "cart"; x: number; y: number; heading: number }
   | { type: "island"; x: number; y: number; w: number; h: number }
   | { type: "slope"; x: number; y: number; w: number; h: number; dir: number; accel: number }
-  | { type: "wind"; dir: number; accel: number };
+  | { type: "wind"; dir: number; accel: number }
+  /**
+   * A car that drives along the lot at height `y`, east (dir 1) or west (-1), leaves, and comes
+   * round again `gap` seconds later. `offset` shifts where in that cycle the level starts.
+   */
+  | {
+      type: "traffic";
+      y: number;
+      dir: 1 | -1;
+      speed: number;
+      gap: number;
+      offset?: number;
+      model: CarModel;
+      colour: CarColour;
+    };
 
 export type Paint =
   | { type: "text"; text: string; x: number; y: number; rot?: number; size?: number }
@@ -64,6 +78,8 @@ export interface Level {
   cars: LevelCar[];
   hazards: Hazard[];
   paint?: Paint[];
+  /** The card limit, in centavos: more damage than this and the run fails. None = no limit. */
+  limit?: number;
   /** A recorded run that parks with R$ 0 (encoded inputs, see replay.ts). */
   par?: { cart: string; inputs: string };
 }
