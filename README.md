@@ -1,6 +1,6 @@
 # Park the Cart (Estacione o Carrinho)
 
-> *Three wheels work. The fourth is free.* A free browser game: push a shopping cart with one bad wheel across a crowded supermarket car park and into the corral, without scratching the cars. Every scratch goes on the receipt.
+> *Three wheels work. The fourth is free.* A free 3D browser game: push a shopping cart with one bad wheel across a crowded supermarket car park and into the corral, without scratching the cars. Every scratch goes on the receipt.
 
 **Play: https://allbdev.github.io/park-the-cart/** · Ten levels, a daily level that's the same for everyone, five carts, replays you can share as a link. Desktop and phone, English and Portuguese.
 
@@ -21,9 +21,10 @@ Player-facing text is English by default, with a Brazilian Portuguese toggle. Co
 ## How it plays
 
 1. Push the cart. The bad wheel drags it to one side.
-2. Steer against the pull. Hold the cart back on the slope and in the rain. Mind the door that opens as you pass and the car that backs out without looking. Don't touch the manager's car.
-3. Get it into the corral.
-4. The receipt: *"R$ 3.480 de prejuízo em 41 segundos."* Less damage wins; time breaks ties. Again for a cleaner one, or the next level.
+2. Steer against the pull. Hold the cart back on the slope and in the rain. Mind the door that opens as you pass, the car that backs out without looking and the one driving through that won't brake. Don't touch the manager's car.
+3. Stay under the level's card limit. It starts at R$ 4,000 and ends at R$ 100: two cones.
+4. Get it into the corral.
+5. The receipt: *"R$ 3.480 de prejuízo em 41 segundos."* Less damage wins; time breaks ties. Again for a cleaner one, or the next level.
 
 ## The interesting problem
 
@@ -50,7 +51,8 @@ An end-to-end test plays a messy 40-second run on *Horário de Pico* (reversing 
 
 A parking bot (`src/core/bot.ts`) plans a path with A* on a 25 cm grid around everything that can bill (cars inflated by the cart's size, open doors, the lane a car will back into, cones), string-pulls it, and drives the real simulation with a steering and speed controller. Whatever it presses is a valid input log.
 
-- Each hand-made level ships with a **par run** recorded by the bot (`npm run record-par`). CI replays all ten: if a change to the cart model makes any level impossible, the build fails. Bot pars range from 16 to 30 seconds; people take roughly twice as long.
+- **The ten levels are meant to be nearly impossible, and are proven possible.** Each one is drawn from a spec (`tools/make-levels.ts`: how full the lot is, doors, cones, abandoned carts, wind, traffic, the card limit) and a seed, and kept only if the bot parks it with R$ 0 in under 55 seconds; otherwise the next seed is tried. The bot's run ships with the level as its **par run**. Carts unlock by finishing all ten levels with the previous cart, so the bot must also park each level with the Rusty, Basket and Kiddie carts; those runs live with the tests. CI replays all forty: if a change to the cart model makes any level impossible, the build fails. Bot pars range from 17 to 31 seconds.
+- **Traffic** can't be planned around in space alone. The bot closes each lane on its grid except for one gate, then searches gates and waiting times until a run crosses in a gap between cars. A browser test replays those runs in Chromium, Firefox and WebKit: the gap is in the same place in every engine.
 - The **daily level** is generated from the date. The bot must park it with R$ 0 within 45 seconds, or the generator re-rolls, so every day is finishable by construction.
 
 `npm run daily-report -- 2000` over 2,000 consecutive days:
@@ -66,9 +68,18 @@ No day fell back to the plain lot. Hazard mix: cones 65% of days, doors 63%, rev
 
 The result screen has *Watch replay* and *Copy replay link*. A link is `#r=v1.<level>.<cart>.<data>`, where data is the run-length-encoded inputs as varints in base64url. Keyboard input changes rarely, so a minute of play is usually well under a kilobyte; the bot's analogue par runs, which change every tick, are 2 to 5 KB. Links are untrusted input: length and tick caps, strict parsing, fuzzed with fast-check. A bug report is a replay link.
 
-### The art is code
+### 3D without a 3D library
 
-There are no image files. The car park is drawn procedurally on Canvas 2D (`src/ui/art.ts`): worn asphalt with patches, oil stains and cracks, nibbled stall paint, the hatched corral, cars, wire carts whose shadows fall through the mesh, cones, rain and puddles. Sprites are drawn once per scale into offscreen canvases. First load is about 45 KB of gzipped JS and CSS, plus fonts.
+There are no image files and no model files, and no engine: the car park is rendered in 3D by about 2,300 lines of TypeScript and WebGL 2 written for this game.
+
+- **Models are code** (`src/ui/gl/models.ts`). A car body is a skin lofted over a handful of cross-sections, with a glass cabin, a painted roof, pillars, wheels, lamps and mirrors; five shapes, six colours. The carts have wire panels, frames, handles and groceries. Cones, the corral's rails, speed bumps, kerbs and hedges are built the same way. Every size comes from the spec the collisions use, so what you see is what you hit.
+- **The asphalt is still painted** (`src/ui/art.ts`): worn lines, oil stains, patches, cracks and puddles drawn on a 2D canvas, then laid on the ground as a texture.
+- **One sun, real shadows** (`src/ui/render3d.ts`). A shadow map from a low sun, so shadows fall long towards the camera, also through the baskets' wire mesh (the mesh is a texture that cuts holes in the shadow too). Paint and glass reflect a strip of sky; wet asphalt shines.
+- **The camera** stands south of the lot looking down at an angle, slides with the cart, and drops in close for half a second when you hit something.
+- **Tested without a GPU.** The matrices, the camera framing and every model are plain functions, unit-tested in Node: each car model must fit its collision box, each level's lot must build. The browser tests then check the real thing draws.
+- **Fallback.** Where WebGL 2 is missing, the game uses the flat top-down renderer it first shipped with.
+
+First load is about 58 KB of gzipped JS and CSS, plus fonts.
 
 ## Requirements
 
@@ -98,14 +109,15 @@ npm run preview      # serve the build (port 4183)
 | **R** | Restart | Restart the level |
 | **Esc** | Pause button | Pause |
 
-Dev and test URL parameters (not offered in the UI): `?level=03-speed-bump` (or `?level=daily`) opens a level; `?test=1` exposes `window.__cart` and allows `&speed=N`, `&date=YYYY-MM-DD` (never saved) and `&site=public` (share the public address).
+Dev and test URL parameters (not offered in the UI): `?level=03-speed-bump` (or `?level=daily`) opens a level; `?test=1` exposes `window.__cart` and allows `&speed=N`, `&date=YYYY-MM-DD` (never saved), `&site=public` (share the public address) and `&gfx=flat` (the flat fallback renderer).
 
 ## Tests and tools
 
 ```sh
 npm run check         # lint + typecheck + unit tests + build + size budget (run before every commit)
 npm test              # Vitest: unit, property tests, par runs, 300 daily levels
-npm run e2e           # Playwright: full runs, keyboard-only flow, replays (Chromium, Firefox, WebKit, phone)
+npm run e2e           # Playwright: full runs, keyboard-only flow, replays, both renderers (Chromium, Firefox, WebKit, phone)
+npm run make-levels   # rebuild the ten levels from their specs, each proven by the bot
 npm run record-par    # re-record the levels' par runs with the bot
 npm run daily-report  # daily-level statistics over many days
 npm run designs       # capture the design-canvas screen boards from the game (needs npm run preview)
@@ -121,10 +133,12 @@ src/
                the world (hazards, damage, parking), results, replay codec, level validator,
                parking bot, daily generator. No DOM.
   content/     Carts, cars and prices, levels/*.json, and locales/en.ts + locales/pt-BR.ts.
-  ui/          Procedural art and renderer, input, play / replay / result / menu screens, storage.
+  ui/          The 3D renderer (render3d.ts, gl/: maths, camera, mesh builder, models, shaders), the
+               flat fallback renderer and painted asphalt, input, play / replay / result / menu
+               screens, storage.
   main.ts      Wiring.
 tests/         Vitest tests mirroring src/, plus e2e/ (Playwright).
-tools/         Size check, par recorder, daily report, design-board capture.
+tools/         Level generator, par recorder, size check, daily report, design-board capture.
 designs/       The design canvas boards (reference only, not used in the game).
 marketing/     Press kit and posts.
 ```

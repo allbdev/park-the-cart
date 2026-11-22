@@ -106,6 +106,10 @@
 47. [x] Procedural sprites: asphalt with worn paint, stains and patches; cars by model and colour; carts (wire mesh with shadow); cones, corral with sign, abandoned cart, speed bump; baked shadows
 48. [x] Lot composition from level data into a cached background layer; markings, "IDOSO" and "CARRINHOS" paint, arrows
 49. [x] Landing and how-to backgrounds: the lot drawn and blurred (the only blurred screens)
+59. [x] The lot in 3D (22 Nov 2026, asked for by the developer: "too basic, ideally more 3D"): hand-written WebGL 2 renderer, car, cart and prop models built by code, sun shadow map, angled camera that slides with the cart and drops in on a hit; the flat renderer stays as the fallback
+61. [x] Make it hard (22 Nov 2026, asked for by the developer: "near impossible to pass, but possible"): a card limit per level (over it the run fails, "card declined"), traffic that drives through the aisle, several abandoned carts per level (billed only once pushed), and all ten levels regenerated from specs by `npm run make-levels`, each proven by the bot
+62. [x] Carts unlock in a chain (22 Nov 2026, asked for by the developer): all ten levels with one cart opens the next; per-cart tally in storage (older saves are converted), shown on level select; every gating cart proven on every level by the bot
+60. [~] Refresh the design boards with 3D captures (done: canvas page "3D look (new)" with eight boards; left: replace the screen boards and `designs/*.jpg` once the developer has seen the look)
 
 ---
 
@@ -133,4 +137,4 @@
 - A ghost of your best run
 - A tiny level editor on top of the JSON format
 - Share as an image
-- The 3D close-up for hits (board 4's art target)
+- Depth of field on the hit close-up (board 4's art target; the 3D camera move is in)
