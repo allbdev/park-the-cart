@@ -10,7 +10,7 @@ Park the Cart: ten levels, a daily level that's the same for everyone, and your 
 
 The part I enjoyed most as an engineer: replays are just the list of keys you pressed, and they play back bit-identically in Chrome, Firefox and Safari. That meant writing my own sine and cosine, because Math.sin isn't specified to the last bit and the engines disagree. A parking bot proves every level (and every daily level) can be finished without a scratch, and CI replays its runs on every commit.
 
-Play: https://allbdev.github.io/park-the-cart/
+Play: https://park-the-cart.vinicius-albuquerque.com.br/
 Code (MIT): https://github.com/allbdev/park-the-cart
 
 ## LinkedIn (Português)
@@ -21,14 +21,14 @@ Estacione o Carrinho: dez fases, uma fase do dia igual pra todo mundo, e o preju
 
 A parte que mais gostei como engenheiro: o replay é só a lista de teclas, e roda igualzinho, bit a bit, no Chrome, no Firefox e no Safari. Pra isso tive que escrever meu próprio seno e cosseno, porque o Math.sin não é igual em todos os navegadores. Um robô estacionador prova que toda fase (e toda fase do dia) dá pra terminar sem arranhar ninguém, e o CI repete as corridas dele a cada commit.
 
-Jogar: https://allbdev.github.io/park-the-cart/
+Jogar: https://park-the-cart.vinicius-albuquerque.com.br/
 Código (MIT): https://github.com/allbdev/park-the-cart
 
 ## X / Bluesky
 
 Estacione o Carrinho 🛒 R$ 3.480 de prejuízo em 41 segundos.
 A shopping cart with one bad wheel and a corral that's always further than it looks. Free, in the browser.
-https://allbdev.github.io/park-the-cart/
+https://park-the-cart.vinicius-albuquerque.com.br/
 
 ## Show HN
 

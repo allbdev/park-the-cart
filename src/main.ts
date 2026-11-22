@@ -17,7 +17,7 @@ addEventListener("hashchange", () => {
   if (location.hash.startsWith("#r=")) location.reload();
 });
 
-const PUBLIC_URL = "https://allbdev.github.io/park-the-cart/";
+const PUBLIC_URL = "https://park-the-cart.vinicius-albuquerque.com.br/";
 const params = new URLSearchParams(location.search);
 const test = params.get("test") === "1";
 const speed = test ? Math.min(20, Math.max(1, Number(params.get("speed") ?? 1) || 1)) : 1;

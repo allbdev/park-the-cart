@@ -2,7 +2,7 @@
 
 > *Three wheels work. The fourth is free.* A free 3D browser game: push a shopping cart with one bad wheel across a crowded supermarket car park and into the corral, without scratching the cars. Every scratch goes on the receipt.
 
-**Play: https://allbdev.github.io/park-the-cart/** · Ten levels, a daily level that's the same for everyone, five carts, replays you can share as a link. Desktop and phone, English and Portuguese.
+**Play: https://park-the-cart.vinicius-albuquerque.com.br/** · Ten levels, a daily level that's the same for everyone, five carts, replays you can share as a link. Desktop and phone, English and Portuguese.
 
 **Status:** built and playable end to end. What's left is playtesting and tuning (see `ROADMAP.md`).
 
