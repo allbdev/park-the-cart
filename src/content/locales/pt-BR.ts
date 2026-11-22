@@ -38,7 +38,7 @@ const ptBR: LocaleDict = {
   },
   levelsScreen: {
     title: "Ofertas da semana",
-    subtitle: "10 fases · válidas enquanto durarem os para-choques",
+    subtitle: "10 fases · cada uma com limite no cartão · válidas enquanto durarem os para-choques",
     back: "Voltar",
     best: "melhor: {price} · {time}",
     playNow: "jogar agora",
@@ -53,8 +53,11 @@ const ptBR: LocaleDict = {
     dailyDone: "Cupom de hoje: {price} · {time}",
     dailyFailed: "A primeira de hoje não estacionou. O treino está liberado.",
     cartKicker: "Seu carrinho",
-    cartBody: "Cada carrinho puxa de um jeito. Troque no curral.",
-    cartLocked: "Termine a fase {n} pra liberar",
+    cartBody:
+      "Cada carrinho puxa pra um lado. Termine todas as fases com um pra liberar o próximo.",
+    cartLocked: "Termine as {total} fases com o {name} pra liberar ({n}/{total})",
+    cartProgress: "{n} de {total} fases concluídas com este carrinho",
+    doneWith: "✓ feita com este carrinho",
     cartChoose: "Usar o {name}",
   },
   hud: {
@@ -81,6 +84,10 @@ const ptBR: LocaleDict = {
     hitZoom: "Câmera aproxima por meio segundo a cada batida. O tempo não para.",
     dailyTag: "Fase do dia · {date}",
     practice: "treino",
+    limit: "limite {price}",
+    windLabel: "Vento",
+    gust: "rajada!",
+    calm: "calmo",
   },
   pause: {
     title: "Pausado",
@@ -90,8 +97,9 @@ const ptBR: LocaleDict = {
     sound: "Menos movimento",
   },
   tips: {
+    traffic: "Tem carro passando. Ele não freia.",
     rain: "Na chuva o carrinho desliza: solte antes da curva.",
-    wind: "O vento vem em rajadas. Empurre entre elas.",
+    wind: "Olhe o medidor de vento: empurre na calmaria, segure na rajada.",
     slope: "Ele desce sozinho. Segure.",
     bump: "Lombada: o carrinho pula.",
     cart: "Carrinho abandonado: empurrado, vira outro problema.",
@@ -120,6 +128,7 @@ const ptBR: LocaleDict = {
     rearBumper: "Para-choque traseiro",
     doorOpening: "Porta abrindo",
     reversing: "Carro saindo de ré",
+    traffic: "Batida em carro passando",
     cone: "Cone atropelado",
   },
   cars: {
@@ -145,6 +154,9 @@ const ptBR: LocaleDict = {
     failedTag: "Fim",
     failedBig: "O carro do gerente",
     failedBody: "Preto, na vaga dele. Encostou, acabou.",
+    declinedTag: "Cartão recusado",
+    declinedBig: "Estourou o limite",
+    declinedBody: "O limite desta fase é {limit}. O cupom passou disso.",
     best: "Seu melhor",
     noScratch: "Sem arranhar ninguém",
     noScratchYes: "conseguiu!",

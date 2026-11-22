@@ -7,6 +7,15 @@
 export type CartId = "standard" | "rusty" | "basket" | "kiddie" | "wholesale";
 export const CART_IDS: readonly CartId[] = ["standard", "rusty", "basket", "kiddie", "wholesale"];
 
+/**
+ * Carts unlock in this order: finish every level with one cart to get the next. Returns the cart
+ * that has to do that before `id` opens, or null for the first cart, which is free.
+ */
+export function cartBefore(id: CartId): CartId | null {
+  const i = CART_IDS.indexOf(id);
+  return i > 0 ? CART_IDS[i - 1]! : null;
+}
+
 export interface WheelSpec {
   x: number;
   y: number;
@@ -60,8 +69,6 @@ export interface CartSpec {
   faults: readonly FaultSpec[];
   /** Which way the HUD says it pulls. */
   pulls: "left" | "right" | "jerks" | "straight" | "heavy";
-  /** Finish this level number to unlock (0 = free). */
-  unlockAfter: number;
 }
 
 const STANDARD_WHEELS: readonly WheelSpec[] = [
@@ -100,46 +107,47 @@ export const CARTS: Record<CartId, CartSpec> = {
       },
     ],
     pulls: "right",
-    unlockAfter: 0,
   },
+  // Two seized wheels that let go and grab again: it lurches to faster than the standard cart,
+  // then one wheel locks and it nearly stops, yawing towards whichever wheel grabbed. Hard to
+  // turn on purpose, easy to turn by accident.
   rusty: {
     id: "rusty",
     length: 1.0,
     width: 0.58,
     mass: 26,
-    push: 78,
+    push: 110,
     pullBack: 35,
-    turn: 44,
+    turn: 32,
     grip: 110,
     casterGrip: 0.4,
-    drag: 15,
+    drag: 12,
     rollResist: 8,
     hold: 80,
-    spinDamping: 6,
+    spinDamping: 8,
     windFactor: 1,
     wheels: STANDARD_WHEELS,
     faults: [
       {
         wheel: 0,
         stuckAngle: 0,
-        stuckGrip: 40,
-        stuckDrag: 55,
+        stuckGrip: 110,
+        stuckDrag: 600,
         freeDrag: 4,
-        stuckTime: [0.25, 0.7],
-        freeTime: [0.5, 1.3],
+        stuckTime: [0.35, 0.9],
+        freeTime: [0.5, 1.1],
       },
       {
         wheel: 3,
-        stuckAngle: -0.1,
-        stuckGrip: 8,
-        stuckDrag: 45,
+        stuckAngle: -0.45,
+        stuckGrip: 50,
+        stuckDrag: 420,
         freeDrag: 4,
-        stuckTime: [0.2, 0.6],
-        freeTime: [0.6, 1.5],
+        stuckTime: [0.3, 0.9],
+        freeTime: [0.5, 1.2],
       },
     ],
     pulls: "jerks",
-    unlockAfter: 3,
   },
   basket: {
     id: "basket",
@@ -174,7 +182,6 @@ export const CARTS: Record<CartId, CartSpec> = {
       },
     ],
     pulls: "left",
-    unlockAfter: 5,
   },
   kiddie: {
     id: "kiddie",
@@ -210,21 +217,22 @@ export const CARTS: Record<CartId, CartSpec> = {
       },
     ],
     pulls: "straight",
-    unlockAfter: 7,
   },
+  // A loaded platform trolley: all mass and almost no drag. It takes seconds to get moving,
+  // ends up twice as fast as the standard cart, and holding it back barely helps.
   wholesale: {
     id: "wholesale",
     length: 1.4,
     width: 0.8,
-    mass: 70,
-    push: 140,
-    pullBack: 60,
+    mass: 120,
+    push: 48,
+    pullBack: 40,
     turn: 110,
     grip: 110,
     casterGrip: 0.4,
-    drag: 26,
-    rollResist: 10,
-    hold: 150,
+    drag: 5,
+    rollResist: 12,
+    hold: 35,
     spinDamping: 22,
     windFactor: 0.6,
     wheels: [
@@ -238,13 +246,12 @@ export const CARTS: Record<CartId, CartSpec> = {
         wheel: 3,
         stuckAngle: 0.14,
         stuckGrip: 3,
-        stuckDrag: 8,
-        freeDrag: 4,
+        stuckDrag: 3,
+        freeDrag: 1,
         stuckTime: [1.5, 3.5],
         freeTime: [0.6, 1.6],
       },
     ],
     pulls: "heavy",
-    unlockAfter: 9,
   },
 };

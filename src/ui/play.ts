@@ -9,7 +9,7 @@ import { button, h } from "./dom";
 import { itemText } from "./format";
 import { bindHold, bindStick, Controls } from "./input";
 import { receiptEl } from "./receipt";
-import { poseOf, Renderer, type Pose } from "./render";
+import { copyPoses, createRenderer, poseOf, type LotRenderer, type Pose } from "./render";
 
 /**
  * The play screen: canvas, HUD (board 3), the open receipt and price tags (board 4), touch
@@ -31,8 +31,10 @@ export interface PlayOptions {
 }
 
 function tipFor(level: Level): string | null {
-  if (level.surface === "wet") return "tips.rain";
+  // The wind gauge needs explaining more than a car coming at you does.
   if (level.hazards.some((h) => h.type === "wind")) return "tips.wind";
+  if (level.hazards.some((h) => h.type === "traffic")) return "tips.traffic";
+  if (level.surface === "wet") return "tips.rain";
   if (level.hazards.some((h) => h.type === "slope")) return "tips.slope";
   if (level.cars.some((c) => c.reverse)) return "tips.reversing";
   if (level.cars.some((c) => c.model === "manager")) return "tips.manager";
@@ -100,17 +102,21 @@ export class PlayScreen {
   private o: PlayOptions;
   private world: World;
   private inputs: Input[] = [];
-  private renderer: Renderer;
+  private renderer: LotRenderer;
   private controls = new Controls();
   private raf = 0;
   private last = 0;
   private acc = 0;
   private prevCart: Pose;
-  private prevLoose: Pose | null;
+  private prevLoose: Pose[] = [];
   private ended = false;
   private endTimer = 0;
   paused = false;
   private hud: { time: HTMLElement; damage: HTMLElement; status: HTMLElement };
+  /** The wind gauge, on windy levels: the bar's fill and the word beside it. */
+  private windBar: HTMLElement | null = null;
+  private windWord: HTMLElement | null = null;
+  private gusting: boolean | null = null;
   private receiptSlot: HTMLElement;
   private tags: HTMLElement;
   private lastLines = 0;
@@ -122,11 +128,11 @@ export class PlayScreen {
     this.o = o;
     this.world = createWorld(o.level, o.cart);
     this.prevCart = poseOf(this.world.cart.body);
-    this.prevLoose = this.world.loose ? poseOf(this.world.loose) : null;
+    copyPoses(this.prevLoose, this.world.loose);
 
     const L = o.locale;
     const canvas = h("canvas", { class: "lot", role: "img", "aria-label": t(L, "a11y.canvas") });
-    this.renderer = new Renderer(canvas);
+    this.renderer = createRenderer(canvas);
     this.renderer.setLevel(o.level);
 
     const time = h("span", { class: "hud-value" }, "00:00");
@@ -149,8 +155,43 @@ export class PlayScreen {
         h("span", { class: "hud-value" }, o.levelLabel),
       ),
       h("div", { class: "hud-box" }, h("span", { class: "hud-label" }, t(L, "hud.time")), time),
-      h("div", { class: "hud-tag" }, h("span", { class: "hud-label" }, t(L, "hud.damage")), damage),
+      h(
+        "div",
+        { class: "hud-tag" },
+        h("span", { class: "hud-label" }, t(L, "hud.damage")),
+        damage,
+        o.level.limit === undefined
+          ? null
+          : h(
+              "span",
+              { class: "hud-limit", "data-testid": "limit" },
+              t(L, "hud.limit", { price: formatMoney(L, o.level.limit, false) }),
+            ),
+      ),
     );
+    const wind = this.world.wind;
+    if (wind) {
+      // An arrow pointing where the wind blows, a bar that fills with the gust, and a word,
+      // so the state never depends on colour alone.
+      const arrow = h("span", { class: "wind-arrow", "aria-hidden": "true" }, "➜");
+      arrow.style.transform = `rotate(${(Math.atan2(wind.ay, wind.ax) * 180) / Math.PI}deg)`;
+      this.windBar = h("span", { class: "wind-fill" });
+      this.windWord = h("span", { class: "wind-word", "data-testid": "wind-word" });
+      hudLeft.append(
+        h(
+          "div",
+          { class: "hud-box hud-wind", "data-testid": "wind" },
+          h("span", { class: "hud-label" }, t(L, "hud.windLabel")),
+          h(
+            "span",
+            { class: "wind-row" },
+            arrow,
+            h("span", { class: "wind-bar" }, this.windBar),
+            this.windWord,
+          ),
+        ),
+      );
+    }
     const hudRight = h(
       "div",
       { class: "hud-wheel" },
@@ -229,6 +270,7 @@ export class PlayScreen {
     clearTimeout(this.endTimer);
     this.controls.detach();
     this.resizeObs?.disconnect();
+    this.renderer.dispose();
     this.unbindStick?.();
   }
 
@@ -243,7 +285,7 @@ export class PlayScreen {
     this.world = createWorld(this.o.level, this.o.cart);
     this.inputs = [];
     this.prevCart = poseOf(this.world.cart.body);
-    this.prevLoose = this.world.loose ? poseOf(this.world.loose) : null;
+    copyPoses(this.prevLoose, this.world.loose);
     this.ended = false;
     this.lastLines = 0;
     this.acc = 0;
@@ -273,7 +315,7 @@ export class PlayScreen {
   private tick(input: Input): void {
     if (this.world.status !== "playing") return;
     this.prevCart = poseOf(this.world.cart.body);
-    if (this.world.loose) this.prevLoose = poseOf(this.world.loose);
+    copyPoses(this.prevLoose, this.world.loose);
     this.inputs.push(input);
     step(this.world, input);
     if (this.world.receipt.length !== this.lastLines) this.onHits();
@@ -319,6 +361,17 @@ export class PlayScreen {
       document.createTextNode(whole),
       h("sup", {}, (L === "pt-BR" ? "," : ".") + cents),
     );
+    const wind = this.world.wind;
+    if (wind && this.windBar && this.windWord) {
+      this.windBar.style.width = `${Math.round(Math.min(1, wind.level) * 100)}%`;
+      // "Gust" from the moment it starts building, so there's time to react.
+      const gusting = wind.target > 0.5 || wind.level > 0.6;
+      if (gusting !== this.gusting) {
+        this.gusting = gusting;
+        this.windWord.textContent = t(L, gusting ? "hud.gust" : "hud.calm");
+        this.windBar.parentElement!.classList.toggle("gusting", gusting);
+      }
+    }
   }
 
   private onHits(): void {

@@ -17,9 +17,9 @@ A shopping cart with one bad wheel, a crowded car park, and a cart corral that i
 
 | # | Decision | Choice | Why |
 |---|---|---|---|
-| D1 | Concept | Top-down: push a cart with a sticky caster into the corral without scratching the cars | Cart games are racing and stunts; car-parking games are cars. I found none about parking a cart with a bad wheel |
+| D1 | Concept | Seen from above: push a cart with a sticky caster into the corral without scratching the cars | Cart games are racing and stunts; car-parking games are cars. I found none about parking a cart with a bad wheel |
 | D2 | Platform | Browser, client only, played from a link; phone first | No store, no review queue, no login |
-| D3 | Stack | TypeScript strict, Vite, Canvas 2D, Vitest + fast-check, Playwright smoke, GitHub Actions | Same scaffold as `../cartorio-simulator` and `../um-buraco-so`; see §12 |
+| D3 | Stack | TypeScript strict, Vite, WebGL 2 (hand-written, no library) with a Canvas 2D fallback, Vitest + fast-check, Playwright smoke, GitHub Actions | Same scaffold as `../cartorio-simulator` and `../um-buraco-so`; see §12 |
 | D4 | Physics | **A small hand-written cart model**, not Matter.js or Rapier (decided 20 Nov 2026) | The cart *is* the game; a model we own is easier to tune, deterministic across browsers, tiny, and a better story in the README |
 | D5 | Determinism | Fixed time step; a run is `simulate(level, cart, inputs)` | Replays are an input list; bug reports are a level plus an input log |
 | D6 | Text | **English by default, PT-BR toggle** | Same as the sibling games: the audience includes recruiters abroad |
@@ -32,7 +32,7 @@ Open decisions are in `TODO_FOR_YOU.md`.
 
 ## 3. The loop
 
-1. Top-down view of a car park. You push the cart; the bad wheel drags it to one side.
+1. A car park seen from above and a little to the south, in 3D. You push the cart; the bad wheel drags it to one side.
 2. Steer against the pull, hold the cart back on slopes and in the rain, dodge doors that open and cars that reverse.
 3. Get it into the corral ("DEVOLVA AQUI"). The level ends when the cart is parked: inside the corral and nearly still.
 4. Result: a till receipt itemising the damage, the total, and the time. *"R$ 3.480 de prejuízo em 41 segundos."*
@@ -51,7 +51,7 @@ Open decisions are in `TODO_FOR_YOU.md`.
 
 **Second version (from the mockups, in the roadmap after the first version)**
 - Replays: the input list in a link; the replay viewer shows the path and where each line of the receipt happened.
-- Five carts with different faults (§6.3), unlocked by finishing levels.
+- Five carts with different faults (§6.3), unlocked in a chain: finish all ten levels with one cart to get the next.
 - The daily level: generated from the date, the same for everyone; the first try counts, the rest are practice.
 
 **Later**
@@ -98,15 +98,15 @@ The model has a handful of numbers per cart (mass, pull strength and side, stick
 
 ### 6.3 The five carts (second version)
 
-Each cart is the same model with different numbers, so the same level plays differently. They unlock by finishing levels; you change carts at the corral. (Canvas board "The carts".)
+Each cart is the same model with different numbers, so the same level plays differently. They unlock in a chain (22 Nov 2026, asked for by the developer): finish all ten levels with one cart to open the next, so the whole game is played again with each cart. Levels stay open once reached; the tally of finished levels is kept per cart (level select shows "7 of 10 levels finished with this cart" and marks each level done with it). The bot proves every level with every cart that gates another (Standard, Rusty, Basket, Kiddie); the Wholesale cart is the last and gates nothing, and the bot can't finish four levels with it. (Canvas board "The carts".)
 
 | Cart | Fault | Unlocks |
 |---|---|---|
 | Padrão (Standard) | Front right wheel bent. Pulls right | Free |
-| Enferrujado (Rusty) | Two wheels lock. Moves in jerks | Level 3 |
-| Cestinha (Basket) | Light and nervous. Turns with the wind | Level 5 |
-| Infantil (Kiddie) | Long, with a toy car on the front. Won't turn | Level 7 |
-| Atacarejo (Wholesale) | Heavy. Slow to start, slower to stop | Level 9 |
+| Enferrujado (Rusty) | Two wheels seize and let go: it lurches, stalls and yaws | All ten levels with the Standard |
+| Cestinha (Basket) | Light and nervous. Turns with the wind | All ten levels with the Rusty |
+| Infantil (Kiddie) | Long, with a toy car on the front. Won't turn | All ten levels with the Basket |
+| Atacarejo (Wholesale) | Heavy. Seconds to get moving, twice the Standard's top speed, metres to stop | All ten levels with the Kiddie |
 
 ## 7. Hazards and the price list
 
@@ -118,34 +118,38 @@ Door scratches, mirrors and bumpers bill once per car and part per second (a lon
 |---|---|---|
 | Lombada (speed bump) | The cart jumps and changes direction | R$ 0 |
 | Cone | Knocked over, keeps going. On the receipt | R$ 34 each |
-| Carrinho abandonado (abandoned cart) | Pushed, it becomes another problem | R$ 0 (what it hits is billed) |
+| Carrinho abandonado (abandoned cart) | Several per level from level 4. They roll with the slope and the wind on their own, for free; once you've pushed one, what it hits is on your receipt | R$ 0 (what it hits is billed) |
+| Carro passando (traffic) | Drives through the aisle, leaves, comes round again. Doesn't brake. From level 6 | R$ 3.900 per pass |
 | Porta abrindo (door opening) | Opens when you pass beside it | R$ 1.840 |
 | Carro saindo de ré (car reversing) | Doesn't look. Never looks | R$ 2.600 |
 | Ladeira (slope) | The cart rolls by itself | R$ 0 |
-| Vento (wind) | Pushes sideways, in gusts | R$ 0 |
+| Vento (wind) | Pushes sideways, in gusts. The HUD has a wind gauge (an arrow for the direction, a bar that fills with the gust, and the word "calm" or "gust!"), and streaks sweep across the lot the way it blows, longer and faster in a gust | R$ 0 |
 | Chuva (rain) | Less friction: it doesn't stop where you stopped | R$ 0 |
 | Carro do gerente (manager's car) | Black, in his own space. Touch it and it's over | Level failed |
+| Limite do cartão (card limit) | Every level has one. The receipt goes over it and the run ends: "cartão recusado" | Level failed |
 
 **Car damage** (first draft): door scratch R$ 1.840, mirror R$ 620, bumper R$ 918. Each line names the car: "sedã prata", "SUV preto", "picape vermelha". Car models, colours and prices are content (`src/content/cars.ts`), with names in both locales.
 
-Hazards with timing (door, reversing car, wind gusts) run on the simulation tick, never on wall time. A door opens when the cart enters its trigger zone; a reversing car starts at a fixed tick or on a trigger. Both are the same on every replay.
+**The card limit is what makes the game hard** (22 Nov 2026, asked for by the developer: "near impossible, but possible"). Before it, any run that reached the corral passed, however expensive. Now each level allows less damage than the one before: R$ 4.000 on level 1 (two doors), R$ 1.000 on level 7 (one mirror or one bumper, never a door), R$ 100 on level 10 (two cones). A hit from traffic is over every limit.
+
+Hazards with timing (door, reversing car, traffic, wind gusts) run on the simulation tick, never on wall time. Where a traffic car is depends only on the tick. A door opens when the cart enters its trigger zone; a reversing car starts at a fixed tick or on a trigger. Both are the same on every replay.
 
 ## 8. The levels
 
-Ten levels, each about a minute, unlocked in order. Every level ships with a **par run**: an input log that parks the cart with R$ 0, recorded by the parking bot (`npm run record-par`; a grid planner plus a steering controller driving the real simulation). A test replays it, so every level is proven finishable, and any change to the cart model that breaks a level fails CI. (Canvas board "Level select": "Ofertas da semana".)
+Ten levels, each about a minute, unlocked in order, and meant to be brutal. They are generated: `tools/make-levels.ts` holds a spec per level (how full the lot is, how many doors, cones, carts and reversing cars, the wind, the traffic lanes, the card limit) and draws the level from a seed. Every level ships with a **par run**: an input log that parks the cart with R$ 0, recorded by the parking bot (a grid planner plus a steering controller driving the real simulation; in traffic it also picks where to cross the lane and how long to wait first). If the bot can't park a draw in 55 seconds the generator tries the next seed, so a level can be as nasty as its spec asks and is still possible by construction. A test replays every par run, so any change to the cart model that breaks a level fails CI. To tune difficulty, edit a spec and run `npm run make-levels`. (Canvas board "Level select": "Ofertas da semana".)
 
 | # | Name (PT-BR) | English (draft) | Introduces |
 |---|---|---|---|
-| 1 | Vaga do Idoso | Seniors' Space | Push and the pull; a short straight run |
-| 2 | Domingo de Manhã | Sunday Morning | Turning; an almost empty lot |
-| 3 | Lombada | Speed Bump | Speed bumps, cones |
-| 4 | Carrinho Abandonado | Abandoned Cart | Dynamic props |
-| 5 | Ladeira | The Slope | Slope; holding the cart |
-| 6 | Vento | Wind | Gusts |
-| 7 | Chuva | Rain | Wet asphalt: low friction |
-| 8 | Black Friday | Black Friday | A full lot; opening doors |
-| 9 | Carro do Gerente | The Manager's Car | Instant fail |
-| 10 | Horário de Pico | Rush Hour | Reversing cars; everything at once |
+| 1 | Vaga do Idoso | Seniors' Space | Push and the pull; cones; limit R$ 4.000 |
+| 2 | Domingo de Manhã | Sunday Morning | Turning, out of a stall and across the lot; a speed bump; limit R$ 3.000 |
+| 3 | Lombada | Speed Bump | Two speed bumps, ten cones; limit R$ 2.500 |
+| 4 | Carrinho Abandonado | Abandoned Cart | Three abandoned carts, a door; limit R$ 2.000 |
+| 5 | Ladeira | The Slope | A steep slope with carts rolling down it; limit R$ 1.900 |
+| 6 | Vento | Wind | Strong gusts, and the first traffic; limit R$ 1.500 |
+| 7 | Chuva | Rain | Wet asphalt, traffic, a speed bump; limit R$ 1.000 |
+| 8 | Black Friday | Black Friday | A full lot, five doors (one beside your own stall), faster traffic; limit R$ 900 |
+| 9 | Carro do Gerente | The Manager's Car | The manager's cars either side of the corral; limit R$ 700 |
+| 10 | Horário de Pico | Rush Hour | Rain, wind, two cars in the lane, reversing cars, the manager; limit R$ 100 |
 
 **Level format** (JSON in `src/content/levels/`, validated when loaded). Stalls come in rows, and cars are placed by stall, so a level reads like a car-park plan:
 
@@ -162,7 +166,8 @@ Ten levels, each about a minute, unlocked in order. Every level ships with a **p
   "cars": [{ "row": 0, "stall": 2, "model": "suv", "colour": "black",
              "door": "right", "reverse": { "near": 5, "distance": 3 } }],
   "hazards": [{ "type": "speedBump", "x": 13, "y": 5.6, "w": 0.9, "h": 6.8 },
-              { "type": "cone", "x": 8.6, "y": 14 }],   // also cart, island, slope, wind
+              { "type": "cone", "x": 8.6, "y": 14 }],   // also cart, island, slope, wind, traffic
+  "limit": 250000,                        // the card limit, in centavos
   "paint": [{ "type": "text", "text": "IDOSO", "x": 8.2, "y": 2.6 }],
   "par": { "cart": "standard", "inputs": "…" }          // recorded by npm run record-par
 }
@@ -186,12 +191,12 @@ The validator is hand-written (no schema library without asking) and rejects unk
 
 A drone photo of a supermarket car park with the supermarket's own flyer (encarte) laid over it. (Canvas page "Art direction".)
 
-- **Top-down, real light:** worn paint, oil stains, patched asphalt, long shadows through the cart's wire mesh.
+- **From above, in 3D, with real light:** the camera stands south of the lot and looks down at an angle, so cars have sides and roofs. A low sun throws long shadows towards the camera, also through the cart's wire mesh. Worn paint, oil stains, patched asphalt.
 - **The interface is the flyer:** yellow price tags with red prices, tilted a degree or two. The result is a till receipt.
 - **Money is the score.** Every number on screen is a price.
 - **Nobody is in the picture.** No drivers, no shoppers: just the cart and what it hits.
-- Against the other three: Dig to Japan is round cartoon, Um Buraco Só is dark glass on a photo, Cartório is paper and green signage. This one is loud retail yellow and red, and the only one seen from straight above.
-- Play screens stay sharp. Depth of field only on the landing and the hit close-up.
+- Against the other three: Dig to Japan is round cartoon, Um Buraco Só is dark glass on a photo, Cartório is paper and green signage. This one is loud retail yellow and red, and the only one in 3D.
+- Play screens stay sharp. Blur only on the landing and how-to backdrops. On a hit the camera drops towards the cart for half a second (off with reduced motion).
 - Red and yellow never carry meaning alone: every state also has a word or a price.
 
 **Tokens**
@@ -211,7 +216,9 @@ A drone photo of a supermarket car park with the supermarket's own flyer (encart
 
 All three are OFL and are self-hosted in the build (no runtime calls to Google Fonts).
 
-**Art.** The mockups are 3D renders. In the game, everything is drawn procedurally in Canvas 2D by code (decided 20 Nov 2026: Claude makes the art): a top-down asphalt texture with worn paint, stains and patches, and sprites for each car model and colour, each cart, cones, the corral and the abandoned cart, with baked shadows, pre-rendered once into offscreen canvases. Level layouts are data, so one set of sprites makes every level. The hit close-up is a 2D zoom on the sprite plus the price tag (the 3D close-up of board 4 is the art target, not the first version). Rain is a wet tint, reflections and drops drawn over the lot. If an image doesn't load, the game draws the same thing from shapes.
+**Art.** Everything is built by code (decided 20 Nov 2026: Claude makes the art), and since 22 Nov 2026 in 3D, like the mockups. The models are meshes generated at load (`src/ui/gl/models.ts`): four car bodies and the manager's car lofted from cross-sections, with glass cabins, wheels, lamps and mirrors; the five carts with wire panels, frames, handles and groceries; cones, the corral's rails and sign, speed bumps, kerbs, pavement and hedges. The asphalt is still the painted texture (worn lines, stains, patches, puddles), laid on the ground. One sun with a shadow map lights it all; car paint and glass pick up a little sky. Sizes come from the same specs the collisions use, so what you see is what you hit. Rain is an overcast light, a glossy wet ground and falling streaks. Where WebGL 2 isn't available the game falls back to the flat top-down sprites it shipped with (`?test=1&gfx=flat` shows them).
+
+**Camera.** Wide screens: the camera frames about 80% of the lot and slides with the cart, so the lot's edge comes into view as the cart nears it. Portrait phones: it follows the cart closely. In both, a hit pulls it down and in for half a second.
 
 **Screens on the canvas:** 1 Landing · 2 How to play · 3 Playing · 4 A scratch · 5 Result: the receipt · 6 Level select · 7 Rain level · 8 Replay · Phone layouts (portrait, one thumb to steer and one to hold, the camera follows the cart; result and level select stacked) · The carts · Hazards and price list · Art direction.
 
@@ -222,7 +229,7 @@ All three are OFL and are self-hosted in the build (no runtime calls to Google F
 - **Deterministic across browsers:** JavaScript numbers are IEEE doubles, and `+ - * / sqrt` are exactly rounded everywhere, but `Math.sin`, `Math.cos`, `Math.atan2`, `Math.exp` and `Math.pow` may differ in the last bit between engines. The core uses its own trig and exp (`src/core/math.ts`), so a replay recorded in Safari plays the same in Chrome. A test pins known outputs.
 - **Seeded RNG** (small, fast) for the caster's stick phases, gusts and the daily generator.
 - **Levels and carts are data**, validated at load.
-- **Rendering** is Canvas 2D for the lot; the HUD, receipt, menus and buttons are DOM (real `<button>`s, readable text, focusable).
+- **Rendering** is WebGL 2 for the lot (3D, written by hand: no engine), with a Canvas 2D fallback; the HUD, receipt, menus and buttons are DOM (real `<button>`s, readable text, focusable).
 - **Client only.** No server.
 
 ## 12. Stack and conventions
@@ -233,7 +240,7 @@ Shared with `../cartorio-simulator` and `../um-buraco-so`: one scaffold (Vite + 
 |---|---|---|
 | Language | TypeScript, strict | Day-to-day stack; readable to recruiters |
 | Build | Vite | Fast, zero-config static output |
-| Rendering | Canvas 2D for the lot; DOM for HUD, receipt and menus | Small bundle, loads instantly on a phone |
+| Rendering | Hand-written WebGL 2 for the lot (Canvas 2D fallback); DOM for HUD, receipt and menus | 3D without a 3D library: the whole game is still under 60 KB gzipped |
 | Physics | Hand-written (D4) | Deterministic, tunable, tiny |
 | Tests | Vitest for logic, fast-check for property tests, Playwright for one end-to-end smoke test | Logic separate from drawing, and tested |
 | CI | GitHub Actions: lint, typecheck, test, build, deploy on push | Shows the pipeline, not only the game |
@@ -259,7 +266,7 @@ Shared with `../cartorio-simulator` and `../um-buraco-so`: one scaffold (Vite + 
 | Touch controls | Design for the phone first; test on a real mid-range phone in Phase 2 |
 | Replays drift between browsers | Own trig/exp in the core; fixed step; quantised inputs; a cross-engine test in CI (Chromium, Firefox, WebKit) |
 | Tuning the cart breaks old levels and replays | Par runs replayed in CI; replay links carry a version |
-| Art takes longer than code | Every sprite has a shapes fallback; the game is playable with shapes alone |
+| Art takes longer than code | The art is code; the flat renderer remains as a fallback where WebGL 2 is missing |
 | Least engineering depth of the browser games | The hand-written model, cross-browser determinism and replays add it |
 
 **Effort (estimate):** about 1 weekend for the first version with shapes, plus the art. The second version (replays, carts, daily level) another weekend. (Built in one long session on 20–21 Nov 2026.)

@@ -1,12 +1,13 @@
-import { CART_IDS, CARTS, type CartId } from "../content/carts";
+import { CART_IDS, cartBefore, type CartId } from "../content/carts";
 import { t, type Locale } from "../content/i18n";
-import { LEVELS, type LevelEntry } from "../content/levels";
+import { LEVEL_IDS, LEVELS, type LevelEntry } from "../content/levels";
 import type { Level } from "../core/level";
 import { createWorld } from "../core/world";
 import { button, h } from "./dom";
 import { bestText } from "./format";
-import { Renderer } from "./render";
-import type { Progress } from "./store";
+import { poseOf, Renderer2D, type LotRenderer } from "./render";
+import { Renderer3D, supports3d } from "./render3d";
+import { cartUnlocked, doneWith, type Progress } from "./store";
 
 /** Landing (board 1), how it works (board 2) and level select (board 6). */
 
@@ -23,33 +24,64 @@ export interface Nav {
   dailyStatus(): { label: string; done: boolean } | null;
 }
 
-/** A still, blurred drawing of a level, for backgrounds and thumbnails. */
-export function levelPicture(level: Level, w: number, h: number, cls: string): HTMLCanvasElement {
+const STILL_OPTIONS = {
+  alpha: 1,
+  time: 0,
+  showYou: false,
+  zoom: 0,
+  zoomAt: null,
+  labels: { you: "", returnHere: "" },
+  reducedMotion: true,
+} as const;
+
+/** One hidden 3D renderer draws every still; browsers only allow a handful of GPU contexts. */
+let stills: LotRenderer | null = null;
+const thumbs = new Map<string, HTMLCanvasElement>();
+
+/**
+ * A still picture of a level, for backdrops and thumbnails. `fill` < 1 moves the camera in so
+ * the lot covers the frame. Thumbnails are cached: a level's picture never changes.
+ */
+export function levelPicture(
+  level: Level,
+  w: number,
+  h: number,
+  cls: string,
+  fill = 1,
+): HTMLCanvasElement {
+  const key = `${level.id}:${w}x${h}:${fill}`;
+  const hit = thumbs.get(key);
+  if (hit) return hit;
   const c = document.createElement("canvas");
   c.className = cls;
   c.setAttribute("aria-hidden", "true");
-  const r = new Renderer(c);
-  r.setLevel(level);
-  r.resize(w, h, Math.min(2, devicePixelRatio || 1));
-  r.fit(null);
-  // Cover rather than fit, so there are no bars around the lot.
-  const [W, H] = level.size;
-  r.camera.scale = Math.max(w / W, h / H);
-  r.camera.cx = W / 2;
-  r.camera.cy = H / 2;
+  const dpr = Math.min(2, devicePixelRatio || 1);
   const world = createWorld(level, "standard");
   const pose = { x: world.cart.body.x, y: world.cart.body.y, a: world.cart.body.a };
-  r.draw(world, {
-    alpha: 1,
+  const o = {
+    ...STILL_OPTIONS,
     prevCart: pose,
-    prevLoose: world.loose ? { x: world.loose.x, y: world.loose.y, a: world.loose.a } : null,
-    time: 0,
-    showYou: false,
-    zoom: 0,
-    zoomAt: null,
-    labels: { you: "", returnHere: "" },
-    reducedMotion: true,
-  });
+    prevLoose: world.loose.map(poseOf),
+  };
+  const small = w < 400;
+  if (supports3d()) {
+    stills ??= new Renderer3D(document.createElement("canvas"));
+    stills.setLevel(level, small ? 20 : 48);
+    stills.resize(w, h, dpr);
+    stills.fit(null, fill);
+    stills.draw(world, o);
+    // Copy straight away: the GPU canvas only keeps its picture until the browser next paints.
+    c.width = stills.canvas.width;
+    c.height = stills.canvas.height;
+    c.getContext("2d")!.drawImage(stills.canvas, 0, 0);
+  } else {
+    const r = new Renderer2D(c);
+    r.setLevel(level);
+    r.resize(w, h, dpr);
+    r.fit(null, fill);
+    r.draw(world, o);
+  }
+  if (small) thumbs.set(key, c);
   return c;
 }
 
@@ -62,7 +94,7 @@ function langButton(nav: Nav): HTMLButtonElement {
 
 export function landingScreen(nav: Nav): HTMLElement {
   const L = nav.locale;
-  const bg = levelPicture(LEVELS[2]!.level, innerWidth, innerHeight, "backdrop");
+  const bg = levelPicture(LEVELS[2]!.level, innerWidth, innerHeight, "backdrop", 0.8);
   const play = button(
     t(L, "landing.play"),
     "btn btn-red big",
@@ -115,7 +147,7 @@ export function landingScreen(nav: Nav): HTMLElement {
 
 export function howtoScreen(nav: Nav, touch: boolean): HTMLElement {
   const L = nav.locale;
-  const bg = levelPicture(LEVELS[2]!.level, innerWidth, innerHeight, "backdrop");
+  const bg = levelPicture(LEVELS[2]!.level, innerWidth, innerHeight, "backdrop", 0.8);
   const card = (n: number, title: string, body: string) =>
     h(
       "li",
@@ -148,6 +180,8 @@ export function howtoScreen(nav: Nav, touch: boolean): HTMLElement {
 export function levelsScreen(nav: Nav, opts: { dailyEnabled: boolean }): HTMLElement {
   const L = nav.locale;
   const p = nav.progress;
+  // The cart in use: the chosen one, or the standard cart if that one isn't open (any more).
+  const cart = cartUnlocked(p, p.cart, LEVEL_IDS) ? p.cart : "standard";
   const grid = h("ol", { class: "level-grid" });
   for (const entry of LEVELS) {
     const name = t(L, `levels.${entry.key}`);
@@ -165,6 +199,7 @@ export function levelsScreen(nav: Nav, opts: { dailyEnabled: boolean }): HTMLEle
             }),
           )
         : h("span", { class: "card-status now" }, t(L, "levelsScreen.playNow"));
+    const doneHere = !locked && (p.done[cart] ?? []).includes(entry.level.id);
     const thumb = levelPicture(entry.level, 260, 146, "thumb");
     const card = h(
       "button",
@@ -180,6 +215,7 @@ export function levelsScreen(nav: Nav, opts: { dailyEnabled: boolean }): HTMLEle
       h("span", { class: "card-pic" }, thumb, h("span", { class: "card-n" }, String(entry.number))),
       h("span", { class: "card-name" }, name),
       status,
+      doneHere ? h("span", { class: "card-done" }, t(L, "levelsScreen.doneWith")) : null,
     );
     card.addEventListener("click", () => {
       if (!locked) nav.play(entry);
@@ -209,29 +245,29 @@ export function levelsScreen(nav: Nav, opts: { dailyEnabled: boolean }): HTMLEle
     "aria-label": t(L, "levelsScreen.cartKicker"),
   });
   for (const id of CART_IDS) {
-    const spec = CARTS[id];
-    const unlocked = spec.unlockAfter <= p.finished;
+    const unlocked = cartUnlocked(p, id, LEVEL_IDS);
+    const before = cartBefore(id);
+    const lockedText = before
+      ? t(L, "levelsScreen.cartLocked", {
+          name: t(L, `carts.${before}`),
+          n: doneWith(p, before, LEVEL_IDS),
+          total: LEVEL_IDS.length,
+        })
+      : "";
     const name = t(L, `carts.${id}`);
     const b = h(
       "button",
       {
         type: "button",
         role: "radio",
-        "aria-checked": p.cart === id ? "true" : "false",
+        "aria-checked": cart === id ? "true" : "false",
         "aria-disabled": unlocked ? undefined : "true",
-        class: `cart-choice${p.cart === id ? " on" : ""}${unlocked ? "" : " locked"}`,
-        title: unlocked
-          ? t(L, `carts.${id}Fault`)
-          : t(L, "levelsScreen.cartLocked", { n: spec.unlockAfter }),
+        class: `cart-choice${cart === id ? " on" : ""}${unlocked ? "" : " locked"}`,
+        title: unlocked ? t(L, `carts.${id}Fault`) : lockedText,
+        "data-testid": `cart-${id}`,
       },
       h("span", { class: "cart-name" }, name),
-      h(
-        "span",
-        { class: "cart-fault" },
-        unlocked
-          ? t(L, `carts.${id}Fault`)
-          : t(L, "levelsScreen.cartLocked", { n: spec.unlockAfter }),
-      ),
+      h("span", { class: "cart-fault" }, unlocked ? t(L, `carts.${id}Fault`) : lockedText),
     );
     b.addEventListener("click", () => {
       if (unlocked) nav.chooseCart(id);
@@ -243,8 +279,16 @@ export function levelsScreen(nav: Nav, opts: { dailyEnabled: boolean }): HTMLEle
       "section",
       { class: "cart-card" },
       h("p", { class: "kicker" }, t(L, "levelsScreen.cartKicker")),
-      h("h2", {}, t(L, `carts.${p.cart}`)),
+      h("h2", {}, t(L, `carts.${cart}`)),
       h("p", {}, t(L, "levelsScreen.cartBody")),
+      h(
+        "p",
+        { class: "cart-progress", "data-testid": "cart-progress" },
+        t(L, "levelsScreen.cartProgress", {
+          n: doneWith(p, cart, LEVEL_IDS),
+          total: LEVEL_IDS.length,
+        }),
+      ),
       carList,
     ),
   );

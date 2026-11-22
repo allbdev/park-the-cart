@@ -28,6 +28,8 @@ export function itemText(locale: Locale, item: ReceiptItem): { title: string; su
       };
     case "reversing":
       return { title: t(locale, "zones.reversing"), sub: carName(locale, item.model, item.colour) };
+    case "traffic":
+      return { title: t(locale, "zones.traffic"), sub: carName(locale, item.model, item.colour) };
     case "cone":
       return {
         title: t(locale, "zones.cone"),

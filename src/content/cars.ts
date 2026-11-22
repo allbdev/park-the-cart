@@ -45,4 +45,5 @@ export const HAZARD_PRICES = {
   cone: 3_400,
   doorOpening: 184_000,
   reversing: 260_000,
+  traffic: 390_000,
 } as const;

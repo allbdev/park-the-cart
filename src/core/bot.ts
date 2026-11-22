@@ -10,6 +10,10 @@ import { createWorld, step, type World } from "./world";
  * cart's size plus a margin, open doors, the lane a reversing car backs into, cones), then drives
  * the real simulation along it with a steering controller. Whatever it presses is a valid input
  * log, so a successful run is a par run (and proof the level can be finished with R$ 0).
+ *
+ * Traffic can't be planned around in space alone. Its lanes are blocked on the grid, with one
+ * narrow gate left open to cross at; `findPar` then tries gates and waits at the start until one
+ * combination crosses in a gap between cars.
  */
 
 export interface BotOptions {
@@ -19,6 +23,8 @@ export interface BotOptions {
   cruise: number;
   /** Give up after this many seconds. */
   timeout: number;
+  /** Cross the traffic lanes at this x (see `planPath`). */
+  gate?: number;
 }
 
 export interface BotRun {
@@ -50,7 +56,7 @@ function inflateBox(b: Body, grow: number, extendBack = 0): Body {
   };
 }
 
-function buildGrid(world: World, clearance: number): Grid {
+function buildGrid(world: World, clearance: number, gate?: number): Grid {
   const [W, H] = world.level.size;
   const w = Math.ceil(W / CELL);
   const h = Math.ceil(H / CELL);
@@ -58,25 +64,26 @@ function buildGrid(world: World, clearance: number): Grid {
   const solids: Body[] = [];
   for (const s of world.statics) solids.push(inflateBox(s, clearance));
   for (const car of world.cars) {
+    if (car.traffic) continue;
     const r = car.reverse;
     // A car that will back out: block its lane too.
     solids.push(inflateBox(car.body, clearance + (car.manager ? 0.3 : 0), r ? r.distance + 1 : 0));
     if (car.door) {
-      // The open door sweeps about a metre out of that side; keep away from it.
+      // The open door sweeps just under a metre out of that side; keep away from it.
       const d = car.door.side;
       const b = car.body;
       solids.push({
         ...b,
-        x: b.x - b.s * d * (b.hy + 0.6),
-        y: b.y + b.c * d * (b.hy + 0.6),
+        x: b.x - b.s * d * (b.hy + 0.48),
+        y: b.y + b.c * d * (b.hy + 0.48),
         hx: b.hx * 0.6 + clearance,
-        hy: 0.6 + clearance,
+        hy: 0.48 + clearance,
         r: b.hx + 1.6 + clearance,
       });
     }
   }
   for (const cone of world.cones) solids.push({ ...cone.body, r: cone.body.r + clearance + 0.1 });
-  if (world.loose) solids.push(inflateBox(world.loose, clearance + 0.2));
+  for (const l of world.loose) solids.push(inflateBox(l, clearance + 0.2));
   for (let j = 0; j < h; j++) {
     for (let i = 0; i < w; i++) {
       const x = (i + 0.5) * CELL;
@@ -86,6 +93,20 @@ function buildGrid(world: World, clearance: number): Grid {
           blocked[j * w + i] = 1;
           break;
         }
+      }
+    }
+  }
+  // Traffic lanes: closed along their whole length, but for a gate one cart wide.
+  for (const car of world.cars) {
+    if (!car.traffic) continue;
+    const half = car.body.hy + clearance + 0.25;
+    for (let j = 0; j < h; j++) {
+      const y = (j + 0.5) * CELL;
+      if (Math.abs(y - car.body.y) > half) continue;
+      for (let i = 0; i < w; i++) {
+        const x = (i + 0.5) * CELL;
+        if (gate !== undefined && Math.abs(x - gate) < CELL * 1.5) continue;
+        blocked[j * w + i] = 1;
       }
     }
   }
@@ -219,10 +240,10 @@ function corralTargets(world: World): { approach: [number, number]; centre: [num
 }
 
 /** Plans a path from the cart to the corral, or null if there isn't one at this clearance. */
-export function planPath(world: World, margin: number): [number, number][] | null {
+export function planPath(world: World, margin: number, gate?: number): [number, number][] | null {
   const spec = world.cart.spec;
   const clearance = spec.width / 2 + margin;
-  const g = buildGrid(world, clearance);
+  const g = buildGrid(world, clearance, gate);
   const b = world.cart.body;
   // The spawn may sit inside the inflated margin; free the cells around it.
   const si = Math.floor(b.x / CELL);
@@ -258,7 +279,7 @@ export function drive(
     inputs.push(i);
     step(world, i);
   }
-  const path = planPath(world, opts.margin);
+  const path = planPath(world, opts.margin, opts.gate);
   if (!path) return null;
   const spec = CARTS[cartId];
   let seg = 1;
@@ -298,14 +319,58 @@ export function drive(
   return { inputs, world, path };
 }
 
+const WAIT: Input = { push: 0, turn: 0, hold: true };
+
 /** Tries a few clearances and speeds; returns the fastest run that parks with R$ 0. */
 export function findPar(level: Level, cartId: CartId = "standard"): BotRun | null {
+  if (level.hazards.some((h) => h.type === "traffic")) return findParInTraffic(level, cartId);
   let best: BotRun | null = null;
   for (const margin of [0.6, 0.45, 0.8, 0.35, 1.0]) {
     for (const cruise of [1.8, 1.4, 1.0, 0.7]) {
       const run = drive(level, cartId, { margin, cruise, timeout: 90 });
       if (!run || run.world.status !== "parked" || run.world.damage !== 0) continue;
       if (!best || run.world.endTick < best.world.endTick) best = run;
+    }
+    if (best) return best;
+  }
+  return best;
+}
+
+/**
+ * With traffic, timing matters: try each crossing gate (and no gate, when start and corral are
+ * on the same side of the lanes), each clearance and speed, and a wait at the start of up to a
+ * full traffic cycle. Returns the first clean run of the fastest few found.
+ */
+function findParInTraffic(level: Level, cartId: CartId): BotRun | null {
+  const W = level.size[0];
+  // Straight across in front of the corral first, then at the start, then everywhere else.
+  const start = createWorld(level, cartId);
+  const gates: (number | undefined)[] = [
+    undefined,
+    start.corral.x + start.corral.w / 2,
+    start.cart.body.x,
+  ];
+  for (let x = 1.5; x < W - 1; x += 1.5) gates.push(x);
+  let cycle = 0;
+  for (const h of level.hazards) {
+    if (h.type === "traffic") cycle = Math.max(cycle, (W + 8) / h.speed + h.gap);
+  }
+  let best: BotRun | null = null;
+  let found = 0;
+  for (const margin of [0.6, 0.45, 0.8, 0.35]) {
+    for (const cruise of [1.8, 1.4, 1.0]) {
+      for (const gate of gates) {
+        // A plan that doesn't exist won't exist after waiting either.
+        if (!planPath(createWorld(level, cartId), margin, gate)) continue;
+        for (let wait = 0; wait <= cycle; wait += 0.75) {
+          const prefix: Input[] = new Array(Math.round(wait * TICK_RATE)).fill(WAIT);
+          const run = drive(level, cartId, { margin, cruise, timeout: 90, gate }, prefix);
+          if (!run || run.world.status !== "parked" || run.world.damage !== 0) continue;
+          if (!best || run.world.endTick < best.world.endTick) best = run;
+          if (++found >= 6) return best;
+          break;
+        }
+      }
     }
     if (best) return best;
   }

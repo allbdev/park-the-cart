@@ -15,6 +15,8 @@ import { validateLevel } from "./validate";
 
 export const DAILY_BOUND_SECONDS = 45;
 const MAX_ATTEMPTS = 24;
+/** The daily card limit: one door and a cone or two, in centavos. */
+export const DAILY_LIMIT = 200_000;
 
 /** "2026-11-20" from a year, month (1-12) and day. */
 export function dateKey(year: number, month: number, day: number): string {
@@ -166,6 +168,7 @@ export function generateCandidate(key: string, attempt: number): Level {
     spawn,
     corral: { row: corralRow, stall: corralStall },
     surface,
+    limit: DAILY_LIMIT,
     rows: [TOP, BOTTOM],
     cars,
     hazards,

@@ -1,6 +1,6 @@
-import { CARTS, type CartId } from "../content/carts";
+import type { CartId } from "../content/carts";
 import { DEFAULT_LOCALE, formatMoney, formatTime, t, type Locale } from "../content/i18n";
-import { LEVELS, levelById, type LevelEntry } from "../content/levels";
+import { LEVEL_IDS, LEVELS, levelById, type LevelEntry } from "../content/levels";
 import type { Input } from "../core/cart";
 import { dailyLevel, dateKey, isDateKey, type Daily } from "../core/daily";
 import type { Level } from "../core/level";
@@ -13,7 +13,7 @@ import { PlayScreen } from "./play";
 import { ReplayScreen } from "./replay";
 import { resultScreen } from "./result";
 import { howtoScreen, landingScreen, levelsScreen, type Nav } from "./screens";
-import { loadProgress, saveProgress, type Progress } from "./store";
+import { cartUnlocked, loadProgress, markDone, saveProgress, type Progress } from "./store";
 
 export interface AppOptions {
   root: HTMLElement;
@@ -178,7 +178,7 @@ export class App {
   }
 
   private chooseCart(id: CartId): void {
-    if (CARTS[id].unlockAfter > this.progress.finished) return;
+    if (!cartUnlocked(this.progress, id, LEVEL_IDS)) return;
     this.progress.cart = id;
     saveProgress(this.progress);
     this.levels();
@@ -198,7 +198,7 @@ export class App {
   }
 
   private currentCart(): CartId {
-    return CARTS[this.progress.cart].unlockAfter <= this.progress.finished
+    return cartUnlocked(this.progress, this.progress.cart, LEVEL_IDS)
       ? this.progress.cart
       : "standard";
   }
@@ -232,6 +232,7 @@ export class App {
     if (newBest) this.progress.best[entry.level.id] = result;
     if (result.parked && entry.number > this.progress.finished)
       this.progress.finished = entry.number;
+    if (result.parked) markDone(this.progress, result.cart, entry.level.id);
     saveProgress(this.progress);
     const next = LEVELS[entry.number];
     this.showResult({
@@ -265,6 +266,7 @@ export class App {
         levelLabel: r.label,
         result: resultOf(r.world),
         lines: r.world.receipt,
+        reason: r.world.failReason,
         best: r.best,
         newBest: r.newBest,
         share: r.share,

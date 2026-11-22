@@ -436,6 +436,55 @@ h1:focus,
   color: var(--price-dark);
 }
 
+.hud-limit {
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--price-dark);
+}
+
+.wind-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.wind-arrow {
+  display: inline-block;
+  font-size: 22px;
+  color: var(--tag);
+}
+
+.wind-bar {
+  width: 64px;
+  height: 10px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.wind-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: #fff;
+}
+
+.wind-bar.gusting .wind-fill {
+  background: var(--tag);
+}
+
+.wind-word {
+  min-width: 4.2em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 14px;
+}
+
 .tag-price {
   font-family: var(--display);
   font-size: 32px;
@@ -686,6 +735,17 @@ h1:focus,
     top: 10px;
     left: 10px;
     gap: 6px;
+  }
+  /* No room in the top row on a phone: the wind gauge sits between pause and restart. */
+  .hud-wind {
+    position: fixed;
+    top: 94px;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
   }
   .hud-box,
   .hud-tag {
@@ -1066,6 +1126,17 @@ h1:focus,
   padding: 0 16px;
   font-weight: 700;
   font-size: 16px;
+}
+
+.card-done {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1c6b2c;
+}
+
+.cart-progress {
+  font-weight: 700;
 }
 
 .card-status.now {

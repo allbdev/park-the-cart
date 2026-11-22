@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { open } from "./helpers";
 
 test.skip(({ isMobile }) => isMobile, "keyboard only on desktop");
 
@@ -18,7 +19,7 @@ async function tabTo(page: import("@playwright/test").Page, name: RegExp) {
 }
 
 test("the whole flow works with the keyboard alone", async ({ page }) => {
-  await page.goto("/?test=1");
+  await open(page, "/?test=1");
   // The screen starts at its heading.
   await expect(page.locator("h1")).toBeFocused();
   await tabTo(page, /^Play$/i);
@@ -50,7 +51,7 @@ test("the whole flow works with the keyboard alone", async ({ page }) => {
 });
 
 test("level cards are buttons with names, and locked ones say so", async ({ page }) => {
-  await page.goto("/?test=1");
+  await open(page, "/?test=1");
   await page.evaluate(() =>
     localStorage.setItem("park-the-cart.v1", JSON.stringify({ finished: 2 })),
   );

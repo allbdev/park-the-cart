@@ -46,6 +46,7 @@ export type ReceiptItem =
   | { kind: "car"; zone: Zone; model: CarModel; colour: CarColour; price: number }
   | { kind: "door"; model: CarModel; colour: CarColour; price: number }
   | { kind: "reversing"; model: CarModel; colour: CarColour; price: number }
+  | { kind: "traffic"; model: CarModel; colour: CarColour; price: number }
   | { kind: "cone"; count: number; unit: number; price: number };
 
 export function receiptItems(lines: readonly ReceiptLine[]): ReceiptItem[] {

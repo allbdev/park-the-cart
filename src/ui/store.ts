@@ -1,4 +1,4 @@
-import { CART_IDS, type CartId } from "../content/carts";
+import { CART_IDS, cartBefore, type CartId } from "../content/carts";
 import { LOCALES, type Locale } from "../content/i18n";
 import type { Result } from "../core/result";
 
@@ -13,6 +13,8 @@ export interface Progress {
   best: Record<string, Result>;
   /** Highest level number finished. */
   finished: number;
+  /** The level ids each cart has finished (parked, under the limit). Carts unlock on this. */
+  done: Partial<Record<CartId, string[]>>;
   cart: CartId;
   reducedMotion: boolean;
   /** Daily results by date key: the first try only. */
@@ -20,9 +22,18 @@ export interface Progress {
 }
 
 const KEY = "park-the-cart.v1";
+const LEVEL_ID = /^[a-z0-9-]{1,40}$/;
 
 export function emptyProgress(): Progress {
-  return { locale: null, best: {}, finished: 0, cart: "standard", reducedMotion: false, daily: {} };
+  return {
+    locale: null,
+    best: {},
+    finished: 0,
+    done: {},
+    cart: "standard",
+    reducedMotion: false,
+    daily: {},
+  };
 }
 
 const isObj = (v: unknown): v is Record<string, unknown> =>
@@ -69,12 +80,43 @@ export function parseProgress(raw: string | null): Progress {
   }
   if (!isObj(v)) return p;
   if ((LOCALES as readonly unknown[]).includes(v.locale)) p.locale = v.locale as Locale;
-  p.best = cleanResults(v.best, /^[a-z0-9-]{1,40}$/);
+  p.best = cleanResults(v.best, LEVEL_ID);
   if (isInt(v.finished, 10)) p.finished = v.finished;
+  if (isObj(v.done)) {
+    for (const id of CART_IDS) {
+      const list = v.done[id];
+      if (!Array.isArray(list)) continue;
+      const ids = list.filter((x): x is string => typeof x === "string" && LEVEL_ID.test(x));
+      p.done[id] = [...new Set(ids)].slice(0, 100);
+    }
+  } else {
+    // Saved before carts kept their own tally: a level's best run says which cart parked it.
+    for (const r of Object.values(p.best)) {
+      if (r.parked) (p.done[r.cart] ??= []).push(r.level);
+    }
+  }
   if ((CART_IDS as readonly unknown[]).includes(v.cart)) p.cart = v.cart as CartId;
   if (typeof v.reducedMotion === "boolean") p.reducedMotion = v.reducedMotion;
   p.daily = cleanResults(v.daily, /^\d{4}-\d{2}-\d{2}$/);
   return p;
+}
+
+/** Records that `cart` parked `level`. */
+export function markDone(p: Progress, cart: CartId, level: string): void {
+  const list = (p.done[cart] ??= []);
+  if (!list.includes(level)) list.push(level);
+}
+
+/** How many of `levels` this cart has finished. */
+export function doneWith(p: Progress, cart: CartId, levels: readonly string[]): number {
+  const list = p.done[cart] ?? [];
+  return levels.filter((id) => list.includes(id)).length;
+}
+
+/** A cart is open once the cart before it has finished every level. The first is always open. */
+export function cartUnlocked(p: Progress, cart: CartId, levels: readonly string[]): boolean {
+  const before = cartBefore(cart);
+  return before === null || doneWith(p, before, levels) === levels.length;
 }
 
 export function loadProgress(storage: Storage | null = safeStorage()): Progress {

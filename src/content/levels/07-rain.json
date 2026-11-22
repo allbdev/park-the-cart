@@ -4,7 +4,7 @@
   "seed": 7,
   "spawn": {
     "x": 2.6,
-    "y": 9,
+    "y": 10.2,
     "heading": 0
   },
   "corral": {
@@ -12,6 +12,7 @@
     "stall": 9
   },
   "surface": "wet",
+  "limit": 100000,
   "rows": [
     {
       "x": 0.4,
@@ -30,86 +31,137 @@
     {
       "row": 0,
       "stall": 0,
-      "model": "sedan",
-      "colour": "white"
+      "model": "pickup",
+      "colour": "grey"
     },
     {
       "row": 0,
       "stall": 1,
-      "model": "hatch",
+      "model": "suv",
       "colour": "silver"
     },
     {
       "row": 0,
       "stall": 2,
       "model": "suv",
-      "colour": "black"
+      "colour": "silver"
+    },
+    {
+      "row": 0,
+      "stall": 3,
+      "model": "pickup",
+      "colour": "white",
+      "shift": 0.27745647119358186,
+      "tilt": 0.02296317111235112
     },
     {
       "row": 0,
       "stall": 4,
       "model": "sedan",
-      "colour": "white"
+      "colour": "black"
     },
     {
       "row": 0,
-      "stall": 5,
+      "stall": 6,
       "model": "sedan",
-      "colour": "grey"
+      "colour": "blue",
+      "tilt": 0.020114083117805423
     },
     {
       "row": 0,
-      "stall": 7,
+      "stall": 8,
       "model": "suv",
-      "colour": "silver"
+      "colour": "red",
+      "shift": 0.29758173418231304,
+      "door": "right"
     },
     {
       "row": 0,
       "stall": 10,
       "model": "pickup",
-      "colour": "red"
+      "colour": "blue",
+      "shift": -0.17527198072057218
     },
     {
       "row": 0,
       "stall": 11,
+      "model": "suv",
+      "colour": "red",
+      "tilt": 0.00344454450532794,
+      "backIn": true
+    },
+    {
+      "row": 1,
+      "stall": 0,
+      "model": "suv",
+      "colour": "red"
+    },
+    {
+      "row": 1,
+      "stall": 1,
+      "model": "suv",
+      "colour": "grey",
+      "shift": 0.1491974972561002
+    },
+    {
+      "row": 1,
+      "stall": 2,
+      "model": "sedan",
+      "colour": "grey",
+      "backIn": true
+    },
+    {
+      "row": 1,
+      "stall": 3,
+      "model": "suv",
+      "colour": "black",
+      "shift": -0.09837978279218079
+    },
+    {
+      "row": 1,
+      "stall": 5,
+      "model": "hatch",
+      "colour": "blue",
+      "tilt": -0.0323073069518432
+    },
+    {
+      "row": 1,
+      "stall": 6,
       "model": "sedan",
       "colour": "blue"
     },
     {
       "row": 1,
-      "stall": 1,
-      "model": "sedan",
-      "colour": "white"
+      "stall": 7,
+      "model": "pickup",
+      "colour": "blue",
+      "tilt": -0.04617074298206717,
+      "backIn": true
     },
     {
       "row": 1,
-      "stall": 2,
-      "model": "suv",
-      "colour": "silver"
-    },
-    {
-      "row": 1,
-      "stall": 4,
+      "stall": 8,
       "model": "pickup",
       "colour": "red"
     },
     {
       "row": 1,
-      "stall": 5,
-      "model": "sedan",
-      "colour": "white"
-    },
-    {
-      "row": 1,
-      "stall": 7,
+      "stall": 9,
       "model": "hatch",
-      "colour": "blue"
+      "colour": "black"
     },
     {
       "row": 1,
-      "stall": 8,
+      "stall": 10,
+      "model": "suv",
+      "colour": "blue",
+      "tilt": 0.06343561124056579
+    },
+    {
+      "row": 1,
+      "stall": 11,
       "model": "sedan",
-      "colour": "black"
+      "colour": "grey"
     }
   ],
   "hazards": [
@@ -121,47 +173,80 @@
       "h": 6.8
     },
     {
+      "type": "traffic",
+      "y": 7.4,
+      "dir": -1,
+      "speed": 3,
+      "gap": 6,
+      "offset": 11.1,
+      "model": "sedan",
+      "colour": "blue"
+    },
+    {
       "type": "cart",
-      "x": 20,
-      "y": 10.4,
-      "heading": 2.4
+      "x": 6.4,
+      "y": 11.5,
+      "heading": -0.8
     },
     {
       "type": "cone",
-      "x": 8.6,
-      "y": 14
+      "x": 18.6,
+      "y": 11.5
     },
     {
       "type": "cone",
-      "x": 9.6,
-      "y": 15.6
+      "x": 12.4,
+      "y": 10.4
+    },
+    {
+      "type": "cone",
+      "x": 28.4,
+      "y": 9
+    },
+    {
+      "type": "cone",
+      "x": 9.4,
+      "y": 10.3
+    },
+    {
+      "type": "cone",
+      "x": 25.1,
+      "y": 10.8
+    },
+    {
+      "type": "cone",
+      "x": 14.1,
+      "y": 1.5
+    },
+    {
+      "type": "cone",
+      "x": 14.2,
+      "y": 2.8
+    },
+    {
+      "type": "cone",
+      "x": 15.1,
+      "y": 4.1
     }
   ],
   "paint": [
     {
       "type": "arrow",
-      "x": 3.5,
-      "y": 9,
-      "dir": 0
+      "x": 5,
+      "y": 7.4,
+      "dir": 3.141593
     },
     {
       "type": "arrow",
       "x": 16,
-      "y": 9,
-      "dir": 0
+      "y": 7.4,
+      "dir": 3.141593
     },
     {
       "type": "arrow",
-      "x": 28.5,
-      "y": 9,
-      "dir": 0
-    },
-    {
-      "type": "text",
-      "text": "IDOSO",
-      "x": 9.5,
-      "y": 2.6,
-      "size": 0.8
+      "x": 27,
+      "y": 7.4,
+      "dir": 3.141593
     },
     {
       "type": "text",
@@ -173,6 +258,6 @@
   ],
   "par": {
     "cart": "standard",
-    "inputs": "2BAC2hAJ3BA-2hAC3BAB2hApmBAF1g8C1A8Fkg8I0A4Mjg4UzA0Hzg0I0A0Ejg0MkA0YzgwDkA0BzgwKkA0BzgwI0AwBkA0Gjg0MjA0lig0BjA0Big0CjA0Big0DjA0Big0DjA0Big0FjA0Big0uzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0CzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0EjA0Jjg0QkA0JzgwDkA0BzgwIkA0BzgwKkA0BzgwKkA0BzgwE0AwBzgwB0AwBzgwB0AwCzgwBkg0BzgwB0AwCzgwBkA0Gjg0NjA0nig0CjA0Big0CjA0Big0DjA0Big0FjA0Big0uzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0CzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0CzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0DzA0Big0CiA0BzA0Big0Dyg0Big0Dyg0Big0Dyg0Big0CiA0BzA0Big0Cyg0Big0CiA0BzA0Big0BiA0Big0BzA0BiA0Big0BzA0BiA0Big0Cyg0Big0Cyg0Big0CiA0BzA0BiA0Big0Cyg0Big0Cyg0Big0BiA0Big0BzA0BiA0Big0Byg0Big0Cyg0Big0BiA0Big0BzA0BiA0Big0Byg0Big0CiA0BzA0Big0GjA0Kjg0RkA0EzgwHgBEE_hAB_BAB-hAB-BAB9BAB8hAB8BAB7hAC7BABqBABphABpBABohAC3g8B3A8Emg8BnA8Bmg8E2A4Ilg4L1A0Qkg0NkA0Jjg0I0A0Bjg0C0A0Bjg0D0A0BjA0Czg0BjA0Dzg0BjA0Czg0BjA0Czg0BjA0Dzg0BjA0Czg0BjA0Czg0BjA0Czg0BjA0Czg0BjA0Czg0BjA0Dzg0BjA0Big0Bzg0Big0CzA0Big0CzA0Big0CzA0Big0BzA0Big0CzA0Big0BzA0Big0CzA0Big0BzA0Big0CzA0Big0BzA0Big0CzA0Big0BzA0Big0BzA0Big0CzA0Big0BzA0Big0BzA0Big0CzA0Big0BzA0Big0CzA0Big0BzA0Big0BzA0Big0CzA0Big0BzA0Big0BzA0Big0CzA0Big0BzA0Big0BzA0Big0CzA0Big0BzA0Big0CzA0Big0Byg0Big0Byg0Big0BiA0BzA0BiA0BzA0BiA0Byg0Big0Byg0Big0BiA0Byg0Big0Byg0BiA0BzA0BiA0Byg0Big0Byg0BiA0Byg0Big0HjA0Jjg0TkA0DzgwIkA0BzgwIkA0BzgwJkA0BzgwKkA0BzgwKkg0BzgwB0AwBzgwB0AwBzgwB0AwBzgwB0AwCzgwB0AwBzgwBkg0B0AwBzgwB0AwBzgwB0AwCzgwB0AwCzgwB0AwCkA0B0AwCzgwB0AwCzgwB0AwDzgwB0AwCkA0B0AwDzgwB0AwCzgwB0AwDzgwB0AwDkA0B0AwDkA0Hjg0OjA0nig0CjA0Big0EjA0Big09zA0Big0DzA0Big0DzA0Big0DzA0Big0EzA0Big0DzA0Big0EzA0Big0DzA0Big0EzA0Big0CiA0BzA0Big0BiA0Big0BiA0BzA0BiA0Big0BiA0BzA0BiA0Big0BiA0BzA0BiA0Big0BiA0BzA0BiA0Big0BiA0Byg0Big0BiA0Big0Byg0BiA0Big0Byg0BiA0Big0BiA0Byg0Big0BiA0CzA0BiA0Cyg0Big0BiA0CzA0BiA0Cyg0Big0BiA0Cyg0BiA0Big0Byg0BiA0Cyg0Big0BiA0Cyg0BiA0CzA0BiA0Cyg0BiA0DzA0BiA0Cyg0BiA0Cyg0BiA0CzA0BiA0Dyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Dyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Dyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Dyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Dyg0BiA0Cyg0BiA0Cyg0BiA0Dyg0BiA0Cyg0BiA0Dyg0BiA0Eig0HjA0Ojg0NzAwDjg0BzAwIjg0BzAwBzgwGzAwBkA0BzgwKkA0BzgwLkA0BzgwNkA0BzgwOkA0BzgwBoQgs1gUCmAYD2gYEnAcD3gcEoAgF4ggFpAkCpgkDqAkB6gkB7AkE7gkEsgoEtAoGtgoB-AoH-goMvgsZwAsYwgsdxAsyxgsCxAsBxgsDxAsBxgsExAsBxgsGxAsBxgtJhAsFhgsOiAscigsEiAsBigsIiAsBigsIiAsBigsHiAsBigsIiAsBigsHiAsBigsIiAsBigsCiAsQygsBhgsByAsBhgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsBxgsByAsBhAsByAsBhAsByAsBxgsBhAsByAsBxgsBhgsBxgsBhAsByAsBxgsBhAsByAsBxgsBhAsByAsBxgsBhAsBxgsBhgsBxgsChAsByAsBxgsBhAsBxgsChgsBxgsChAsBxgsCwQh0"
+    "inputs": "1BAD1hAF2BAH2hAU3BAB2hAB3BAC2hAB3BAC2hAB3BAB2hAB3BAB2hAC3BAB2hAC3BAB2hAF3BAB2hAw2BALlhAG1A8Gkg8J0A4Mjg4DjA4Djg4BjA4Myg0EzA0Hzg0IjA0Djg0XkA0KzgwBkA0BzgwKkA0BzgwLkA0Bjg0HjA0Pig0diA0J5AkEpgoG6AoGqgsCqAsDpgsCpAsB5gsD5AsD4gsCpAwCogwFoAwG4gwB4AwH3gwI3AwJ2gwBnA0Kmg0NmA0Olg0G1AwBlg0B1AwDlg0B1AwDlg0B1AwFlg0B1AwFlg0B1AwGlg0B1AwHlg0B1AwH0gwBlg0B0gwF1AwB0gwElA0B0gwD1AwB0gwH6goJ7AoBrgsBsAsCsgsDtAsC9gsF-AsFugwDvAwK_gwCgA0Vgg0DxA0Sgg0BxA0Fxg0ChA0Bxg0FhA0Bxg0DhA0Bxg0ChA0Bxg0DhA0Bxg0ChA0Bxg0ChA0Bxg0ChA0Bxg0ChA0Bxg0ChA0Bxg0ChA0Bxg0ChA0ByA0BhA0ByA0Chg0ByA0Chg0ByA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Chg0ByA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0CyA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0CyA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0CyA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0ByA0Bhg0CyA0Bhg0ByA0Bhg0ByA0Bhg0Byg0Bhg0Byg0Bhg0BiA0ByA0Bhg0Byg0Bhg0Byg0Bhg0BiA0ByA0BiA0Byg0Bhg0BiA0ByA0BiA0ByA0BiA0CyA0BiA0ByA0BiA0CyA0BiA0ByA0BiA0CyA0BiA0CyA0BiA0Byg0Bhg0BiA0Byg0Bhg0BiA0Byg0Bhg0BiA0Byg0Bhg0Byg0BiA0Bhg0Byg0BiA0Bhg0Byg0BiA0Bhg0Byg0BiA0CyA0BiA0CyA0BiA0CyA0BiA0CyA0BiA0CyA0BiA0CyA0BiA0CyA0BiA0CyA0BiA0CyA0BiA0CyA0BiA0CyA0BiA0CyA0BiA0CyA0BiA0CyA0BiA0Bhg0Byg0BiA0Fig0IjA0Ojg0KzAwEjg0BzAwGjg0BzAwGkA0BzgwIkA0BzgwJkA0BzgwDgBEE_hAB_BAB-hAB9hAB9BAB8hAB8BAB7hAB7BAB6hABqBABphABpBABohAC3g8B3A8Emg8G2A4Ilg4GlA4Kkg4C0A0Ozg0OsgwBtAwCtgwEuAwEugwF_AwC_gwKgA0TxA0Rgg0BxA0Lgg0BxA0Jgg0BxA0Bxg0BxA0Bxg0Dgg0Bxg0Fgg0Bxg0EhA0Bxg0DhA0Bxg0ChA0Bxg0DhA0Bxg0ChA0Bxg0DhA0Bxg0ChA0Dhg0GiA0Hig0LjA0NygwCjA0BygwDzAwBjg0BzAwEjg0BzAwGjg0BzAwFjg0BzAwHjg0BzAwHjg0BzAwGzgwCjg0BzgwEzAwBzgwEkA0BzAwBzgwHzAwBzgwDkA0BzgwEzAwBzgwF5gwB5AwD4gwD4AwD3gwD3AwF2gwE2AwG1gwG1AwHlg0DlA0Nkg0SkA0Yjg0hjA0yig0DjA0Big0GjA0Big0mzA0Big0DzA0Big0DzA0Big0EzA0Big0DzA0Big0DzA0Big0EzA0Big0DzA0Big0EzA0Big0EzA0Big0DzA0Big0CiA0Big0BzA0BiA0Big0BiA0Big0Byg0Big0BiA0Big0Byg0BiA0Big0BiA0BzA0BiA0Cig0Byg0BiA0Big0BiA0Byg0Big0BiA0CzA0BiA0DzA0BiA0Cyg0BiA0Big0BiA0Byg0BiA0Cyg0Big0BiA0Cyg0BiA0Cyg0Big0BiA0Cyg0BiA0Cyg0BiA0Dyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Dyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Cyg0BiA0Dyg0BiA0Cyg0Big0HjA0Mjg0RzAwGjg0BzAwBzgwGkA0BzgwJkA0BzgwKkA0BzgwLkA0BzgwMkA0BzgwMkA0BzgwMkA0BzgwNkA0BzgwC0AwBzgwBoQgE1gUDmAYD2gYEnAcD3gcDoAgE4ggDpAkE5gkEqAoF6goFrAsH7gsIsAwJ8gwF9AwF9gwEuA0Bug0HvA0Jvg0RwA03pQgBpwgEqQgFqwgE4AUBpAYD5gYEqAcCqgcC7AcErggE8AgB8ggFtAkH-AkIugoHvAoH_goMgAsOwgsOxAsaggsBhAsIhgsNiAscigsCiAsBigsHiAsBigsIiAsBigsHiAsBigsIiAsBigsIiAsBigsIiAsQygsBhgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsBhgsByAsChgsByAsChgsByAsBhgsByAsBxgsBhgsByAsBhgsBxgsByAsBhgsBxgsByAsBhAsByAsBhgsBxgsByAsBhgsBxgsByAsBhAsByAsBhgsBxgsByAsBhAsByAsChAsByAsBxgsBhgsBxgsByAsBhgsBxgsBhgsBxgsByAsBhAsByAsBxgsBhgsBxgsByAsBhAsByAsBxgsBhgsBxgsByAsBhAsByAsBxgsBhgsBxgsByAsBhAsByAsBxgsBhgsBxgsByAsBhAsByAsBxgsBhgsBxgsByAsBhAsByAsBhAsByAsBxgsBhgsBxgsChgsBxgsByAsBhAsByAsBxgsBhgsBxgsChgsBxgsByAsBxgsBhgsBxgsByAsBhAsBxgsByAsBhAsByAsBxgsBhAsByAsBxgsBhgsBxgsByAsBhAsBxgsByAsBhAsByAsBxgsBhAsByAsBxgsBhgsBxgsChgsBxgsByAsBhAsBxgsByAsBhAsByAsBxgsBhAsByAsBxgsBhAsByAsBxgsByAsBhAsBxgsByAsBhAsBxgsByAsBhAsByAsBxgsBhAsByAsBxgsBhAsByAsBxgsBhAsByAsBxgsBhAsByAsBxgsBhAsByAsBxgsChgsBxgsChgsBxgsChgsBxgsChgsBxgsChgsBxgsChgsBxgsChgsNiAscigsFiAsBigsHiAsBigsHiAsBigsHiAsBigsHiAsBigsGiAsBigsGiAsBigsGiAsBigsFwQh3"
   }
 }

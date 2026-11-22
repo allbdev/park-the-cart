@@ -5,7 +5,7 @@ import type { CartId } from "../content/carts";
 import { createWorld, simulate, step, type World } from "../core/world";
 import { button, h } from "./dom";
 import { copyText } from "./result";
-import { poseOf, Renderer, type Pose } from "./render";
+import { copyPoses, createRenderer, poseOf, type LotRenderer, type Pose } from "./render";
 
 /**
  * The replay viewer (board 8). A replay is the level, the cart and the input log; the viewer runs
@@ -26,7 +26,7 @@ export interface ReplayOptions {
 export class ReplayScreen {
   readonly el: HTMLElement;
   private o: ReplayOptions;
-  private renderer: Renderer;
+  private renderer: LotRenderer;
   private world: World;
   private total: number;
   private path: [number, number][] = [];
@@ -37,7 +37,7 @@ export class ReplayScreen {
   private last = 0;
   private raf = 0;
   private prev: Pose;
-  private prevLoose: Pose | null;
+  private prevLoose: Pose[] = [];
   private range: HTMLInputElement;
   private clock: HTMLElement;
   private playBtn: HTMLButtonElement;
@@ -64,10 +64,10 @@ export class ReplayScreen {
 
     this.world = createWorld(o.level, o.cart);
     this.prev = poseOf(this.world.cart.body);
-    this.prevLoose = this.world.loose ? poseOf(this.world.loose) : null;
+    copyPoses(this.prevLoose, this.world.loose);
 
     const canvas = h("canvas", { class: "lot", role: "img", "aria-label": t(L, "a11y.canvas") });
-    this.renderer = new Renderer(canvas);
+    this.renderer = createRenderer(canvas);
     this.renderer.setLevel(o.level);
 
     this.range = h("input", {
@@ -155,6 +155,7 @@ export class ReplayScreen {
   destroy(): void {
     cancelAnimationFrame(this.raf);
     this.resizeObs?.disconnect();
+    this.renderer.dispose();
     removeEventListener("keydown", this.onKey);
   }
 
@@ -176,7 +177,7 @@ export class ReplayScreen {
       step(this.world, this.o.inputs[this.world.tick]!);
     }
     this.prev = poseOf(this.world.cart.body);
-    this.prevLoose = this.world.loose ? poseOf(this.world.loose) : null;
+    copyPoses(this.prevLoose, this.world.loose);
     this.acc = 0;
   }
 
@@ -193,7 +194,7 @@ export class ReplayScreen {
       while (this.acc >= DT && this.world.tick < this.total && this.world.status === "playing") {
         this.acc -= DT;
         this.prev = poseOf(this.world.cart.body);
-        if (this.world.loose) this.prevLoose = poseOf(this.world.loose);
+        copyPoses(this.prevLoose, this.world.loose);
         step(this.world, this.o.inputs[this.world.tick]!);
       }
       if (this.world.tick >= this.total) {

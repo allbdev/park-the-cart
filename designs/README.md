@@ -6,6 +6,8 @@ The canvas, these files, `GAME_PLAN.md` and the game are kept in sync both ways 
 
 **Screens (01–09) are captured from the real game** by `npm run designs` (`tools/designs/capture.ts`): PT-BR here, English in `en/` (canvas page "Screens (English)", and the English phone board on the Mobile page). The text boards (10–12) are edited by hand on the canvas and exported. The drawn mockups the screens replaced (including the 3D renders) are in the canvas history.
 
+**The game is now 3D (22 Nov 2026).** Its captures are on the canvas page "3D look (new)" (boards `Look3d*.dc.html`), where new looks are tried first. The screen boards and the JPGs below still show the flat look; once the developer has seen and accepted the 3D look, re-run `npm run designs` and replace them (roadmap task 60).
+
 | File | Canvas page | Board | What it shows |
 |---|---|---|---|
 | `01-Main.jpg` | Screens | 1 · Landing | Title tags, "offer of the day: 3 wheels work, the fourth is free", play and daily level |

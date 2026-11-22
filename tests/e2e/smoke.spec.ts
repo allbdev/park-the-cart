@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { open } from "./helpers";
 import { readFileSync } from "node:fs";
 import { decodeInputs } from "../../src/core/replay";
 
@@ -13,7 +14,7 @@ type Hooks = {
 test("landing → how it works → level 1 → parked with the par run → receipt", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(String(e)));
-  await page.goto("/?test=1");
+  await open(page, "/?test=1");
   await expect(page).toHaveTitle(/Park the Cart/);
   await page.getByTestId("play").click();
   await page.getByTestId("go").click();
@@ -30,7 +31,7 @@ test("landing → how it works → level 1 → parked with the par run → recei
 });
 
 test("the language toggle switches to Portuguese and is remembered", async ({ page }) => {
-  await page.goto("/?test=1");
+  await open(page, "/?test=1");
   await page.getByRole("button", { name: "Mudar para português" }).click();
   await expect(page.locator("h1")).toContainText("Estacione");
   await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
@@ -39,7 +40,7 @@ test("the language toggle switches to Portuguese and is remembered", async ({ pa
 });
 
 test("driving into a car bills it on the receipt", async ({ page }) => {
-  await page.goto("/?test=1&level=03-speed-bump");
+  await open(page, "/?test=1&level=03-speed-bump");
   const hit = Array.from({ length: 240 }, (_, k) => ({
     push: 1,
     turn: k < 90 ? 1 : 0.3,
@@ -54,7 +55,7 @@ test("driving into a car bills it on the receipt", async ({ page }) => {
 });
 
 test("the daily level: the first try counts, the next is practice", async ({ page }) => {
-  await page.goto("/?test=1&level=daily&date=2026-11-20");
+  await open(page, "/?test=1&level=daily&date=2026-11-20");
   await expect(page.locator(".hud-value").first()).toContainText("20 Nov 2026");
   await page.evaluate(() =>
     (window as unknown as { __cart: { playPar(): void } }).__cart.playPar(),
@@ -70,7 +71,7 @@ test("the daily level: the first try counts, the next is practice", async ({ pag
 });
 
 test("a link can't choose the address players share", async ({ page }) => {
-  await page.goto("/?test=1&site=https://evil.example/&level=01-seniors-space");
+  await open(page, "/?test=1&site=https://evil.example/&level=01-seniors-space");
   await page.evaluate(() =>
     (window as unknown as { __cart: { playPar(): void } }).__cart.playPar(),
   );
@@ -78,7 +79,7 @@ test("a link can't choose the address players share", async ({ page }) => {
 });
 
 test("a test date override never reaches storage", async ({ page }) => {
-  await page.goto("/?test=1&level=daily&date=2031-01-01");
+  await open(page, "/?test=1&level=daily&date=2031-01-01");
   await page.evaluate(() =>
     (window as unknown as { __cart: { playPar(): void } }).__cart.playPar(),
   );

@@ -24,7 +24,7 @@ A shopping cart with one bad wheel, a crowded car park, and a corral that is alw
 - A hand-written cart physics model, about 200 lines, tuned for "funny-bad".
 - Bit-identical replays across Chromium, Firefox and WebKit: the simulation uses its own trigonometry, because `Math.sin` isn't the same to the last bit in every engine.
 - Every level is proven finishable by a parking bot whose recorded runs CI replays; every daily level is checked by the same bot before you see it.
-- All the art is procedural Canvas 2D. About 45 KB of JavaScript and CSS.
+- 3D with no engine and no asset files: the cars, carts and car park are meshes built by code and drawn with hand-written WebGL 2. About 58 KB of JavaScript and CSS.
 
 ## Images
 
