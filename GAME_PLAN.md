@@ -61,16 +61,18 @@ Open decisions are in `TODO_FOR_YOU.md`.
 
 ## 5. Controls
 
-| Keyboard | Touch (portrait) | Action |
+| Keyboard | Touch (phone on its side) | Action |
 |---|---|---|
-| **W** / **↑** | Push the stick forward | Push |
-| **A D** / **← →** | Stick left / right | Turn |
-| **S** / **↓** | Pull the stick back | Pull back (slowly) |
+| **Arrows** / **WASD** | Push the stick that way | Go that way on the screen |
 | **Space** (hold) | **SEGURAR** button (hold) | Hold the cart: strong braking |
 | **R** | RECOMEÇAR button | Restart the level |
-| **Esc** | Back | Pause / back to levels |
+| **Esc** | Pause button | Pause / back to levels |
 
-- Touch: a virtual stick under the left thumb, a big hold button under the right. Targets at least 48 px. The stick is analogue (push and turn amounts are 0–1); the keyboard sends 0 or 1.
+- **You point, the cart turns** (22 Nov 2026, asked for by the developer). Up means up the screen whichever way the cart faces; two keys make a diagonal. The input layer turns the cart towards that direction and pushes once it's roughly lined up; pointing behind the cart pulls it backwards instead of turning it round. This replaced the classic scheme (up pushes, left and right twist the cart), where left and right swap whenever the cart faces down the screen.
+- **The bad wheel is still the player's problem.** The self-steering is loose on purpose (`POINT_GAIN` in `src/ui/input.ts`): a tight one would cancel the pull by itself. Holding a direction, the cart settles a few degrees off it, on the side its wheel drags to, and the player aims a little the other way.
+- **Classic steering is a setting** in the pause menu ("Classic steering: left and right turn the cart"), remembered with the rest of the progress.
+- The simulation doesn't know which scheme is in use: either way it receives a push and a turn, so replays and par runs are unaffected.
+- Touch: the stick appears wherever the left thumb lands; a big hold button sits under the right. Targets at least 48 px. The stick is analogue; the keyboard sends full strength.
 - Inputs are sampled once per simulation tick and quantised (stick to 1/16 steps), so a replay stores exactly what the simulation saw.
 - Remappable keys are not in the first version.
 

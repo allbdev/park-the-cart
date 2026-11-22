@@ -109,6 +109,8 @@
 59. [x] The lot in 3D (22 Nov 2026, asked for by the developer: "too basic, ideally more 3D"): hand-written WebGL 2 renderer, car, cart and prop models built by code, sun shadow map, angled camera that slides with the cart and drops in on a hit; the flat renderer stays as the fallback
 61. [x] Make it hard (22 Nov 2026, asked for by the developer: "near impossible to pass, but possible"): a card limit per level (over it the run fails, "card declined"), traffic that drives through the aisle, several abandoned carts per level (billed only once pushed), and all ten levels regenerated from specs by `npm run make-levels`, each proven by the bot
 62. [x] Carts unlock in a chain (22 Nov 2026, asked for by the developer): all ten levels with one cart opens the next; per-cart tally in storage (older saves are converted), shown on level select; every gating cart proven on every level by the bot
+63. [x] Phones played on their side: turn prompt, thin HUD, floating stick, pause and result that fit (22 Nov 2026, after the developer played on one)
+64. [x] Point-to-steer controls (22 Nov 2026, asked for by the developer): up goes up the screen whichever way the cart faces; classic steering kept as a pause-menu setting
 60. [x] Refresh the design boards with 3D captures: tried on a "3D look (new)" canvas page first; signed off by the developer on 22 Nov 2026, then all eighteen screen boards and `designs/*.jpg` replaced and the trial page removed
 
 ---
