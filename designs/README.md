@@ -16,7 +16,7 @@ The canvas, these files, `GAME_PLAN.md` and the game are kept in sync both ways 
 | `06-Levels.jpg` | Screens | 6 · Level select | "Ofertas da semana": ten levels, daily level, your cart |
 | `07-Rain.jpg` | Screens | 7 · Rain level | Wet asphalt, puddles and rain, the level tip |
 | `08-Replay.jpg` | Screens | 8 · Replay | Path, receipt marks on the scrubber, copy replay link |
-| `09-Mobile.jpg` | Mobile | Phone layouts | Portrait play with stick and hold button, result, level select |
+| `09-Mobile.jpg` | Mobile | Phone layouts | The "turn your phone sideways" card (upright), then landscape: play with the thin HUD and the floating stick, result, level select |
 | `10-Carts.jpg` | Carts & hazards | The carts | Five carts, their faults and unlocks |
 | `11-Hazards.jpg` | Carts & hazards | Hazards and price list | Each hazard and its price |
 | `12-Direction.jpg` | Art direction | Art direction | The look, against the other games, colour and font tokens |
