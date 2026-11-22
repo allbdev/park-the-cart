@@ -109,7 +109,7 @@
 59. [x] The lot in 3D (22 Nov 2026, asked for by the developer: "too basic, ideally more 3D"): hand-written WebGL 2 renderer, car, cart and prop models built by code, sun shadow map, angled camera that slides with the cart and drops in on a hit; the flat renderer stays as the fallback
 61. [x] Make it hard (22 Nov 2026, asked for by the developer: "near impossible to pass, but possible"): a card limit per level (over it the run fails, "card declined"), traffic that drives through the aisle, several abandoned carts per level (billed only once pushed), and all ten levels regenerated from specs by `npm run make-levels`, each proven by the bot
 62. [x] Carts unlock in a chain (22 Nov 2026, asked for by the developer): all ten levels with one cart opens the next; per-cart tally in storage (older saves are converted), shown on level select; every gating cart proven on every level by the bot
-60. [~] Refresh the design boards with 3D captures (done: canvas page "3D look (new)" with eight boards; left: replace the screen boards and `designs/*.jpg` once the developer has seen the look)
+60. [x] Refresh the design boards with 3D captures: tried on a "3D look (new)" canvas page first; signed off by the developer on 22 Nov 2026, then all eighteen screen boards and `designs/*.jpg` replaced and the trial page removed
 
 ---
 
@@ -127,8 +127,8 @@
 54. [x] Open Graph image and meta tags for link previews, in both locales
 55. [ ] Playtests: 5 people, including at least 2 on phones and 2 English speakers
 56. [ ] Tune the cart, prices and levels from playtests
-57. [~] Domain and production deploy (decision in `TODO_FOR_YOU.md`) (live on GitHub Pages: https://allbdev.github.io/park-the-cart/)
-58. [~] Press kit and launch posts (`marketing/`), with a replay link of a spectacular run (drafts written; contact, dates and the replay link to fill at launch)
+57. [x] Domain and production deploy: https://park-the-cart.vinicius-albuquerque.com.br/ (GitHub Pages behind a Cloudflare DNS record, 22 Nov 2026)
+58. [~] Press kit and launch posts (`marketing/`), with a replay link of a spectacular run (drafts written, contact filled in; dates and the replay link to fill at launch)
 
 ---
 
