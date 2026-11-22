@@ -145,12 +145,21 @@ export class Controls {
   }
 }
 
-/** A virtual stick in an element: pointer events, relative to where the thumb landed. */
-export function bindStick(area: HTMLElement, knob: HTMLElement, controls: Controls): () => void {
+/**
+ * A floating virtual stick: the thumb can land anywhere in `zone` and the stick jumps to it, so
+ * it never has to sit on top of the cart. `stick` is the ring, `knob` the dot inside it. Between
+ * touches the ring rests, faint, where the stylesheet puts it.
+ */
+export function bindStick(
+  zone: HTMLElement,
+  stick: HTMLElement,
+  knob: HTMLElement,
+  controls: Controls,
+): () => void {
   let id: number | null = null;
   let ox = 0;
   let oy = 0;
-  const radius = () => Math.max(40, area.clientWidth * 0.32);
+  const radius = () => Math.max(40, stick.clientWidth * 0.32);
   const move = (e: PointerEvent) => {
     if (e.pointerId !== id) return;
     const r = radius();
@@ -168,27 +177,36 @@ export function bindStick(area: HTMLElement, knob: HTMLElement, controls: Contro
   const down = (e: PointerEvent) => {
     if (id !== null) return;
     id = e.pointerId;
-    const rect = area.getBoundingClientRect();
-    ox = rect.left + rect.width / 2;
-    oy = rect.top + rect.height / 2;
-    area.setPointerCapture(e.pointerId);
+    ox = e.clientX;
+    oy = e.clientY;
+    // Centre the ring under the thumb.
+    const rect = zone.getBoundingClientRect();
+    stick.style.left = `${ox - rect.left - stick.clientWidth / 2}px`;
+    stick.style.top = `${oy - rect.top - stick.clientHeight / 2}px`;
+    stick.style.bottom = "auto";
+    stick.classList.add("live");
+    zone.setPointerCapture(e.pointerId);
     move(e);
   };
   const up = (e: PointerEvent) => {
     if (e.pointerId !== id) return;
     id = null;
     knob.style.transform = "";
+    stick.style.left = "";
+    stick.style.top = "";
+    stick.style.bottom = "";
+    stick.classList.remove("live");
     controls.releaseStick();
   };
-  area.addEventListener("pointerdown", down);
-  area.addEventListener("pointermove", move);
-  area.addEventListener("pointerup", up);
-  area.addEventListener("pointercancel", up);
+  zone.addEventListener("pointerdown", down);
+  zone.addEventListener("pointermove", move);
+  zone.addEventListener("pointerup", up);
+  zone.addEventListener("pointercancel", up);
   return () => {
-    area.removeEventListener("pointerdown", down);
-    area.removeEventListener("pointermove", move);
-    area.removeEventListener("pointerup", up);
-    area.removeEventListener("pointercancel", up);
+    zone.removeEventListener("pointerdown", down);
+    zone.removeEventListener("pointermove", move);
+    zone.removeEventListener("pointerup", up);
+    zone.removeEventListener("pointercancel", up);
   };
 }
 

@@ -648,13 +648,36 @@ h1:focus,
 
 /* touch */
 
+/* The left half of the screen takes the steering thumb; the stick appears where it lands. */
+.stick-zone {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 64px;
+  width: 50%;
+  z-index: 1;
+  touch-action: none;
+}
+
+.pause-btn,
+.restart,
+.hold-btn {
+  z-index: 2;
+}
+
 .stick {
   position: absolute;
   left: 18px;
   bottom: calc(18px + env(safe-area-inset-bottom));
   width: 150px;
   height: 150px;
-  touch-action: none;
+  pointer-events: none;
+  /* Faint until touched, so it doesn't hide the cart when the cart starts in that corner. */
+  opacity: 0.4;
+}
+
+.stick.live {
+  opacity: 1;
 }
 
 .stick-ring {
@@ -1396,4 +1419,260 @@ h1:focus,
   font-weight: 700;
   box-shadow: var(--shadow);
   max-width: calc(100% - 32px);
+}
+
+/* ---------------------------------------------------------------- phones */
+
+/* The "turn your phone sideways" card: only while a touch device is held upright. */
+.rotate {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  background: rgba(10, 10, 10, 0.86);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+  touch-action: manipulation;
+}
+
+.play.upright .rotate {
+  display: flex;
+}
+
+.rotate h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 34px;
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: var(--tag);
+  margin: 0;
+}
+
+.rotate p {
+  margin: 0 0 6px;
+  max-width: 280px;
+}
+
+.rotate-phone {
+  width: 54px;
+  height: 92px;
+  border: 4px solid #fff;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  animation: rotate-phone 2.4s ease-in-out infinite;
+}
+
+@keyframes rotate-phone {
+  0%,
+  25% {
+    transform: rotate(0);
+  }
+  60%,
+  100% {
+    transform: rotate(-90deg);
+  }
+}
+
+/* On touch the tip says its piece and gets out of the way. */
+.play.touch .hint {
+  animation: hint-out 0.5s 5s forwards;
+  pointer-events: none;
+}
+
+@keyframes hint-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* The result's backdrop stays put while the receipt and buttons scroll over it. */
+.result .backdrop,
+.result .landing-shade {
+  position: fixed;
+}
+
+.pause {
+  overflow-y: auto;
+}
+
+/*
+ * A phone on its side: plenty of width, very little height (under 300 px with the browser's
+ * bars). The HUD shrinks to one thin strip so the lot stays visible; what the player chose
+ * before starting (the level's name, the cart's fault) isn't repeated.
+ */
+@media (max-height: 480px) {
+  .hud-left {
+    top: 6px;
+    left: calc(6px + env(safe-area-inset-left));
+    gap: 6px;
+  }
+  .hud-box,
+  .hud-tag {
+    padding: 3px 8px 2px;
+    min-width: 0;
+    border-radius: 6px;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .hud-left > .hud-box:first-child,
+  .hud-wheel {
+    display: none;
+  }
+  .hud-label {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+  }
+  .hud-value,
+  .tag-price {
+    font-size: 18px;
+  }
+  .hud-limit {
+    font-size: 10px;
+  }
+  .hud-wind {
+    position: static;
+    transform: none;
+  }
+  .wind-row {
+    font-size: 13px;
+    gap: 5px;
+  }
+  .wind-arrow {
+    font-size: 15px;
+  }
+  .wind-bar {
+    width: 40px;
+    height: 7px;
+  }
+  .wind-word {
+    font-size: 10px;
+    min-width: 3.6em;
+  }
+  .play .pause-btn,
+  .play.touch .pause-btn {
+    top: 6px;
+    left: auto;
+    right: calc(6px + env(safe-area-inset-right));
+    min-height: 34px;
+    padding: 0 12px;
+  }
+  .play .restart,
+  .play.touch .restart {
+    top: 6px;
+    bottom: auto;
+    right: calc(52px + env(safe-area-inset-right));
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 13px;
+  }
+  .play .hint,
+  .play.touch .hint {
+    top: auto;
+    bottom: 8px;
+    font-size: 13px;
+    padding: 5px 12px;
+    max-width: calc(100% - 330px);
+    white-space: normal;
+    text-align: center;
+  }
+  .receipt-slot {
+    display: none;
+  }
+  .stick {
+    width: 124px;
+    height: 124px;
+    left: calc(14px + env(safe-area-inset-left));
+    bottom: 10px;
+  }
+  .stick-knob {
+    width: 54px;
+    height: 54px;
+    margin: -27px 0 0 -27px;
+  }
+  .hold-btn {
+    width: 92px;
+    height: 92px;
+    font-size: 16px;
+    right: calc(14px + env(safe-area-inset-right));
+    bottom: 12px;
+  }
+  .price-pop {
+    scale: 0.7;
+  }
+
+  /* Result: receipt and tag side by side, everything smaller, the page scrolls. */
+  .result-body {
+    grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
+    gap: 18px;
+    padding: 12px calc(14px + env(safe-area-inset-right)) 20px
+      calc(14px + env(safe-area-inset-left));
+  }
+  .result-side {
+    order: 0;
+    gap: 10px;
+  }
+  .result .receipt {
+    font-size: 11px;
+    padding: 12px 14px 16px;
+    transform: rotate(-1deg);
+  }
+  .big-tag {
+    padding: 8px 16px 6px;
+    transform: rotate(0.6deg);
+  }
+  .big-price {
+    font-size: 46px;
+    margin: 0;
+  }
+  .big-word {
+    font-size: 30px;
+  }
+  .big-sub {
+    font-size: 18px;
+  }
+  .big-tag.failed .big-sub {
+    font-size: 15px;
+  }
+  .kicker {
+    font-size: 11px;
+  }
+  .stat {
+    padding: 5px 12px;
+  }
+  .stat-value {
+    font-size: 20px;
+  }
+  .result .btn {
+    min-height: 38px;
+    padding: 0 14px;
+    font-size: 14px;
+  }
+  .share-box {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+
+  /* Pause: the card lies down so every button is on screen. */
+  .pause-card {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 18px;
+    max-width: calc(100% - 24px);
+  }
+  .pause-card h2 {
+    width: 100%;
+    text-align: center;
+    font-size: 26px;
+    margin: 0;
+  }
 }
