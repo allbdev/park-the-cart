@@ -97,6 +97,9 @@ function wheelIcon(): SVGSVGElement {
   return svg;
 }
 
+/** Set once the player chooses to play upright; remembered until the page is closed. */
+let playUpright = false;
+
 export class PlayScreen {
   readonly el: HTMLElement;
   private o: PlayOptions;
@@ -117,6 +120,10 @@ export class PlayScreen {
   private windBar: HTMLElement | null = null;
   private windWord: HTMLElement | null = null;
   private gusting: boolean | null = null;
+  /** Phones held upright: the "turn it sideways" card is up and the game waits. */
+  private upright = false;
+  private portrait: MediaQueryList | null = null;
+  private onTurn = () => this.checkTurn();
   private receiptSlot: HTMLElement;
   private tags: HTMLElement;
   private lastLines = 0;
@@ -229,16 +236,40 @@ export class PlayScreen {
 
     if (o.touch) {
       const knob = h("span", { class: "stick-knob" });
-      const area = h(
+      const stick = h("div", { class: "stick" }, h("span", { class: "stick-ring" }), knob);
+      // The whole left half takes the thumb; the stick appears wherever it lands.
+      const zone = h(
         "div",
-        { class: "stick", "aria-label": t(L, "a11y.stick"), role: "group" },
-        h("span", { class: "stick-ring" }),
-        knob,
+        { class: "stick-zone", "aria-label": t(L, "a11y.stick"), role: "group" },
+        stick,
       );
       const hold = h("button", { type: "button", class: "hold-btn" }, t(L, "hud.hold"));
-      this.el.append(area, hold);
-      this.unbindStick = bindStick(area, knob, this.controls);
+      this.el.append(zone, hold);
+      this.unbindStick = bindStick(zone, stick, knob, this.controls);
       bindHold(hold, this.controls);
+    }
+
+    if (o.touch) {
+      // The lot is wide: on a phone held upright, ask for landscape before anything else.
+      const anyway = button(t(L, "hud.rotateAnyway"), "btn btn-outline", () => {
+        playUpright = true;
+        this.checkTurn();
+      });
+      this.el.append(
+        h(
+          "div",
+          {
+            class: "rotate",
+            role: "dialog",
+            "aria-labelledby": "rotate-title",
+            "data-testid": "rotate",
+          },
+          h("span", { class: "rotate-phone", "aria-hidden": "true" }),
+          h("h2", { id: "rotate-title" }, t(L, "hud.rotateTitle")),
+          h("p", {}, t(L, "hud.rotateBody")),
+          anyway,
+        ),
+      );
     }
 
     this.controls.onAction = (a) => (a === "restart" ? this.restart() : o.onPause());
@@ -256,6 +287,11 @@ export class PlayScreen {
     fit();
     this.resizeObs = new ResizeObserver(fit);
     this.resizeObs.observe(this.el);
+    if (this.o.touch && typeof matchMedia === "function") {
+      this.portrait = matchMedia("(orientation: portrait)");
+      this.portrait.addEventListener("change", this.onTurn);
+      this.checkTurn();
+    }
     this.startWall = performance.now();
     this.last = performance.now();
     const frame = (now: number) => {
@@ -270,8 +306,19 @@ export class PlayScreen {
     clearTimeout(this.endTimer);
     this.controls.detach();
     this.resizeObs?.disconnect();
+    this.portrait?.removeEventListener("change", this.onTurn);
     this.renderer.dispose();
     this.unbindStick?.();
+  }
+
+  /** Shows or hides the "turn your phone" card, and holds the game while it's up. */
+  private checkTurn(): void {
+    const upright = !!this.portrait?.matches && !playUpright;
+    if (upright === this.upright) return;
+    this.upright = upright;
+    this.el.classList.toggle("upright", upright);
+    this.last = performance.now();
+    this.controls.reset();
   }
 
   setPaused(p: boolean): void {
@@ -325,7 +372,7 @@ export class PlayScreen {
   private frame(now: number): void {
     const dt = Math.min(0.25, (now - this.last) / 1000);
     this.last = now;
-    if (!this.paused && !this.ended) {
+    if (!this.paused && !this.upright && !this.ended) {
       this.acc += dt * this.o.speed;
       // The clock starts on the first key or touch.
       if (this.world.tick === 0 && !this.controls.touched) this.acc = 0;

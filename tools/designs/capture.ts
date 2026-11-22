@@ -146,18 +146,23 @@ function simulateUntilHit(inputs: Input[]): number {
 }
 
 async function phones(browser: Browser, locale: Locale, messy: Input[]) {
-  const vp = { width: 390, height: 844 };
-  let page = await open(browser, locale, "&level=03-speed-bump", { viewport: vp, mobile: true });
-  await play(page, decodeInputs(L3.par!.inputs)!.slice(0, 3 * 120));
+  // Upright, the game asks for landscape; on its side it gets the thin HUD.
+  const upright = { width: 390, height: 844 };
+  const side = { width: 800, height: 360 };
+  let page = await open(browser, locale, "&level=03-speed-bump", { viewport: upright, mobile: true });
+  await shot(page, locale, "phone-rotate", 400);
+  await page.context().close();
+  page = await open(browser, locale, "&level=06-wind", { viewport: side, mobile: true });
+  await play(page, new Array(3 * 120).fill({ push: 0, turn: 0, hold: true }));
   await page.evaluate(() => (window as unknown as Hooks).__cart.app.play?.setPaused(true));
   await shot(page, locale, "phone-play");
   await page.context().close();
-  page = await open(browser, locale, "&level=03-speed-bump", { viewport: vp, mobile: true });
+  page = await open(browser, locale, "&level=03-speed-bump", { viewport: side, mobile: true });
   await play(page, messy);
   await page.waitForSelector("[data-testid=result-tag]");
   await shot(page, locale, "phone-result", 600);
   await page.context().close();
-  page = await open(browser, locale, "", { viewport: vp, mobile: true });
+  page = await open(browser, locale, "", { viewport: side, mobile: true });
   await page.getByTestId("play").click();
   await shot(page, locale, "phone-levels");
   await page.context().close();
@@ -167,12 +172,16 @@ async function phones(browser: Browser, locale: Locale, messy: Input[]) {
   const title = locale === "en" ? "On the phone" : "No celular";
   const sub =
     locale === "en"
-      ? "Portrait, one thumb to steer and one to hold. The camera follows the cart instead of showing the whole lot."
-      : "Retrato, um polegar pra virar e outro pra segurar. A câmera segue o carrinho em vez de mostrar o estacionamento inteiro.";
-  await board.setContent(`<body style="margin:0;background:#232527;color:#fff;font-family:'Barlow Semi Condensed',sans-serif;height:1000px;box-sizing:border-box;padding:40px 60px">
-    <div style="display:flex;align-items:baseline;gap:24px;margin-bottom:28px"><b style="font:400 46px Anton,Impact,sans-serif;text-transform:uppercase;white-space:nowrap">${title}</b><span style="font-size:20px">${sub}</span></div>
-    <div style="display:flex;gap:60px;justify-content:center">
-    ${["phone-play.png", "phone-result.png", "phone-levels.png"].map((f) => `<img src="${img(f)}" style="width:370px;height:800px;object-fit:cover;object-position:top;border:9px solid #0e0f10;border-radius:34px;box-shadow:0 14px 34px rgba(0,0,0,.4)">`).join("")}
+      ? "Played on its side: a thin HUD, the stick appears under the left thumb, the right thumb holds. Upright, the game asks you to turn the phone."
+      : "Joga-se deitado: HUD fininho, o direcional aparece embaixo do polegar esquerdo, o direito segura. Em pé, o jogo pede pra virar o celular.";
+  const frame = "border:9px solid #0e0f10;border-radius:30px;box-shadow:0 14px 34px rgba(0,0,0,.4);object-fit:cover;object-position:top";
+  await board.setContent(`<body style="margin:0;background:#232527;color:#fff;font-family:'Barlow Semi Condensed',sans-serif;height:1000px;box-sizing:border-box;padding:36px 50px">
+    <div style="display:flex;align-items:baseline;gap:24px;margin-bottom:26px"><b style="font:400 46px Anton,Impact,sans-serif;text-transform:uppercase;white-space:nowrap">${title}</b><span style="font-size:19px">${sub}</span></div>
+    <div style="display:flex;gap:40px;justify-content:center;align-items:flex-start">
+      <img src="${img("phone-rotate.png")}" style="width:372px;height:806px;${frame}">
+      <div style="display:flex;flex-direction:column;gap:22px">
+      ${["phone-play.png", "phone-result.png", "phone-levels.png"].map((f) => `<img src="${img(f)}" style="width:560px;height:252px;${frame}">`).join("")}
+      </div>
     </div></body>`);
   await board.waitForTimeout(300);
   await board.screenshot({ path: join(OUT, locale, "Mobile.png") });
