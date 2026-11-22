@@ -76,14 +76,14 @@ test("the stick appears under the thumb, anywhere on the left half", async ({ br
   const page = await phone(browser, 800, 300);
   await open(page, "/?test=1&level=01-seniors-space");
   const before = await page.evaluate(() => (window as unknown as Hooks).__cart.world().cart.body.x);
-  // Thumb down in the middle of the left half, then pushed up: the cart faces east, so "up" on
-  // the stick is "push", and it rolls east.
+  // Thumb down in the middle of the left half, then pushed right: the stick points where to go,
+  // and the cart, which faces east, rolls east.
   await page.mouse.move(250, 180);
   await page.mouse.down();
   const ring = await page.locator(".stick").boundingBox();
   expect(Math.abs(ring!.x + ring!.width / 2 - 250)).toBeLessThan(3);
   expect(Math.abs(ring!.y + ring!.height / 2 - 180)).toBeLessThan(3);
-  await page.mouse.move(250, 120, { steps: 4 });
+  await page.mouse.move(310, 180, { steps: 4 });
   await page.waitForTimeout(900);
   await page.mouse.up();
   const after = await page.evaluate(() => (window as unknown as Hooks).__cart.world().cart.body.x);

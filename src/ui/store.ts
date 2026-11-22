@@ -1,6 +1,7 @@
 import { CART_IDS, cartBefore, type CartId } from "../content/carts";
 import { LOCALES, type Locale } from "../content/i18n";
 import type { Result } from "../core/result";
+import { STEER_MODES, type SteerMode } from "./input";
 
 /**
  * Per-player conveniences in localStorage: bests, unlocked levels, chosen cart, language,
@@ -17,6 +18,8 @@ export interface Progress {
   done: Partial<Record<CartId, string[]>>;
   cart: CartId;
   reducedMotion: boolean;
+  /** How the player steers (see SteerMode). */
+  steer: SteerMode;
   /** Daily results by date key: the first try only. */
   daily: Record<string, Result>;
 }
@@ -32,6 +35,7 @@ export function emptyProgress(): Progress {
     done: {},
     cart: "standard",
     reducedMotion: false,
+    steer: "point",
     daily: {},
   };
 }
@@ -97,6 +101,7 @@ export function parseProgress(raw: string | null): Progress {
   }
   if ((CART_IDS as readonly unknown[]).includes(v.cart)) p.cart = v.cart as CartId;
   if (typeof v.reducedMotion === "boolean") p.reducedMotion = v.reducedMotion;
+  if ((STEER_MODES as readonly unknown[]).includes(v.steer)) p.steer = v.steer as SteerMode;
   p.daily = cleanResults(v.daily, /^\d{4}-\d{2}-\d{2}$/);
   return p;
 }

@@ -168,3 +168,12 @@ describe("unlocking carts", () => {
     expect(parseProgress(JSON.stringify({ done: [1, 2] })).done).toEqual({});
   });
 });
+
+describe("the steering setting", () => {
+  it("defaults to pointing where to go, and remembers the classic scheme", () => {
+    expect(emptyProgress().steer).toBe("point");
+    expect(parseProgress(JSON.stringify({ steer: "cart" })).steer).toBe("cart");
+    expect(parseProgress(JSON.stringify({ steer: "tank" })).steer).toBe("point");
+    expect(parseProgress(JSON.stringify({ steer: 1 })).steer).toBe("point");
+  });
+});

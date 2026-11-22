@@ -102,12 +102,12 @@ npm run preview      # serve the build (port 4183)
 
 | Keyboard | Touch | Action |
 |---|---|---|
-| **W** / **↑** | Stick forward | Push |
-| **A D** / **← →** | Stick left / right | Turn |
-| **S** / **↓** | Stick back | Pull back |
+| **Arrows** / **WASD** | Push the stick that way | Go that way on the screen |
 | **Space** (hold) | **Hold** button | Hold the cart |
 | **R** | Restart | Restart the level |
 | **Esc** | Pause button | Pause |
+
+You point and the cart turns itself that way, loosely enough that the bad wheel still drags it off line. The classic scheme (up pushes, left and right twist the cart) is a setting in the pause menu.
 
 Dev and test URL parameters (not offered in the UI): `?level=03-speed-bump` (or `?level=daily`) opens a level; `?test=1` exposes `window.__cart` and allows `&speed=N`, `&date=YYYY-MM-DD` (never saved), `&site=public` (share the public address) and `&gfx=flat` (the flat fallback renderer).
 
