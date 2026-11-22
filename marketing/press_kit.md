@@ -2,7 +2,7 @@
 
 **Park the Cart** (*Estacione o Carrinho*) is a free browser game about the hardest drive of the week: returning a shopping cart with one bad wheel to the corral without scratching anybody's car. Every scratch goes on the receipt.
 
-- **Play:** https://allbdev.github.io/park-the-cart/
+- **Play:** https://park-the-cart.vinicius-albuquerque.com.br/
 - **Source:** https://github.com/allbdev/park-the-cart (MIT)
 - **Made by:** Vinícius Albuquerque Barros
 - **Platforms:** any modern browser, desktop and phone. No install, no account, no ads.
@@ -33,4 +33,4 @@ A shopping cart with one bad wheel, a crowded car park, and a corral that is alw
 
 ## Contact
 
-[CONTACT: add your preferred contact before sending this out]
+alb.develloper@gmail.com
