@@ -15,6 +15,15 @@ const RIGHT_KEYS = new Set(["KeyD", "ArrowRight"]);
 const HOLD_KEYS = new Set(["Space"]);
 const GAME_KEYS = new Set([...PUSH_KEYS, ...BACK_KEYS, ...LEFT_KEYS, ...RIGHT_KEYS, ...HOLD_KEYS]);
 
+/**
+ * Left means "go left", whichever way the cart is travelling. The simulation's `turn` swings the
+ * cart's nose, and when you pull the cart backwards a nose swung left sends the cart back and to
+ * the right, like reversing a car. So while pulling back, the steering is mirrored here.
+ */
+export function steerFor(push: number, turn: number): number {
+  return push < 0 && turn !== 0 ? -turn : turn;
+}
+
 /** Pure: the input from a set of held keys. */
 export function keysToInput(held: ReadonlySet<string>): Input {
   let push = 0;
@@ -32,6 +41,7 @@ export function keysToInput(held: ReadonlySet<string>): Input {
     if (RIGHT_KEYS.has(k)) right = true;
   }
   if (left !== right) turn = left ? -1 : 1;
+  turn = steerFor(push, turn);
   let hold = false;
   for (const k of held) if (HOLD_KEYS.has(k)) hold = true;
   return { push, turn, hold };
@@ -45,7 +55,8 @@ export function stickToInput(dx: number, dy: number, hold: boolean): Input {
     if (a < dead) return 0;
     return Math.sign(v) * Math.min(1, (a - dead) / (1 - dead));
   };
-  return { push: shape(-dy), turn: shape(dx), hold };
+  const push = shape(-dy);
+  return { push, turn: steerFor(push, shape(dx)), hold };
 }
 
 export class Controls {
