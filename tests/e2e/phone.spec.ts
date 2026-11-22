@@ -116,3 +116,57 @@ test("the pause menu and the result fit a phone on its side", async ({ browser }
   expect(again!.y + again!.height).toBeLessThanOrEqual(300);
   await page.close();
 });
+
+test("the menus fit a phone on its side, and scroll when even that isn't enough", async ({
+  browser,
+}) => {
+  const page = await phone(browser, 915, 300);
+  await open(page, "/?test=1");
+  const inView = async (testId: string, height: number) => {
+    const box = (await page.getByTestId(testId).boundingBox())!;
+    expect(box.y).toBeGreaterThanOrEqual(0);
+    expect(box.y + box.height).toBeLessThanOrEqual(height);
+  };
+  // Landing: both buttons on screen without scrolling.
+  await inView("play", 300);
+  await inView("daily", 300);
+  // The blurred picture is pinned to the screen, so scrolling can't leave a bare strip.
+  expect(await page.locator(".backdrop").evaluate((el) => getComputedStyle(el).position)).toBe(
+    "fixed",
+  );
+
+  // On something shorter still, the page scrolls and the button can be reached.
+  await page.setViewportSize({ width: 700, height: 200 });
+  const scroll = await page.locator("main.landing").evaluate((el) => ({
+    overflow: getComputedStyle(el).overflowY,
+    more: el.scrollHeight > el.clientHeight,
+  }));
+  expect(scroll).toEqual({ overflow: "auto", more: true });
+  await page.getByTestId("daily").scrollIntoViewIfNeeded();
+  await inView("daily", 200);
+
+  // How it works: the three cards and the button, also without scrolling.
+  await page.setViewportSize({ width: 915, height: 300 });
+  await page.getByTestId("play").click();
+  await expect(page.locator("h1")).toHaveText("How it works");
+  await inView("go", 300);
+  const top = (await page.locator("h1").boundingBox())!;
+  expect(top.y).toBeGreaterThanOrEqual(0);
+  await page.close();
+});
+
+test("upright, the landing scrolls with its background in place", async ({ browser }) => {
+  const page = await phone(browser, 360, 520);
+  await open(page, "/?test=1");
+  const main = page.locator("main.landing");
+  expect(await main.evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(true);
+  await main.evaluate((el) => el.scrollTo(0, el.scrollHeight));
+  // Scrolled to the end, the picture still covers the whole screen.
+  const box = await page.locator(".backdrop").evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    return { top: r.top, bottom: r.bottom };
+  });
+  expect(box.top).toBeLessThanOrEqual(0);
+  expect(box.bottom).toBeGreaterThanOrEqual(520);
+  await page.close();
+});

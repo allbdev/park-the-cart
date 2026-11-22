@@ -163,8 +163,9 @@ h1:focus,
 
 /* ---------------------------------------------------------------- landing / how-to */
 
+/* Fixed to the screen, not the page: the screens over it scroll on small displays. */
 .backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -173,13 +174,17 @@ h1:focus,
 }
 
 .landing-shade {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: linear-gradient(90deg, rgba(10, 10, 10, 0.72), rgba(10, 10, 10, 0.25));
 }
 
 .landing-shade.dark {
   background: rgba(10, 10, 10, 0.6);
+}
+
+.landing {
+  overflow-y: auto;
 }
 
 .landing-body {
@@ -293,7 +298,6 @@ h1:focus,
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 24px;
   padding: 24px;
   overflow-y: auto;
@@ -306,8 +310,17 @@ h1:focus,
 
 .howto .backdrop,
 .howto .landing-shade {
-  position: absolute;
+  position: fixed;
   z-index: 0;
+}
+
+/* Centred when there's room, scrollable from the top when there isn't. */
+.howto > h1 {
+  margin-top: auto;
+}
+
+.howto > .btn:last-child {
+  margin-bottom: auto;
 }
 
 .howto h1 {
@@ -1491,12 +1504,6 @@ h1:focus,
   }
 }
 
-/* The result's backdrop stays put while the receipt and buttons scroll over it. */
-.result .backdrop,
-.result .landing-shade {
-  position: fixed;
-}
-
 .pause {
   overflow-y: auto;
 }
@@ -1605,6 +1612,101 @@ h1:focus,
   }
   .price-pop {
     scale: 0.7;
+  }
+
+  /* Landing: the title, the pitch and both buttons on screen without scrolling. */
+  .landing-body {
+    padding: 14px calc(18px + env(safe-area-inset-right)) 12px
+      calc(18px + env(safe-area-inset-left));
+    max-width: 560px;
+  }
+  .title {
+    margin-bottom: 12px;
+    gap: 8px;
+  }
+  .title span {
+    font-size: 40px;
+    padding: 2px 14px 5px;
+  }
+  .pitch {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .landing .btn.big,
+  .howto .btn.big {
+    min-height: 40px;
+    padding: 0 20px;
+    font-size: 16px;
+  }
+  .footer {
+    font-size: 12px;
+    margin-top: 10px;
+  }
+  .offer {
+    position: absolute;
+    top: 74px;
+    right: calc(18px + env(safe-area-inset-right));
+    margin: 0;
+    padding: 8px 16px 10px;
+    max-width: 240px;
+  }
+  .offer-kicker {
+    font-size: 10px;
+  }
+  .offer-big {
+    font-size: 36px;
+  }
+  .offer-small {
+    font-size: 15px;
+  }
+
+  /* How it works: three small cards in a row, and the button under them. */
+  .howto {
+    gap: 10px;
+    padding: 10px calc(14px + env(safe-area-inset-right)) 12px
+      calc(14px + env(safe-area-inset-left));
+  }
+  .howto h1 {
+    font-size: 26px;
+  }
+  .how-cards {
+    grid-template-columns: repeat(3, minmax(0, 250px));
+    gap: 12px;
+  }
+  .how-card {
+    padding: 8px 12px 10px;
+  }
+  .how-card h2 {
+    font-size: 18px;
+    margin: 0 0 2px;
+  }
+  .how-card p {
+    font-size: 13px;
+    margin: 0;
+  }
+  .how-n {
+    font-size: 20px;
+  }
+  .how-keys {
+    font-size: 13px;
+    margin: 0;
+    padding: 4px 12px;
+  }
+
+  /* Level select: a shorter header so the first row of levels shows. */
+  .levels {
+    padding: 12px calc(14px + env(safe-area-inset-right)) 24px
+      calc(14px + env(safe-area-inset-left));
+  }
+  .levels-head {
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .levels-head p {
+    font-size: 15px;
+  }
+  .tag-title {
+    font-size: 30px;
   }
 
   /* Result: receipt and tag side by side, everything smaller, the page scrolls. */
