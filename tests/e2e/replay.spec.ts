@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { open } from "./helpers";
 import { expect, test } from "@playwright/test";
 import { encodeReplay } from "../../src/core/replay";
 import { simulate } from "../../src/core/world";
@@ -29,7 +30,7 @@ test("a replay link plays the same run, to the last bit, as in Node", async ({ p
   const inputs = messyInputs();
   const expected = simulate(level, "standard", inputs);
   const link = encodeReplay({ level: level.id, cart: "standard", inputs });
-  await page.goto(`/?test=1#r=${link}`);
+  await open(page, `/?test=1#r=${link}`);
   await expect(page.getByTestId("replay-title")).toContainText("Rush Hour");
   const got = await page.evaluate(() => (window as unknown as ReplayHooks).__cart.replayEnd());
   expect(got).toEqual({
@@ -44,14 +45,14 @@ test("a replay link plays the same run, to the last bit, as in Node", async ({ p
 test("a broken replay link shows a message, not an error", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(String(e)));
-  await page.goto("/?test=1#r=v1.<script>alert(1)</script>.standard.AAAA");
+  await open(page, "/?test=1#r=v1.<script>alert(1)</script>.standard.AAAA");
   await expect(page.getByRole("alert")).toContainText("broken");
   await expect(page.locator("script:not([type=module]):not([src])")).toHaveCount(0);
   expect(errors).toEqual([]);
 });
 
 test("watch the replay from the result screen", async ({ page }) => {
-  await page.goto("/?test=1&level=01-seniors-space");
+  await open(page, "/?test=1&level=01-seniors-space");
   await page.evaluate(() =>
     (window as unknown as { __cart: { playPar(): void } }).__cart.playPar(),
   );
