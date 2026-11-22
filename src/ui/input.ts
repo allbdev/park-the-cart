@@ -24,7 +24,12 @@ export function steerFor(push: number, turn: number): number {
   return push < 0 && turn !== 0 ? -turn : turn;
 }
 
-/** Pure: the input from a set of held keys. */
+const HOLD_KEYS_HELD = (held: ReadonlySet<string>): boolean => {
+  for (const k of held) if (HOLD_KEYS.has(k)) return true;
+  return false;
+};
+
+/** Pure: the input from a set of held keys, in "cart" mode. */
 export function keysToInput(held: ReadonlySet<string>): Input {
   let push = 0;
   let turn = 0;
@@ -45,6 +50,74 @@ export function keysToInput(held: ReadonlySet<string>): Input {
   let hold = false;
   for (const k of held) if (HOLD_KEYS.has(k)) hold = true;
   return { push, turn, hold };
+}
+
+/**
+ * How the player steers. "point": press or push the way you want the cart to go on screen, and
+ * the cart turns itself that way. "cart": up pushes, left and right twist the cart (the classic
+ * top-down driving scheme, where left and right swap when the cart faces down the screen).
+ */
+export type SteerMode = "point" | "cart";
+export const STEER_MODES: readonly SteerMode[] = ["point", "cart"];
+
+/** The direction the held keys point at, on screen (x right, y down), unit length or zero. */
+export function keysToDirection(held: ReadonlySet<string>): { dx: number; dy: number } {
+  let dx = 0;
+  let dy = 0;
+  for (const k of held) {
+    if (PUSH_KEYS.has(k)) dy -= 1;
+    if (BACK_KEYS.has(k)) dy += 1;
+    if (LEFT_KEYS.has(k)) dx -= 1;
+    if (RIGHT_KEYS.has(k)) dx += 1;
+  }
+  dx = Math.sign(dx);
+  dy = Math.sign(dy);
+  const m = Math.hypot(dx, dy);
+  return m > 0 ? { dx: dx / m, dy: dy / m } : { dx: 0, dy: 0 };
+}
+
+function wrap(a: number): number {
+  while (a > Math.PI) a -= Math.PI * 2;
+  while (a < -Math.PI) a += Math.PI * 2;
+  return a;
+}
+
+/**
+ * How firmly the cart is turned towards where the player points, and how much its own spin is
+ * damped. Loose on purpose: a tight controller would cancel the bad wheel by itself, and
+ * compensating for that wheel is the game. With these, the cart settles a few degrees off where
+ * you point, on the side its wheel drags to, and you aim a little the other way.
+ */
+const POINT_GAIN = 1.5;
+const POINT_DAMPING = 0.25;
+/** Pointing further than this behind the cart pulls it backwards instead of turning it round. */
+const REVERSE_BEYOND = 2.2;
+const FORWARD_WITHIN = 1.0;
+
+/**
+ * Pure: "go that way" turned into push and turn. (dx, dy) is the wanted direction on screen,
+ * length 0..1; `heading` and `spin` are the cart's; `reversing` is what this returned last time
+ * (it keeps the cart from flipping between forwards and backwards at the boundary).
+ */
+export function pointToInput(
+  dx: number,
+  dy: number,
+  heading: number,
+  spin: number,
+  reversing: boolean,
+): { push: number; turn: number; reversing: boolean } {
+  const mag = Math.min(1, Math.hypot(dx, dy));
+  if (mag < 0.12) return { push: 0, turn: 0, reversing: false };
+  const target = Math.atan2(dy, dx);
+  const ahead = wrap(target - heading);
+  const back = reversing ? Math.abs(ahead) > FORWARD_WITHIN : Math.abs(ahead) > REVERSE_BEYOND;
+  // Backwards, it's the cart's tail that has to point at the target.
+  const err = back ? wrap(target - heading - Math.PI) : ahead;
+  const turn = Math.max(-1, Math.min(1, POINT_GAIN * err - POINT_DAMPING * spin));
+  // Push only once it's roughly lined up; until then it turns on the spot.
+  const lined = Math.cos(err);
+  const push = lined > 0.35 ? mag * lined : 0;
+  return { push: back ? -push : push, turn, reversing: back };
 }
 
 /** Pure: the input from the stick's offset (-1..1 each, y down) and the hold button. */
@@ -115,6 +188,7 @@ export class Controls {
   reset(): void {
     this.held.clear();
     this.touched = false;
+    this.reversing = false;
   }
 
   setStick(dx: number, dy: number): void {
@@ -131,7 +205,21 @@ export class Controls {
     if (on) this.touched = true;
   }
 
-  read(): Input {
+  /** Whether the cart is being pulled backwards in "point" mode (see `pointToInput`). */
+  private reversing = false;
+
+  /**
+   * The input for this tick. In "point" mode it needs the cart's heading and spin, since the
+   * same key means a different push and turn depending on which way the cart faces.
+   */
+  read(mode: SteerMode = "cart", heading = 0, spin = 0): Input {
+    if (mode === "point") {
+      const hold = this.holdTouch || HOLD_KEYS_HELD(this.held);
+      const d = this.stick ?? keysToDirection(this.held);
+      const p = pointToInput(d.dx, d.dy, heading, spin, this.reversing);
+      this.reversing = p.reversing;
+      return { push: p.push, turn: p.turn, hold };
+    }
     const k = keysToInput(this.held);
     if (this.stick) {
       const s = stickToInput(this.stick.dx, this.stick.dy, this.holdTouch || k.hold);

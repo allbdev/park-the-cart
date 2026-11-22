@@ -7,7 +7,7 @@ import { receiptItems } from "../core/result";
 import { createWorld, elapsed, step, type ReceiptLine, type World } from "../core/world";
 import { button, h } from "./dom";
 import { itemText } from "./format";
-import { bindHold, bindStick, Controls } from "./input";
+import { bindHold, bindStick, Controls, type SteerMode } from "./input";
 import { receiptEl } from "./receipt";
 import { copyPoses, createRenderer, poseOf, type LotRenderer, type Pose } from "./render";
 
@@ -26,6 +26,8 @@ export interface PlayOptions {
   /** Called once the run ends (after a short beat), with the world and the input log. */
   onEnd: (world: World, inputs: Input[]) => void;
   onPause: () => void;
+  /** "point": go the way the keys or stick point on screen. "cart": push and twist the cart. */
+  steer: SteerMode;
   /** Speeds the simulation up for tests (?test=1&speed=N). */
   speed: number;
 }
@@ -42,6 +44,12 @@ function tipFor(level: Level): string | null {
   if (level.hazards.some((h) => h.type === "cart")) return "tips.cart";
   if (level.hazards.some((h) => h.type === "speedBump")) return "tips.bump";
   return null;
+}
+
+/** The locale key of the controls text for this device and steering mode. */
+export function hintKey(prefix: "hud.hint" | "howto.", touch: boolean, steer: SteerMode): string {
+  const device = prefix === "howto." ? (touch ? "touch" : "keys") : touch ? "Touch" : "Keys";
+  return `${prefix}${device}${steer === "cart" ? "Cart" : ""}`;
 }
 
 /** The little cart icon with its bad wheel, for the HUD. */
@@ -217,7 +225,7 @@ export class PlayScreen {
     const hint = h(
       "p",
       { class: "hint" },
-      tip ? t(L, tip) : o.touch ? t(L, "hud.hintTouch") : t(L, "hud.hintKeys"),
+      tip ? t(L, tip) : t(L, hintKey("hud.hint", o.touch, o.steer)),
     );
 
     this.el = h(
@@ -321,6 +329,12 @@ export class PlayScreen {
     this.controls.reset();
   }
 
+  /** Changes how the player steers, mid-level (from the pause menu). */
+  setSteer(mode: SteerMode): void {
+    this.o.steer = mode;
+    this.controls.reset();
+  }
+
   setPaused(p: boolean): void {
     this.paused = p;
     this.last = performance.now();
@@ -378,7 +392,8 @@ export class PlayScreen {
       if (this.world.tick === 0 && !this.controls.touched) this.acc = 0;
       while (this.acc >= DT && this.world.status === "playing") {
         this.acc -= DT;
-        this.tick(this.controls.read());
+        const b = this.world.cart.body;
+        this.tick(this.controls.read(this.o.steer, b.a, b.w));
       }
       this.updateHud();
     }

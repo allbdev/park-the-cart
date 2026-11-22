@@ -5,6 +5,7 @@ import type { Level } from "../core/level";
 import { createWorld } from "../core/world";
 import { button, h } from "./dom";
 import { bestText } from "./format";
+import { hintKey } from "./play";
 import { poseOf, Renderer2D, type LotRenderer } from "./render";
 import { Renderer3D, supports3d } from "./render3d";
 import { cartUnlocked, doneWith, type Progress } from "./store";
@@ -172,7 +173,7 @@ export function howtoScreen(nav: Nav, touch: boolean): HTMLElement {
       card(2, t(L, "howto.step2Title"), t(L, "howto.step2")),
       card(3, t(L, "howto.step3Title"), t(L, "howto.step3")),
     ),
-    h("p", { class: "how-keys" }, touch ? t(L, "howto.touch") : t(L, "howto.keys")),
+    h("p", { class: "how-keys" }, t(L, hintKey("howto.", touch, nav.progress.steer))),
     go,
   );
 }

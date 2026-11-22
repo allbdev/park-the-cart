@@ -216,6 +216,7 @@ export class App {
       cart: this.currentCart(),
       reducedMotion: this.progress.reducedMotion,
       touch: this.touch,
+      steer: this.progress.steer,
       speed: this.o.speed,
       onEnd,
       onPause: () => this.togglePause(),
@@ -351,6 +352,13 @@ export class App {
       this.progress.reducedMotion = motion.checked;
       saveProgress(this.progress);
     });
+    const classic = h("input", { type: "checkbox", id: "classic-steer" });
+    classic.checked = this.progress.steer === "cart";
+    classic.addEventListener("change", () => {
+      this.progress.steer = classic.checked ? "cart" : "point";
+      saveProgress(this.progress);
+      play.setSteer(this.progress.steer);
+    });
     const resume = button(t(L, "pause.resume"), "btn btn-red", () => this.closePause(), {
       "data-autofocus": true,
     });
@@ -368,6 +376,7 @@ export class App {
         }),
         button(t(L, "pause.levels"), "btn btn-dark", () => this.levels()),
         h("label", { class: "check" }, motion, t(L, "pause.sound")),
+        h("label", { class: "check" }, classic, t(L, "pause.classic")),
       ),
     );
     el.addEventListener("keydown", (e) => {
